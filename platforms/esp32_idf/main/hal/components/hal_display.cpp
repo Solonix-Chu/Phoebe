@@ -12,7 +12,11 @@
 #include "../hal_config.h"
 #include <mooncake_log.h>
 #include <memory>
+#include "esp32-hal-gpio.h"
+#include "esp32-hal.h"
+#include "esp_system.h"
 #include "utils/sharpe_mlcd/sharpe_mlcd.h"
+#include <Arduino.h>
 
 using namespace mooncake;
 
@@ -38,9 +42,9 @@ void HalEsp32::display_init()
 
     initArduino();
 
-    // lgfx::pinMode(HAL_PIN_PWR_HOLD, lgfx::pin_mode_t::output);
-    // lgfx::gpio_hi(HAL_PIN_PWR_HOLD);
-    // lgfx::delay(100);
+    pinMode(HAL_PIN_PWR_HOLD, OUTPUT);
+    digitalWrite(HAL_PIN_PWR_HOLD, 1);
+    delay(100);
 
     tone(HAL_PIN_BUZZ_CTRL, 400, 300);
 

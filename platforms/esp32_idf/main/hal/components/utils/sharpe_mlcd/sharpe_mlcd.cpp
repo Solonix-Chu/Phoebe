@@ -169,7 +169,7 @@ void SharpeMlcd::drawPixelPreclipped(uint_fast16_t x, uint_fast16_t y, uint_fast
     //     _sharpmem_buffer[(y * _config.screen_width + x) / 8] &= pgm_read_byte(&clr[x & 7]);
     // }
 
-    if (rgb565_to_grayscale(color) > 200) {
+    if (rgb565_to_grayscale(color) > 168) {
         _sharpmem_buffer[(y * _config.screen_width + x) / 8] |= pgm_read_byte(&set[x & 7]);
     } else {
         _sharpmem_buffer[(y * _config.screen_width + x) / 8] &= pgm_read_byte(&clr[x & 7]);
