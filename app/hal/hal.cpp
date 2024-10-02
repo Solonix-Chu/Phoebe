@@ -9,7 +9,6 @@
  *
  */
 #include "hal.h"
-#include "hal/components/display_m5gfx.h"
 #include <memory>
 #include <string>
 #include <mooncake_log.h>
@@ -129,11 +128,11 @@ hal_components::EncoderBase& HAL::HalBase::Encoder()
 }
 #endif
 
-hal_components::DisplayM5GFXBase& HAL::HalBase::Display()
+hal_components::DisplayBase& HAL::HalBase::Display()
 {
-    if (!_components.display_m5gfx) {
+    if (!_components.display) {
         mclog::tagWarn(_tag, "getting null display component");
-        _components.display_m5gfx = std::make_unique<hal_components::DisplayM5GFXBase>();
+        _components.display = std::make_unique<hal_components::DisplayBase>();
     }
-    return *_components.display_m5gfx.get();
+    return *_components.display.get();
 }

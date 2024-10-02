@@ -18,7 +18,7 @@
 #include "components/touchpad.h"
 #include "components/encoder.h"
 #include "components/system_config.h"
-#include "components/display_m5gfx.h"
+#include "components/display.h"
 
 /**
  * @brief 硬件抽象层
@@ -88,7 +88,7 @@ public:
     hal_components::SystemConfigBase& SystemConfig();
 #endif
 
-    hal_components::DisplayM5GFXBase& Display();
+    hal_components::DisplayBase& Display();
 
 protected:
     // 组件实例管理
@@ -112,7 +112,7 @@ protected:
         std::unique_ptr<hal_components::SystemConfigBase> system_config;
 #endif
 
-        std::unique_ptr<hal_components::DisplayM5GFXBase> display_m5gfx;
+        std::unique_ptr<hal_components::DisplayBase> display;
     };
     Data_t _components;
 };
@@ -159,7 +159,7 @@ inline HAL::HalBase& GetHAL()
  *
  * @return hal_components::DisplayM5GFXBase&
  */
-inline hal_components::DisplayM5GFXBase& GetDisplay()
+inline hal_components::DisplayBase& HalGetDisplay()
 {
     return GetHAL().Display();
 }

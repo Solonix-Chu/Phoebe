@@ -9,6 +9,7 @@
  *
  */
 #pragma once
+#include <cstdint>
 #include <mooncake.h>
 
 /**
@@ -24,4 +25,8 @@ public:
     void onOpen() override;
     void onRunning() override;
     void onClose() override;
+
+private:
+    std::uint32_t _clock_time_count = 0;
+    void update_clock();
 };

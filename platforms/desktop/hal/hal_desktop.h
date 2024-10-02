@@ -20,10 +20,13 @@ public:
 
     void init() override
     {
-        // 创建组件实例等..
-        _display_init();
+        system_ctrl_init();
+        display_init();
+        lvgl_init();
     }
 
 private:
-    void _display_init();
+    void display_init();
+    void system_ctrl_init();
+    void lvgl_init();
 };

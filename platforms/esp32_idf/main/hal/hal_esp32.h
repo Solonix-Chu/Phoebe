@@ -21,8 +21,10 @@ public:
     void init() override
     {
         _display_init();
+        _system_ctrl_init();
     }
 
 private:
     void _display_init();
+    void _system_ctrl_init();
 };

@@ -15,13 +15,8 @@
         "branch": "main"
     },
     {
-        "url": "https://github.com/m5stack/M5GFX.git",
-        "path": "dependencies/M5GFX",
-        "branch": "0.1.17"
-    },
-    {
-        "url": "https://github.com/m5stack/M5Unified.git",
-        "path": "dependencies/M5Unified",
-        "branch": "0.1.17"
+        "url": "https://github.com/lvgl/lvgl.git",
+        "path": "dependencies/lvgl",
+        "branch": "v9.2.0"
     }
 ]
