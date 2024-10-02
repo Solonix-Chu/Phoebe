@@ -1,5 +1,5 @@
 
-IDF_PATH=$HOME/esp/esp-idf-v5.3.1
+IDF_PATH=$HOME/esp/esp-idf-v5.1.4
 
 if [ $# -eq 0 ]; then
     echo "need ouput name"
