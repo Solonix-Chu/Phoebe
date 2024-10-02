@@ -10,31 +10,17 @@
  */
 #pragma once
 #include <M5GFX.h>
-#include <Arduino.h>
-#include <SPI.h>
+#include "../sharpe_mlcd/sharpe_mlcd.h"
 
 namespace lgfx {
 
 class PanelSharpMlcd : public Panel_Device {
 public:
-    PanelSharpMlcd(uint16_t screenWidth, uint16_t screenHeight, int8_t pinSCS, int8_t pinSCLK, int8_t pinSI)
+    void setSharpMlcdInstance(SharpeMlcd* sharpMlcd)
     {
-        _data.screen_width = screenWidth;
-        _data.screen_height = screenHeight;
-        _data.pin_scs = pinSCS;
-        _data.pin_sclk = pinSCLK;
-        _data.pin_si = pinSI;
+        _sharp_mlcd = sharpMlcd;
     }
 
-    void mlcd_init();
-    void mcld_clear_screen();
-    void mlcd_refresh_screen();
-    void mlcd_clear_buffer();
-    void mlcd_draw_pixel(int16_t x, int16_t y, uint16_t color);
-
-    /* -------------------------------------------------------------------------- */
-    /*                                 LGFX Panel                                 */
-    /* -------------------------------------------------------------------------- */
     bool init(bool use_reset) override;
     void beginTransaction(void) override;
     void endTransaction(void) override;
@@ -78,23 +64,7 @@ public:
     void setTilePattern(uint_fast8_t) {}
 
 private:
-    struct Data_t {
-        // Config
-        uint16_t screen_width = 0;
-        uint16_t screen_height = 0;
-        int8_t pin_scs = -1;
-        int8_t pin_sclk = -1;
-        int8_t pin_si = -1;
-        uint8_t rotation = 0;
-
-        // Buffer
-        std::unique_ptr<SPISettings> spi_settings;
-        std::unique_ptr<uint8_t> sharpmem_buffer;
-        uint8_t sharpmem_vcom = 0;
-    };
-    Data_t _data;
-
-    void toggle_vcom();
+    SharpeMlcd* _sharp_mlcd = nullptr;
 };
 
 } // namespace lgfx

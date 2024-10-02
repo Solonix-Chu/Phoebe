@@ -25,6 +25,11 @@ public:
         uint32_t spi_clk_freq = 1000000;
     };
 
+    const Config_t& getConfig()
+    {
+        return _config;
+    }
+
     Config_t& setConfig()
     {
         return _config;
@@ -36,6 +41,8 @@ public:
     void clearBuffer();
     void fillBufferBlack();
     void drawPixel(int16_t x, int16_t y, uint16_t color);
+    void drawPixelPreclipped(uint_fast16_t x, uint_fast16_t y, uint_fast16_t color);
+    void copyBuffer(uint16_t* colors);
 
 private:
     Config_t _config;

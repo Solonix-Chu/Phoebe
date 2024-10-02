@@ -9,6 +9,8 @@
  *
  */
 #include "sharpe_mlcd.h"
+// https://www.sharpsde.com/fileadmin/products/Displays/Specs/LS013B7DH05_25Jan24_Spec_LD-2023X06.pdf
+// https://github.com/adafruit/Adafruit_SHARP_Memory_Display/blob/master/Adafruit_SharpMem.h
 
 #define SHARPMEM_BIT_WRITECMD (0x01) // 0x80 in LSB format
 #define SHARPMEM_BIT_VCOM     (0x02) // 0x40 in LSB format
@@ -132,7 +134,11 @@ void SharpeMlcd::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
     if ((x < 0) || (x >= _config.screen_width) || (y < 0) || (y >= _config.screen_height))
         return;
+    drawPixelPreclipped(x, y, color);
+}
 
+void SharpeMlcd::drawPixelPreclipped(uint_fast16_t x, uint_fast16_t y, uint_fast16_t color)
+{
     switch (_config.rotation) {
         case 1:
             _swap_int16_t(x, y);
@@ -152,6 +158,19 @@ void SharpeMlcd::drawPixel(int16_t x, int16_t y, uint16_t color)
         _sharpmem_buffer.get()[(y * _config.screen_width + x) / 8] |= pgm_read_byte(&set[x & 7]);
     } else {
         _sharpmem_buffer.get()[(y * _config.screen_width + x) / 8] &= pgm_read_byte(&clr[x & 7]);
+    }
+}
+
+void SharpeMlcd::copyBuffer(uint16_t* colors)
+{
+    if (!colors) {
+        return;
+    }
+
+    for (int y = 0; y < _config.screen_height; y++) {
+        for (int x = 0; x < _config.screen_width; x++) {
+            drawPixelPreclipped(x, y, colors[y * _config.screen_width + x]);
+        }
     }
 }
 

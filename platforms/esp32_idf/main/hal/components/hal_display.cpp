@@ -21,6 +21,22 @@
 
 using namespace mooncake;
 
+class LGFX_Phoebe : public lgfx::LGFX_Device {
+public:
+    lgfx::PanelSharpMlcd _panel_instance;
+
+    LGFX_Phoebe(SharpeMlcd* sharpMlcd)
+    {
+        _panel_instance.setSharpMlcdInstance(sharpMlcd);
+        auto cfg = _panel_instance.config();
+        cfg.panel_width = sharpMlcd->getConfig().screen_width;
+        cfg.panel_height = sharpMlcd->getConfig().screen_height;
+        _panel_instance.config(cfg);
+
+        setPanel(&_panel_instance);
+    }
+};
+
 /**
  * @brief 派生组件
  *
@@ -88,54 +104,17 @@ void HalEsp32::_display_init()
 
     mlcd.init();
 
+    LGFX_Phoebe lgfx_phoebe(&mlcd);
+    lgfx_phoebe.init();
+    lgfx_phoebe.setRotation(2);
+
+    LGFX_Sprite canvas(&lgfx_phoebe);
+    canvas.createSprite(144, 168);
+
     /* -------------------------------------------------------------------------- */
     /*                                    Test                                    */
     /* -------------------------------------------------------------------------- */
     while (1) {
-        // mcld->clearBuffer2();
-        // int y = 0;
-        // for (int x = 0; x < HAL_SCREEN_WIDTH; x++) {
-        //     mcld->drawPixel(x, y, 1);
-        //     y++;
-        // }
-        // mcld->refresh();
-        // lgfx::delay(1000);
-
-        // mcld->clearBuffer();
-        // y = 0;
-        // for (int x = 0; x < HAL_SCREEN_WIDTH; x++) {
-        //     mcld->drawPixel(x, y, 0);
-        //     y++;
-        // }
-        // mcld->refresh();
-        // lgfx::delay(1000);
-
-        // mcld->clear();
-        // // mcld->refresh();
-        // lgfx::delay(1000);
-
-        // // mcld->clear();
-        // mcld->clearBuffer();
-        // mcld->refresh();
-        // lgfx::delay(1000);
-
-        // mcld->clearBuffer2();
-        // mcld->refresh();
-        // lgfx::delay(1000);
-
-        // mlcd.clearBuffer();
-        // int y = 0;
-        // for (int x = 0; x < HAL_SCREEN_WIDTH; x++) {
-        //     mlcd.drawPixel(x, y, 1);
-        //     y++;
-        // }
-        // mlcd.refreshScreen();
-        // lgfx::delay(1000);
-
-        // mlcd.clearBuffer();
-        // mlcd.refreshScreen();
-        // lgfx::delay(1000);
-
         mlcd.fillBufferBlack();
         int y = 0;
         for (int x = 0; x < HAL_SCREEN_WIDTH; x++) {
@@ -152,6 +131,24 @@ void HalEsp32::_display_init()
             y++;
         }
         mlcd.refreshScreen();
+        lgfx::delay(1000);
+
+        // mclog::info("canvas shit");
+        // canvas.fillScreen(TFT_WHITE);
+        // canvas.pushSprite(0, 0);
+        // lgfx::delay(100);
+
+        // mclog::info("device shit {} {}", lgfx_phoebe.width(), lgfx_phoebe.height());
+        // lgfx_phoebe.fillScreen(TFT_WHITE);
+        // lgfx::delay(1000);
+
+        mclog::info("canvas shit");
+        canvas.fillScreen(TFT_WHITE);
+        canvas.fillRect(10, 30, 66, 99, TFT_BLACK);
+        canvas.setTextColor(TFT_BLACK);
+        canvas.setCursor(0, 0);
+        canvas.print("asdasdasd\n66666\n???&&*&^%\nddd");
+        canvas.pushSprite(0, 0);
         lgfx::delay(1000);
     }
 }
