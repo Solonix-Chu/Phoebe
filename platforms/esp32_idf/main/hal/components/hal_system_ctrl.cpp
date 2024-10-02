@@ -9,9 +9,12 @@
  *
  */
 #include "../hal_esp32.h"
+#include "freertos/projdefs.h"
 #include <mooncake_log.h>
 #include <memory>
-#include <M5GFX.h>
+#include <esp_timer.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 using namespace mooncake;
 
@@ -19,23 +22,23 @@ using namespace mooncake;
  * @brief 派生组件
  *
  */
-class SystemControlDesktop : public hal_components::SystemControlBase {
+class SystemControlEsp32 : public hal_components::SystemControlBase {
 public:
     std::uint32_t millis() override
     {
-        return lgfx::millis();
+        return esp_timer_get_time() / 1000;
     }
 
     void delay(std::uint32_t ms) override
     {
-        lgfx::delay(ms);
+        vTaskDelay(pdMS_TO_TICKS(ms));
     }
 };
 
-void HalEsp32::_system_ctrl_init()
+void HalEsp32::system_ctrl_init()
 {
     mclog::info("system ctrl init");
 
     // 创建组件实例
-    _components.system_control = std::make_unique<SystemControlDesktop>();
+    _components.system_control = std::make_unique<SystemControlEsp32>();
 }

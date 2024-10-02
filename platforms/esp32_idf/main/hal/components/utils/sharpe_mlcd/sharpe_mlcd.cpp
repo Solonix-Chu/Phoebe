@@ -44,13 +44,13 @@ bool SharpeMlcd::init()
     SPI.setFrequency(_config.spi_clk_freq);
     SPI.setBitOrder(SPI_LSBFIRST);
     SPI.begin(_config.pin_sclk, -1, _config.pin_si, -1);
-    _spi_settings = std::make_unique<SPISettings>(_config.spi_clk_freq, SPI_LSBFIRST, SPI_MODE0);
+    _spi_settings = new SPISettings(_config.spi_clk_freq, SPI_LSBFIRST, SPI_MODE0);
 
     // Set the vcom bit to a defined state
     _sharpmem_vcom = SHARPMEM_BIT_VCOM;
 
     // 显存
-    _sharpmem_buffer = std::make_unique<uint8_t>((_config.screen_width * _config.screen_height) / 8);
+    _sharpmem_buffer = new uint8_t[(_config.screen_width * _config.screen_height) / 8];
 
     // 片选脚
     gpio_reset_pin((gpio_num_t)_config.pin_scs);
@@ -104,7 +104,7 @@ void SharpeMlcd::refreshScreen()
         line[0] = currentline;
 
         // copy over this line
-        memcpy(line + 1, _sharpmem_buffer.get() + i, bytes_per_line);
+        memcpy(line + 1, _sharpmem_buffer + i, bytes_per_line);
 
         // Send end of line
         line[bytes_per_line + 1] = 0x00;
@@ -122,12 +122,12 @@ void SharpeMlcd::refreshScreen()
 
 void SharpeMlcd::clearBuffer()
 {
-    memset(_sharpmem_buffer.get(), 0xff, (_config.screen_width * _config.screen_height) / 8);
+    memset(_sharpmem_buffer, 0xff, (_config.screen_width * _config.screen_height) / 8);
 }
 
 void SharpeMlcd::fillBufferBlack()
 {
-    memset(_sharpmem_buffer.get(), 0x00, (_config.screen_width * _config.screen_height) / 8);
+    memset(_sharpmem_buffer, 0x00, (_config.screen_width * _config.screen_height) / 8);
 }
 
 void SharpeMlcd::drawPixel(int16_t x, int16_t y, uint16_t color)
@@ -135,6 +135,15 @@ void SharpeMlcd::drawPixel(int16_t x, int16_t y, uint16_t color)
     if ((x < 0) || (x >= _config.screen_width) || (y < 0) || (y >= _config.screen_height))
         return;
     drawPixelPreclipped(x, y, color);
+}
+
+uint_fast8_t SharpeMlcd::rgb565_to_grayscale(uint_fast16_t rgb565)
+{
+    // 提取 G 组件
+    uint_fast8_t g = (rgb565 >> 5) & 0x3F; // G: 6 bits
+
+    // 将 G 扩展到 8 位
+    return (g * 255) / 63; // 转换为 8 位灰度值
 }
 
 void SharpeMlcd::drawPixelPreclipped(uint_fast16_t x, uint_fast16_t y, uint_fast16_t color)
@@ -154,10 +163,16 @@ void SharpeMlcd::drawPixelPreclipped(uint_fast16_t x, uint_fast16_t y, uint_fast
             break;
     }
 
-    if (color) {
-        _sharpmem_buffer.get()[(y * _config.screen_width + x) / 8] |= pgm_read_byte(&set[x & 7]);
+    // if (color) {
+    //     _sharpmem_buffer[(y * _config.screen_width + x) / 8] |= pgm_read_byte(&set[x & 7]);
+    // } else {
+    //     _sharpmem_buffer[(y * _config.screen_width + x) / 8] &= pgm_read_byte(&clr[x & 7]);
+    // }
+
+    if (rgb565_to_grayscale(color) > 200) {
+        _sharpmem_buffer[(y * _config.screen_width + x) / 8] |= pgm_read_byte(&set[x & 7]);
     } else {
-        _sharpmem_buffer.get()[(y * _config.screen_width + x) / 8] &= pgm_read_byte(&clr[x & 7]);
+        _sharpmem_buffer[(y * _config.screen_width + x) / 8] &= pgm_read_byte(&clr[x & 7]);
     }
 }
 

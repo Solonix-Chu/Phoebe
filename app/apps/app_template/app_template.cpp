@@ -10,14 +10,19 @@
  */
 #include "app_template.h"
 #include "hal/hal.h"
+#include <benchmark/lv_demo_benchmark.h>
 #include <mooncake.h>
 #include <mooncake_log.h>
 #include <lvgl.h>
+#include <src/core/lv_obj_style.h>
 #include <src/core/lv_obj_style_gen.h>
 #include <src/display/lv_display.h>
 #include <src/misc/lv_color.h>
+#include <src/misc/lv_style_gen.h>
 #include <src/misc/lv_timer.h>
 #include <lv_demos.h>
+#include <src/themes/mono/lv_theme_mono.h>
+#include <stress/lv_demo_stress.h>
 #include <widgets/lv_demo_widgets.h>
 #include <widgets/lv_example_widgets.h>
 
@@ -41,14 +46,20 @@ void AppTemplate::onOpen()
 {
     mclog::tagInfo(getAppInfo().name, "on open");
 
-    // lv_demo_widgets();
-    lv_example_switch_1();
+    lv_theme_t* theme_mono = lv_theme_mono_init(lv_display_get_default(), false, &lv_font_montserrat_14);
+    lv_display_set_theme(lv_display_get_default(), theme_mono);
 
-    lv_obj_set_style_bg_color(lv_screen_active(), lv_color_white(), LV_STATE_DEFAULT);
+    // lv_demo_widgets();
+    lv_demo_stress();
+    // lv_demo_benchmark();
+
+    // lv_example_switch_1();
+    // lv_example_label_1();
 }
 
 void AppTemplate::onRunning()
 {
+    update_clock();
     lv_timer_handler();
 }
 
@@ -62,6 +73,8 @@ void AppTemplate::update_clock()
     if (GetHAL().SystemControl().millis() - _clock_time_count < 1000) {
         return;
     }
+
+    mclog::info("hi");
 
     _clock_time_count = GetHAL().SystemControl().millis();
 }

@@ -11,7 +11,6 @@
 #pragma once
 #include <Arduino.h>
 #include <SPI.h>
-#include <memory>
 
 class SharpeMlcd {
 public:
@@ -46,9 +45,11 @@ public:
 
 private:
     Config_t _config;
-    std::unique_ptr<SPISettings> _spi_settings;
-    std::unique_ptr<uint8_t> _sharpmem_buffer;
+    // 下边d野用亲 unique 指针就会炸，唔7知点嗨解，傻嗨 idf
+    SPISettings* _spi_settings = nullptr;
+    uint8_t* _sharpmem_buffer = nullptr;
     uint8_t _sharpmem_vcom = 0;
 
     void toggle_vcom();
+    uint_fast8_t rgb565_to_grayscale(uint_fast16_t rgb565);
 };
