@@ -1,23 +1,36 @@
 /**
- * @file hal_lvgl.cpp
+ * @file hal_desktop.cpp
  * @author Forairaaaaa
  * @brief
  * @version 0.1
- * @date 2024-09-30
+ * @date 2024-10-10
  *
  * @copyright Copyright (c) 2024
  *
  */
-#include "../hal_desktop.h"
-#include "../hal_config.h"
+#include "hal_desktop.h"
+#include "hal_config.h"
+#include "components/system_ctrl_sdl/system_ctrl_sdl.h"
+#include <memory>
 #include <mooncake_log.h>
 #include <lvgl.h>
-#include <src/misc/lv_timer.h>
-// // https://github.com/lvgl/lv_port_pc_vscode/blob/master/main/src/main.c
 
 using namespace mooncake;
 
-void HalDesktop::lvgl_init()
+void HALDesktop::init()
+{
+    lvgl_init();
+
+    // 创建组件实例
+    _components.system_control = std::make_unique<SystemControlSDL>();
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Lvgl                                    */
+/* -------------------------------------------------------------------------- */
+// https://github.com/lvgl/lv_port_pc_vscode/blob/master/main/src/main.c
+
+void HALDesktop::lvgl_init()
 {
     mclog::info("lvgl init");
 

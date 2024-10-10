@@ -30,9 +30,9 @@ namespace HAL {
  * @brief 硬件抽象基类
  *
  */
-class HalBase {
+class HALBase {
 public:
-    virtual ~HalBase() = default;
+    virtual ~HALBase() = default;
 
     /* -------------------------------------------------------------------------- */
     /*                                Hardware APIs                               */
@@ -127,14 +127,14 @@ protected:
  *
  * @return HalBase&
  */
-HalBase& Get();
+HALBase& Get();
 
 /**
  * @brief 注入 HAL，期间会调用 init() 以初始化 HAL
  *
  * @param hal
  */
-void Inject(std::unique_ptr<HalBase> hal);
+void Inject(std::unique_ptr<HALBase> hal);
 
 /**
  * @brief 销毁当前 HAL 实例
@@ -149,7 +149,7 @@ void Destroy();
  *
  * @return HAL::HalBase&
  */
-inline HAL::HalBase& GetHAL()
+inline HAL::HALBase& GetHAL()
 {
     return HAL::Get();
 }

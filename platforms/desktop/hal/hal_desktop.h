@@ -11,22 +11,15 @@
 #pragma once
 #include <hal/hal.h>
 
-class HalDesktop : public HAL::HalBase {
+class HALDesktop : public HAL::HALBase {
 public:
     std::string type() override
     {
         return "Desktop";
     }
 
-    void init() override
-    {
-        system_ctrl_init();
-        display_init();
-        lvgl_init();
-    }
+    void init() override;
 
 private:
-    void display_init();
-    void system_ctrl_init();
     void lvgl_init();
 };
