@@ -10,12 +10,13 @@
  */
 #include "hal_esp32.h"
 #include "hal_config.h"
-#include <mooncake_log.h>
-#include <Arduino.h>
-#include <lvgl.h>
-#include <esp_timer.h>
 #include "components/utils/sharpe_mlcd/sharpe_mlcd.h"
 #include "components/system_ctrl/system_ctrl.h"
+#include <mooncake_log.h>
+#include <Arduino.h>
+#include <driver/i2c.h>
+#include <lvgl.h>
+#include <esp_timer.h>
 
 using namespace mooncake;
 
@@ -27,12 +28,62 @@ void HALESP32::init()
     _components.system_control = std::make_unique<SystemControlArduino>();
     _components.system_control->init();
 
+    i2c_init();
     display_init();
     lvgl_init();
 
     /* -------------------------------------------------------------------------- */
     /*                                    Test                                    */
     /* -------------------------------------------------------------------------- */
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                     I2C                                    */
+/* -------------------------------------------------------------------------- */
+void HALESP32::i2c_init()
+{
+    mclog::info("i2c init");
+
+    // 初始化
+    i2c_config_t conf;
+    conf.mode = I2C_MODE_MASTER;
+    conf.sda_io_num = HAL_PIN_IMU_I2C_BUS_SDA;
+    conf.scl_io_num = HAL_PIN_IMU_I2C_BUS_SCL;
+    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.master.clk_speed = 400000;
+    conf.clk_flags = I2C_SCLK_SRC_FLAG_FOR_NOMAL;
+    i2c_param_config(HAL_I2C_BUS_PORT_NUM, &conf);
+
+    if (i2c_driver_install(HAL_I2C_BUS_PORT_NUM, conf.mode, 0, 0, 0) != ESP_OK) {
+        mclog::error("i2c driver install failed");
+    }
+
+    // 扫描
+    uint8_t device_num = 0;
+    uint8_t WRITE_BIT = I2C_MASTER_WRITE;
+    uint8_t ACK_CHECK_EN = 0x1;
+    uint8_t address;
+    mclog::info("scan bus..");
+    for (int i = 0; i < 128; i += 16) {
+        for (int j = 0; j < 16; j++) {
+            fflush(stdout);
+            address = i + j;
+            i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+            i2c_master_start(cmd);
+            i2c_master_write_byte(cmd, (address << 1) | WRITE_BIT, ACK_CHECK_EN);
+            i2c_master_stop(cmd);
+            esp_err_t ret = i2c_master_cmd_begin(HAL_I2C_BUS_PORT_NUM, cmd, portMAX_DELAY);
+            i2c_cmd_link_delete(cmd);
+            if (ret == ESP_OK) {
+                if (address == 0)
+                    continue;
+                mclog::info(">> {:#X}", address);
+                device_num++;
+            }
+        }
+    }
+    mclog::info("found {} device", device_num);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -21,6 +21,7 @@ public:
     void init() override;
 
 private:
+    void i2c_init();
     void display_init();
     void lvgl_init();
 };
