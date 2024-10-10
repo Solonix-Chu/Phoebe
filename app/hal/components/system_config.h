@@ -9,6 +9,7 @@
  *
  */
 #pragma once
+#include <string>
 
 namespace hal_components {
 
@@ -20,8 +21,9 @@ class SystemConfigBase {
 public:
     struct Config_t {
         // 想要保存的配置
-        // std::string wifiSsid = "";
-        // std::string wifiPassword = "";
+        bool mute = false;
+        bool hapticFeedback = true;
+        std::string watchFace;
     };
 
     ~SystemConfigBase() = default;
@@ -78,6 +80,12 @@ public:
     {
         return false;
     }
+
+    /**
+     * @brief Log 出来看看
+     *
+     */
+    virtual void logConfig() {}
 
 protected:
     Config_t _config;

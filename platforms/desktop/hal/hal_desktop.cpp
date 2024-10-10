@@ -11,6 +11,7 @@
 #include "hal_desktop.h"
 #include "hal_config.h"
 #include "components/system_ctrl_sdl/system_ctrl_sdl.h"
+#include "components/system_config_std/system_config_std.h"
 #include <memory>
 #include <mooncake_log.h>
 #include <lvgl.h>
@@ -23,6 +24,13 @@ void HALDesktop::init()
 
     // 创建组件实例
     _components.system_control = std::make_unique<SystemControlSDL>();
+    _components.system_config = std::make_unique<SystemConfigStd>();
+
+    /* -------------------------------------------------------------------------- */
+    /*                                    Test                                    */
+    /* -------------------------------------------------------------------------- */
+    GetHAL().SystemConfig().loadConfig();
+    GetHAL().SystemConfig().logConfig();
 }
 
 /* -------------------------------------------------------------------------- */

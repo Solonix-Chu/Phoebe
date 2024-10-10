@@ -11,6 +11,9 @@ set(LV_CONF_INCLUDE_SIMPLE OFF)
 set(LV_CONF_PATH ../../lv_conf.h)
 add_subdirectory(dependencies/lvgl)
 
+# Arduinojson
+add_subdirectory(dependencies/ArduinoJson)
+
 # SDL
 find_package(SDL2 REQUIRED SDL2)
 include_directories(PUBLIC ${SDL2_INCLUDE_DIRS})
@@ -66,7 +69,16 @@ file(GLOB_RECURSE APP_DESKTOP_BUILD_SRCS
 )
 add_executable(app_desktop_build ${APP_DESKTOP_BUILD_SRCS} ${APP_LAYER_SRCS})
 target_include_directories(app_desktop_build PUBLIC ${APP_LAYER_INCS})
-target_link_libraries(app_desktop_build PUBLIC mooncake mooncake_log mooncake_event lvgl lvgl_examples lvgl_demos ${SDL2_LIBRARIES})
+target_link_libraries(app_desktop_build PUBLIC 
+    mooncake 
+    mooncake_log 
+    mooncake_event 
+    lvgl 
+    lvgl_examples 
+    lvgl_demos 
+    ${SDL2_LIBRARIES} 
+    ArduinoJson
+)
 
 # 设置构建路径
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build/desktop)

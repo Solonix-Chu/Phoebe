@@ -18,5 +18,10 @@
         "url": "https://github.com/lvgl/lvgl.git",
         "path": "dependencies/lvgl",
         "branch": "v9.2.0"
+    },
+    {
+        "url": "https://github.com/bblanchon/ArduinoJson.git",
+        "path": "dependencies/ArduinoJson",
+        "branch": "v7.2.0"
     }
 ]
