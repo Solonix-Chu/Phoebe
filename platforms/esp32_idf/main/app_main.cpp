@@ -20,7 +20,7 @@ extern "C" void app_main(void)
 
     callback.onHalInjection = []() {
         // 注入桌面平台的硬件抽象
-        HAL::Inject(std::make_unique<HalEsp32>());
+        HAL::Inject(std::make_unique<HALESP32>());
     };
 
     // 应用层启动

@@ -66,7 +66,7 @@ void HAL::Destroy()
 hal_components::SystemControlBase& HAL::HALBase::SystemControl()
 {
     if (!_components.system_control) {
-        mclog::tagWarn(_tag, "getting null system config component");
+        mclog::tagWarn(_tag, "getting null system control component");
         _components.system_control = std::make_unique<hal_components::SystemControlBase>();
     }
     return *_components.system_control.get();

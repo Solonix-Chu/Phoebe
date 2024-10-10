@@ -11,22 +11,16 @@
 #pragma once
 #include <hal/hal.h>
 
-class HalEsp32 : public HAL::HalBase {
+class HALESP32 : public HAL::HALBase {
 public:
     std::string type() override
     {
         return "ESP32";
     }
 
-    void init() override
-    {
-        system_ctrl_init();
-        display_init();
-        lvgl_init();
-    }
+    void init() override;
 
 private:
     void display_init();
-    void system_ctrl_init();
     void lvgl_init();
 };
