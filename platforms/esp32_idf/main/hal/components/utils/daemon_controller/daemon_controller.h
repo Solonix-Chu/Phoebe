@@ -11,7 +11,6 @@
 #pragma once
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include <thread>
 #include <mutex>
 
 /**
@@ -23,7 +22,7 @@ protected:
     struct Data_t {
         std::mutex mutex;
         bool time_2_go = false;
-        bool is_gone = false;
+        bool is_daemon_exist = false;
     };
     Data_t _data;
 
@@ -54,25 +53,32 @@ public:
         return ret;
     }
 
-    void DaemonGone()
+    void CreateDaemon()
     {
-        Borrow().is_gone = true;
+        Borrow().is_daemon_exist = true;
+        _data.time_2_go = false;
         Return();
     }
 
-    bool DaemonIsKilled()
+    void DestoryDaemon()
     {
-        bool ret = Borrow().is_gone;
+        Borrow().is_daemon_exist = false;
+        Return();
+    }
+
+    bool IsDaemonExist()
+    {
+        bool ret = Borrow().is_daemon_exist;
         Return();
         return ret;
     }
 
-    void SendKillSignalAndWait(const TickType_t xTicksToDelay = pdMS_TO_TICKS(100))
+    void SendKillSignalAndWait(const TickType_t xTicksToDelay = pdMS_TO_TICKS(20))
     {
         SendKillSignal();
         while (1) {
             vTaskDelay(xTicksToDelay);
-            if (DaemonIsKilled())
+            if (!IsDaemonExist())
                 break;
         }
     }

@@ -13,7 +13,6 @@
 
 class BuzzerArduino : public hal_components::BuzzerBase {
 public:
-    void init() override;
     void beep(float frequency, std::uint32_t duration) override;
     void stop() override;
     void playRtttlMusic(const std::string& rtttlMusic) override;

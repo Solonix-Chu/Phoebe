@@ -13,6 +13,7 @@
 #include "components/utils/sharpe_mlcd/sharpe_mlcd.h"
 #include "components/system_ctrl/system_ctrl.h"
 #include "components/imu/imu.h"
+#include "components/buzzer/buzzer.h"
 #include <mooncake_log.h>
 #include <Arduino.h>
 #include <driver/i2c.h>
@@ -36,6 +37,9 @@ void HalEsp32::init()
     // IMU
     _components.imu = std::make_unique<ImuBmi270>();
     _components.imu->init();
+
+    // 蜂鸣器
+    _components.buzzer = std::make_unique<BuzzerArduino>();
 
     // 显示屏
     display_init();
