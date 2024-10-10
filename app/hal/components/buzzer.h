@@ -22,6 +22,8 @@ class BuzzerBase {
 public:
     ~BuzzerBase() = default;
 
+    virtual void init() {}
+
     /**
      * @brief 开始哔哔
      *
@@ -29,17 +31,6 @@ public:
      * @param duration
      */
     virtual void beep(float frequency, std::uint32_t duration = 0xFFFFFFFF) {}
-
-    /**
-     * @brief 是否在叫
-     *
-     * @return true
-     * @return false
-     */
-    virtual bool isBeeping()
-    {
-        return false;
-    }
 
     /**
      * @brief 别叫了
@@ -57,6 +48,17 @@ public:
     // https://en.wikipedia.org/wiki/Ring_Tone_Text_Transfer_Language
     // https://adamonsoon.github.io/rtttl-play/
     // https://picaxe.com/rtttl-ringtones-for-tune-command/
+
+    /**
+     * @brief 是否在播放
+     *
+     * @return true
+     * @return false
+     */
+    virtual bool isPlaying()
+    {
+        return false;
+    }
 };
 
 } // namespace hal_components
