@@ -36,6 +36,8 @@ public:
 
     ~ImuBase() = default;
 
+    virtual void init() {}
+
     /**
      * @brief 更新 IMU 数据
      *

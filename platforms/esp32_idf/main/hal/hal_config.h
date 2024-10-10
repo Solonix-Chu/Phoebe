@@ -18,13 +18,14 @@
 #define HAL_PIN_MLCD_SCS  7
 
 // I2C
-#define HAL_I2C_BUS_PORT_NUM I2C_NUM_0
+#define HAL_I2C_BUS_PORT_NUM    I2C_NUM_0
 #define HAL_PIN_IMU_I2C_BUS_SDA 21
 #define HAL_PIN_IMU_I2C_BUS_SCL 22
 
 // IMU
-#define HAL_PIN_IMU_INT1 3
-#define HAL_PIN_IMU_INT2 2
+#define HAL_IMU_DEVICE_ADDR 0x68
+#define HAL_PIN_IMU_INT1    3
+#define HAL_PIN_IMU_INT2    2
 
 // 电源
 #define HAL_PIN_PWR_HOLD      4

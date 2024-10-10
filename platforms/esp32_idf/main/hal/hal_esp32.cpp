@@ -12,6 +12,7 @@
 #include "hal_config.h"
 #include "components/utils/sharpe_mlcd/sharpe_mlcd.h"
 #include "components/system_ctrl/system_ctrl.h"
+#include "components/imu/imu.h"
 #include <mooncake_log.h>
 #include <Arduino.h>
 #include <driver/i2c.h>
@@ -20,21 +21,29 @@
 
 using namespace mooncake;
 
+// 组件实例创建和杂项初始化
 void HalEsp32::init()
 {
     initArduino();
 
-    // 创建系统控制组件
+    // 系统控制
     _components.system_control = std::make_unique<SystemControlArduino>();
     _components.system_control->init();
 
+    // I2C
     i2c_init();
+
+    // IMU
+    _components.imu = std::make_unique<ImuBmi270>();
+    _components.imu->init();
+
+    // 显示屏
     display_init();
+
+    // Lvgl
     lvgl_init();
 
-    /* -------------------------------------------------------------------------- */
-    /*                                    Test                                    */
-    /* -------------------------------------------------------------------------- */
+    hal_test();
 }
 
 /* -------------------------------------------------------------------------- */

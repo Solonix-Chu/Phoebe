@@ -24,4 +24,7 @@ private:
     void i2c_init();
     void display_init();
     void lvgl_init();
+
+    void hal_test();
+    void imu_test();
 };
