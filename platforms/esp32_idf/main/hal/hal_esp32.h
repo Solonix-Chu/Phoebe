@@ -11,7 +11,7 @@
 #pragma once
 #include <hal/hal.h>
 
-class HALESP32 : public HAL::HALBase {
+class HalEsp32 : public hal::HalBase {
 public:
     std::string type() override
     {

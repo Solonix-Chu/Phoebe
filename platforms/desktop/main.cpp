@@ -16,19 +16,19 @@
 int main()
 {
     // 应用层初始化回调
-    APP::InitCallback_t callback;
+    app::InitCallback_t callback;
 
     callback.onHalInjection = []() {
         // 注入桌面平台的硬件抽象
-        HAL::Inject(std::make_unique<HALDesktop>());
+        hal::Inject(std::make_unique<HalDesktop>());
     };
 
     // 应用层启动
-    APP::Init(callback);
-    while (!APP::IsDone()) {
-        APP::Update();
+    app::Init(callback);
+    while (!app::IsDone()) {
+        app::Update();
     }
-    APP::Destroy();
+    app::Destroy();
 
     return 0;
 }

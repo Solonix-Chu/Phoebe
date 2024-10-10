@@ -20,7 +20,7 @@
 
 using namespace mooncake;
 
-void HALESP32::init()
+void HalEsp32::init()
 {
     initArduino();
 
@@ -40,7 +40,7 @@ void HALESP32::init()
 /* -------------------------------------------------------------------------- */
 /*                                     I2C                                    */
 /* -------------------------------------------------------------------------- */
-void HALESP32::i2c_init()
+void HalEsp32::i2c_init()
 {
     mclog::info("i2c init");
 
@@ -92,7 +92,7 @@ void HALESP32::i2c_init()
 
 static SharpeMlcd* _sharp_mlcd = nullptr;
 
-void HALESP32::display_init()
+void HalEsp32::display_init()
 {
     mclog::info("display init");
 
@@ -132,7 +132,7 @@ static void lvgl_tick_timer(void* arg)
     lv_tick_inc(10);
 }
 
-void HALESP32::lvgl_init()
+void HalEsp32::lvgl_init()
 {
     mclog::info("lvgl init");
 

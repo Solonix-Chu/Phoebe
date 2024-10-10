@@ -20,19 +20,19 @@ using namespace mooncake;
 /* -------------------------------------------------------------------------- */
 // 提供一个可注入的全局单例
 
-static std::unique_ptr<HAL::HALBase> _hal_instance;
+static std::unique_ptr<hal::HalBase> _hal_instance;
 static const std::string _tag = "HAL";
 
-HAL::HALBase& HAL::Get()
+hal::HalBase& hal::Get()
 {
     if (!_hal_instance) {
         mclog::tagWarn(_tag, "getting null hal, auto inject base");
-        _hal_instance = std::make_unique<HALBase>();
+        _hal_instance = std::make_unique<HalBase>();
     }
     return *_hal_instance.get();
 }
 
-void HAL::Inject(std::unique_ptr<HALBase> hal)
+void hal::Inject(std::unique_ptr<HalBase> hal)
 {
     if (!hal) {
         mclog::tagError(_tag, "pass null hal");
@@ -52,7 +52,7 @@ void HAL::Inject(std::unique_ptr<HALBase> hal)
     mclog::tagInfo(_tag, "hal injected");
 }
 
-void HAL::Destroy()
+void hal::Destroy()
 {
     _hal_instance.reset();
 }
@@ -63,7 +63,7 @@ void HAL::Destroy()
 // 组件获取接口，如果当前没有实例，则懒加载一个基类，这样就算某个平台没有适配某个组件，也不会崩溃
 
 #if HAL_ENABLE_COMPONENT_SYSTEM_CONTROL
-hal_components::SystemControlBase& HAL::HALBase::SystemControl()
+hal_components::SystemControlBase& hal::HalBase::SystemControl()
 {
     if (!_components.system_control) {
         mclog::tagWarn(_tag, "getting null system control component");
@@ -74,7 +74,7 @@ hal_components::SystemControlBase& HAL::HALBase::SystemControl()
 #endif
 
 #if HAL_ENABLE_COMPONENT_IMU
-hal_components::ImuBase& HAL::HALBase::Imu()
+hal_components::ImuBase& hal::HalBase::Imu()
 {
     if (!_components.imu) {
         mclog::tagWarn(_tag, "getting null imu component");
@@ -85,7 +85,7 @@ hal_components::ImuBase& HAL::HALBase::Imu()
 #endif
 
 #if HAL_ENABLE_COMPONENT_SYSTEM_CONFIG
-hal_components::SystemConfigBase& HAL::HALBase::SystemConfig()
+hal_components::SystemConfigBase& hal::HalBase::SystemConfig()
 {
     if (!_components.system_config) {
         mclog::tagWarn(_tag, "getting null system config component");
@@ -96,7 +96,7 @@ hal_components::SystemConfigBase& HAL::HALBase::SystemConfig()
 #endif
 
 #if HAL_ENABLE_COMPONENT_BUZZER
-hal_components::BuzzerBase& HAL::HALBase::Buzzer()
+hal_components::BuzzerBase& hal::HalBase::Buzzer()
 {
     if (!_components.buzzer) {
         mclog::tagWarn(_tag, "getting null buzzer component");
@@ -107,7 +107,7 @@ hal_components::BuzzerBase& HAL::HALBase::Buzzer()
 #endif
 
 #if HAL_ENABLE_COMPONENT_TOUCHPAD
-hal_components::TouchpadBase& HAL::HalBase::Touchpad()
+hal_components::TouchpadBase& hal::HalBase::Touchpad()
 {
     if (!_components.touchpad) {
         mclog::tagWarn(_tag, "getting null touchpad component");
@@ -118,7 +118,7 @@ hal_components::TouchpadBase& HAL::HalBase::Touchpad()
 #endif
 
 #if HAL_ENABLE_COMPONENT_ENCODER
-hal_components::EncoderBase& HAL::HalBase::Encoder()
+hal_components::EncoderBase& hal::HalBase::Encoder()
 {
     if (!_components.encoder) {
         mclog::tagWarn(_tag, "getting null encoder component");
@@ -128,7 +128,7 @@ hal_components::EncoderBase& HAL::HalBase::Encoder()
 }
 #endif
 
-hal_components::DisplayBase& HAL::HALBase::Display()
+hal_components::DisplayBase& hal::HalBase::Display()
 {
     if (!_components.display) {
         mclog::tagWarn(_tag, "getting null display component");

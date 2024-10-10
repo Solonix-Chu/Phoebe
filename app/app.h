@@ -16,7 +16,7 @@
  * @brief 应用层
  *
  */
-namespace APP {
+namespace app {
 
 // 依赖注入回调
 struct InitCallback_t {

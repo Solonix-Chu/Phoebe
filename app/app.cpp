@@ -19,7 +19,7 @@ using namespace mooncake;
 
 static const std::string _tag = "APP";
 
-void APP::Init(InitCallback_t callback)
+void app::Init(InitCallback_t callback)
 {
     mclog::tagInfo(_tag, "init");
 
@@ -48,7 +48,7 @@ void APP::Init(InitCallback_t callback)
     on_install_apps();
 }
 
-void APP::Update()
+void app::Update()
 {
     // 更新 Mooncake
     GetMooncake().update();
@@ -59,13 +59,13 @@ void APP::Update()
 #endif
 }
 
-bool APP::IsDone()
+bool app::IsDone()
 {
     return false;
 }
 
-void APP::Destroy()
+void app::Destroy()
 {
     DestroyMooncake();
-    HAL::Destroy();
+    hal::Destroy();
 }

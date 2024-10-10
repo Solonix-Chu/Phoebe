@@ -16,7 +16,7 @@
  * @brief 资产层，方便 App 的静态资源访问
  *
  */
-namespace Asset {
+namespace asset_pool {
 
 /**
  * @brief 资产池定义，静态资源都可以放在这里
@@ -81,7 +81,7 @@ void Inject(AssetPool_t* assetPool);
 
 } // namespace Asset
 
-inline Asset::AssetPool_t& GetAsset()
+inline asset_pool::AssetPool_t& GetAsset()
 {
-    return Asset::Get();
+    return asset_pool::Get();
 }

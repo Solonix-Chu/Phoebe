@@ -18,7 +18,7 @@
 
 using namespace mooncake;
 
-void HALDesktop::init()
+void HalDesktop::init()
 {
     lvgl_init();
 
@@ -38,7 +38,7 @@ void HALDesktop::init()
 /* -------------------------------------------------------------------------- */
 // https://github.com/lvgl/lv_port_pc_vscode/blob/master/main/src/main.c
 
-void HALDesktop::lvgl_init()
+void HalDesktop::lvgl_init()
 {
     mclog::info("lvgl init");
 
