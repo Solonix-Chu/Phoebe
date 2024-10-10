@@ -42,3 +42,6 @@
 
 // 蜂鸣器
 #define HAL_PIN_BUZZ_CTRL 20
+
+// 看门狗超时
+#define HAL_WATCH_DOG_TIMEOUT_S 6

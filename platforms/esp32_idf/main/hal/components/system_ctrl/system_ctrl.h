@@ -1,5 +1,5 @@
 /**
- * @file system_ctrl_sdl.h
+ * @file system_ctrl.h
  * @author Forairaaaaa
  * @brief
  * @version 0.1
@@ -11,9 +11,13 @@
 #pragma once
 #include <hal/hal.h>
 
-// SDL 实现
-class SystemControlSDL : public hal_components::SystemControlBase {
+// Arduino 实现
+class SystemControlArduino : public hal_components::SystemControlBase {
 public:
+    void init() override;
     std::uint32_t millis() override;
     void delay(std::uint32_t ms) override;
+    void reboot() override;
+    void powerOff() override;
+    void feedTheDog() override;
 };

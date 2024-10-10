@@ -15,6 +15,7 @@
 #include <lvgl.h>
 #include <esp_timer.h>
 #include "components/utils/sharpe_mlcd/sharpe_mlcd.h"
+#include "components/system_ctrl/system_ctrl.h"
 
 using namespace mooncake;
 
@@ -22,14 +23,16 @@ void HALESP32::init()
 {
     initArduino();
 
-    pinMode(HAL_PIN_PWR_HOLD, OUTPUT);
-    digitalWrite(HAL_PIN_PWR_HOLD, 1);
-    delay(100);
+    // 创建系统控制组件
+    _components.system_control = std::make_unique<SystemControlArduino>();
+    _components.system_control->init();
 
     display_init();
     lvgl_init();
 
-    // 创建组件实例
+    /* -------------------------------------------------------------------------- */
+    /*                                    Test                                    */
+    /* -------------------------------------------------------------------------- */
 }
 
 /* -------------------------------------------------------------------------- */

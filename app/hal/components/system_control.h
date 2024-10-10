@@ -22,6 +22,12 @@ public:
     ~SystemControlBase() = default;
 
     /**
+     * @brief 初始化
+     *
+     */
+    virtual void init() {}
+
+    /**
      * @brief 睡眠当前线程
      *
      * @param ms
