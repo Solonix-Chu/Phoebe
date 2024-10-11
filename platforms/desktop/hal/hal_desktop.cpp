@@ -27,8 +27,8 @@ void HalDesktop::init()
     _components.system_config = std::make_unique<SystemConfigStd>();
 
     // 拉取一下保存的配置
-    GetHAL().SystemConfig().loadConfig();
-    GetHAL().SystemConfig().logConfig();
+    HAL::SysCfg().loadConfig();
+    HAL::SysCfg().logConfig();
 }
 
 /* -------------------------------------------------------------------------- */

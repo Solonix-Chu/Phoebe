@@ -16,7 +16,7 @@
  * @brief 资产层，方便 App 的静态资源访问
  *
  */
-namespace asset_pool {
+namespace AssetPool {
 
 /**
  * @brief 资产池定义，静态资源都可以放在这里
@@ -79,9 +79,4 @@ void Inject(AssetPool_t* assetPool);
 // 到这里 ESP32 就相当于有了一个 AssetPool_t 实例了
 // 注入到资产层以后，Get()->image_bye 就可以访问这个图片的数据了
 
-} // namespace Asset
-
-inline asset_pool::AssetPool_t& GetAsset()
-{
-    return asset_pool::Get();
-}
+} // namespace AssetPool

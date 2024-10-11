@@ -16,17 +16,17 @@
 extern "C" void app_main(void)
 {
     // 应用层初始化回调
-    app::InitCallback_t callback;
+    APP::InitCallback_t callback;
 
     callback.onHalInjection = []() {
         // 注入桌面平台的硬件抽象
-        hal::Inject(std::make_unique<HalEsp32>());
+        HAL::Inject(std::make_unique<HalEsp32>());
     };
 
     // 应用层启动
-    app::Init(callback);
-    while (!app::IsDone()) {
-        app::Update();
+    APP::Init(callback);
+    while (!APP::IsDone()) {
+        APP::Update();
     }
-    app::Destroy();
+    APP::Destroy();
 }

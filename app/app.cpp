@@ -19,7 +19,7 @@ using namespace mooncake;
 
 static const std::string _tag = "APP";
 
-void app::Init(InitCallback_t callback)
+void APP::Init(InitCallback_t callback)
 {
     mclog::tagInfo(_tag, "init");
 
@@ -48,24 +48,24 @@ void app::Init(InitCallback_t callback)
     on_install_apps();
 }
 
-void app::Update()
+void APP::Update()
 {
     // 更新 Mooncake
     GetMooncake().update();
 
     // 重置看门狗，建议实现这个看门狗，避免某个生命周期长时间阻塞
 #if HAL_ENABLE_COMPONENT_SYSTEM_CONTROL
-    GetHAL().SystemControl().feedTheDog();
+    HAL::SysCtrl().feedTheDog();
 #endif
 }
 
-bool app::IsDone()
+bool APP::IsDone()
 {
     return false;
 }
 
-void app::Destroy()
+void APP::Destroy()
 {
     DestroyMooncake();
-    hal::Destroy();
+    HAL::Destroy();
 }

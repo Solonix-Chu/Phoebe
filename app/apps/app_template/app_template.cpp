@@ -57,12 +57,15 @@ static uint8_t* canvas_buffer;
 // #define COLOR_HIGH lv_color_black()
 // #define COLOR_LOW  lv_color_white()
 
-const char* phrases[9] = {
-    "FUCK  AROUND FUCK OFF WHAT THE FUCK?   FUCK UP FUCK YOU", "WHAT THE FUCK?  FUCK YOU FUCK OFF FUCK UP FUCK AROUND",
-    "FUCK  YOU  FUCK OFF WHAT THE  FUCK?  FUCK AROUND FUCK UP", "FUCK OFF FUCK UP WHAT  THE FUCK?   FUCK  AROUND FUCK YOU",
-    "FUCK  UP FUCK  YOU FUCK  AROUND WHAT THE FUCK? FUCK OFF", "WHAT THE FUCK? FUCK AROUND   FUCK OFF FUCK  YOU FUCK UP",
-    "FUCK  OFF FUCK AROUND WHAT THE FUCK? FUCK YOU FUCK UP", "FUCK YOU   WHAT  THE FUCK? FUCK   OFF FUCK AROUND FUCK UP",
-    "FUCK  AROUND   WHAT  THE FUCK? FUCK UP   FUCK OFF FUCK YOU"};
+const char* phrases[9] = {"FUCK  AROUND FUCK OFF WHAT THE FUCK?   FUCK UP FUCK YOU",
+                          "WHAT THE FUCK?  FUCK YOU FUCK OFF FUCK UP FUCK AROUND",
+                          "FUCK  YOU  FUCK OFF WHAT THE  FUCK?  FUCK AROUND FUCK UP",
+                          "FUCK OFF FUCK UP WHAT  THE FUCK?   FUCK  AROUND FUCK YOU",
+                          "FUCK  UP FUCK  YOU FUCK  AROUND WHAT THE FUCK? FUCK OFF",
+                          "WHAT THE FUCK? FUCK AROUND   FUCK OFF FUCK  YOU FUCK UP",
+                          "FUCK  OFF FUCK AROUND WHAT THE FUCK? FUCK YOU FUCK UP",
+                          "FUCK YOU   WHAT  THE FUCK? FUCK   OFF FUCK AROUND FUCK UP",
+                          "FUCK  AROUND   WHAT  THE FUCK? FUCK UP   FUCK OFF FUCK YOU"};
 
 void AppTemplate::onOpen()
 {
@@ -110,7 +113,7 @@ void AppTemplate::onClose()
 
 void AppTemplate::update_clock()
 {
-    if (GetHAL().SystemControl().millis() - _clock_time_count < 1000) {
+    if (HAL::SysCtrl().millis() - _clock_time_count < 1000) {
         return;
     }
 
@@ -172,5 +175,5 @@ void AppTemplate::update_clock()
 
     lv_canvas_finish_layer(canvas, &layer);
 
-    _clock_time_count = GetHAL().SystemControl().millis();
+    _clock_time_count = HAL::SysCtrl().millis();
 }

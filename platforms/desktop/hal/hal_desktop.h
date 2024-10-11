@@ -11,7 +11,7 @@
 #pragma once
 #include <hal/hal.h>
 
-class HalDesktop : public hal::HalBase {
+class HalDesktop : public HAL::HalBase {
 public:
     std::string type() override
     {

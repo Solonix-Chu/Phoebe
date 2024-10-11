@@ -11,12 +11,9 @@
 #pragma once
 #include <memory>
 #include <string>
-#include "components/components_config.h"
 #include "components/system_control.h"
 #include "components/imu.h"
 #include "components/buzzer.h"
-#include "components/touchpad.h"
-#include "components/encoder.h"
 #include "components/system_config.h"
 #include "components/display.h"
 
@@ -24,7 +21,7 @@
  * @brief 硬件抽象层
  *
  */
-namespace hal {
+namespace HAL {
 
 /**
  * @brief 硬件抽象基类
@@ -62,59 +59,23 @@ public:
     /* -------------------------------------------------------------------------- */
     /*                              Components Getter                             */
     /* -------------------------------------------------------------------------- */
-    // 组件获取接口
-
-#if HAL_ENABLE_COMPONENT_SYSTEM_CONTROL
-    hal_components::SystemControlBase& SystemControl();
-#endif
-
-#if HAL_ENABLE_COMPONENT_IMU
+    // 组件实例接口
+    hal_components::SystemControlBase& SysCtrl();
     hal_components::ImuBase& Imu();
-#endif
-
-#if HAL_ENABLE_COMPONENT_BUZZER
     hal_components::BuzzerBase& Buzzer();
-#endif
-
-#if HAL_ENABLE_COMPONENT_TOUCHPAD
-    hal_components::TouchpadBase& Touchpad();
-#endif
-
-#if HAL_ENABLE_COMPONENT_ENCODER
-    hal_components::EncoderBase& Encoder();
-#endif
-
-#if HAL_ENABLE_COMPONENT_SYSTEM_CONFIG
-    hal_components::SystemConfigBase& SystemConfig();
-#endif
-
+    hal_components::SystemConfigBase& SysCfg();
     hal_components::DisplayBase& Display();
 
 protected:
     // 组件实例管理
-    struct Data_t {
-#if HAL_ENABLE_COMPONENT_SYSTEM_CONTROL
+    struct Components_t {
         std::unique_ptr<hal_components::SystemControlBase> system_control;
-#endif
-#if HAL_ENABLE_COMPONENT_IMU
         std::unique_ptr<hal_components::ImuBase> imu;
-#endif
-#if HAL_ENABLE_COMPONENT_BUZZER
         std::unique_ptr<hal_components::BuzzerBase> buzzer;
-#endif
-#if HAL_ENABLE_COMPONENT_TOUCHPAD
-        std::unique_ptr<hal_components::TouchpadBase> touchpad;
-#endif
-#if HAL_ENABLE_COMPONENT_ENCODER
-        std::unique_ptr<hal_components::EncoderBase> encoder;
-#endif
-#if HAL_ENABLE_COMPONENT_SYSTEM_CONFIG
         std::unique_ptr<hal_components::SystemConfigBase> system_config;
-#endif
-
         std::unique_ptr<hal_components::DisplayBase> display;
     };
-    Data_t _components;
+    Components_t _components;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -142,24 +103,26 @@ void Inject(std::unique_ptr<HalBase> hal);
  */
 void Destroy();
 
+// 封装一下不然长的一
+inline hal_components::SystemControlBase& SysCtrl()
+{
+    return Get().SysCtrl();
+}
+inline hal_components::ImuBase& Imu()
+{
+    return Get().Imu();
+}
+inline hal_components::BuzzerBase& Buzzer()
+{
+    return Get().Buzzer();
+}
+inline hal_components::SystemConfigBase& SysCfg()
+{
+    return Get().SysCfg();
+}
+inline hal_components::DisplayBase& Display()
+{
+    return Get().Display();
+}
+
 } // namespace hal
-
-/**
- * @brief 获取当前 HAL 实例
- *
- * @return hal::HalBase&
- */
-inline hal::HalBase& GetHAL()
-{
-    return hal::Get();
-}
-
-/**
- * @brief 获取屏幕组件
- *
- * @return hal_components::DisplayM5GFXBase&
- */
-inline hal_components::DisplayBase& HalGetDisplay()
-{
-    return GetHAL().Display();
-}
