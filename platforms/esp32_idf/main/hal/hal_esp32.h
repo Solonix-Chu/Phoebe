@@ -29,4 +29,5 @@ private:
     void imu_test();
     void buzzer_test();
     void haptic_test();
+    void haptic_engine_test();
 };

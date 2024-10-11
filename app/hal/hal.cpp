@@ -107,11 +107,11 @@ hal_components::DisplayBase& HAL::HalBase::Display()
     return *_components.display.get();
 }
 
-hal_components::HapticEngine& HAL::HalBase::HapticEngine()
+hal_components::HapticEngineBase& HAL::HalBase::HapticEngine()
 {
     if (!_components.haptic_engine) {
         mclog::tagWarn(_tag, "getting null haptic engine component");
-        _components.haptic_engine = std::make_unique<hal_components::HapticEngine>();
+        _components.haptic_engine = std::make_unique<hal_components::HapticEngineBase>();
     }
     return *_components.haptic_engine.get();
 }

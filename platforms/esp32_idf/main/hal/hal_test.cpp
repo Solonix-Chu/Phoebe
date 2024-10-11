@@ -22,7 +22,8 @@ void HalEsp32::hal_test()
     /* ---------------------------------- Test ---------------------------------- */
     // imu_test();
     // buzzer_test();
-    haptic_test();
+    // haptic_test();
+    haptic_engine_test();
 }
 
 void HalEsp32::imu_test()
@@ -97,6 +98,30 @@ void HalEsp32::haptic_test()
         shit.go();
 
         // wait a bit
+        delay(1000);
+
+        effect++;
+        if (effect > 117) {
+            effect = 1;
+        }
+
+        HAL::SysCtrl().feedTheDog();
+    }
+}
+
+void HalEsp32::haptic_engine_test()
+{
+    // while (1) {
+    //     HAL::SysCtrl().feedTheDog();
+    //     HAL::HapticEngine().playEffect(HapticEffect::StrongClick100);
+    //     delay(1000);
+    // }
+
+    uint8_t effect = 1;
+    while (1) {
+        mclog::info("effect: {}", effect);
+        HAL::HapticEngine().playEffect(static_cast<HapticEffect::HapticEffect_t>(effect));
+
         delay(1000);
 
         effect++;

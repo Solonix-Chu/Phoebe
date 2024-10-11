@@ -29,9 +29,6 @@ public:
         float gyroX = 0.0;
         float gyroY = 0.0;
         float gyroZ = 0.0;
-        float magX = 0.0;
-        float magY = 0.0;
-        float magZ = 0.0;
     };
 
     ~ImuBase() = default;

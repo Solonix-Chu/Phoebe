@@ -14,6 +14,7 @@
 #include "components/system_ctrl/system_ctrl.h"
 #include "components/imu/imu.h"
 #include "components/buzzer/buzzer.h"
+#include "components/haptic_engine/haptic_engine.h"
 #include <mooncake_log.h>
 #include <Arduino.h>
 #include <driver/i2c.h>
@@ -40,6 +41,10 @@ void HalEsp32::init()
 
     // 蜂鸣器
     _components.buzzer = std::make_unique<BuzzerArduino>();
+
+    // 线性马达
+    _components.haptic_engine = std::make_unique<HapticEngineDRV2605L>();
+    _components.haptic_engine->init();
 
     // 显示屏
     display_init();

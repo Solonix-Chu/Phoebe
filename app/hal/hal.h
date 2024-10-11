@@ -66,7 +66,7 @@ public:
     hal_components::BuzzerBase& Buzzer();
     hal_components::SystemConfigBase& SysCfg();
     hal_components::DisplayBase& Display();
-    hal_components::HapticEngine& HapticEngine();
+    hal_components::HapticEngineBase& HapticEngine();
 
 protected:
     // 组件实例管理
@@ -76,7 +76,7 @@ protected:
         std::unique_ptr<hal_components::BuzzerBase> buzzer;
         std::unique_ptr<hal_components::SystemConfigBase> system_config;
         std::unique_ptr<hal_components::DisplayBase> display;
-        std::unique_ptr<hal_components::HapticEngine> haptic_engine;
+        std::unique_ptr<hal_components::HapticEngineBase> haptic_engine;
     };
     Components_t _components;
 };
@@ -127,7 +127,7 @@ inline hal_components::DisplayBase& Display()
 {
     return Get().Display();
 }
-inline hal_components::HapticEngine& HapticEngine()
+inline hal_components::HapticEngineBase& HapticEngine()
 {
     return Get().HapticEngine();
 }
