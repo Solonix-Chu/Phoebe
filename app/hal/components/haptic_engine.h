@@ -15,109 +15,129 @@
 // ToFix tmd gpt 怎么缺料了
 namespace HapticEffect {
 enum HapticEffect_t {
-    StrongClick100 = 1,             // 强力点击 - 100%
-    StrongClick60,                  // 强力点击 - 60%
-    StrongClick30,                  // 强力点击 - 30%
-    SharpClick100,                  // 猛击 - 100%
-    SharpClick60,                   // 猛击 - 60%
-    SharpClick30,                   // 猛击 - 30%
-    SoftBump100,                    // 软冲击 - 100%
-    SoftBump60,                     // 软冲击 - 60%
-    SoftBump30,                     // 软冲击 - 30%
-    DoubleClick100,                 // 双次点击 - 100%
-    DoubleClick60,                  // 双次点击 - 60%
-    TripleClick100,                 // 三次点击 - 100%
-    SoftFuzz60,                     // 小毛刺 - 60%
-    StrongBuzz100,                  // 剧烈蜂鸣 - 100%
-    Alert750Ms100,                  // 750ms 报警 - 100%
-    Alert1000Ms100,                 // 1000ms 报警 - 100%
-    StrongClick1100,                // 强力点击 1 - 100%
-    StrongClick280,                 // 强力点击 2 - 80%
-    StrongClick360,                 // 强力点击 3 - 60%
-    StrongClick430,                 // 强力点击 4 - 30%
-    MediumClick1100,                // 中等力度点击 1 - 100%
-    MediumClick280,                 // 中等力度点击 2 - 80%
-    MediumClick360,                 // 中等力度点击 3 - 60%
-    SharpTick1100,                  // 猛击节拍 1 - 100%
-    SharpTick280,                   // 猛击节拍 2 - 80%
-    SharpTick360,                   // 猛击节拍 3 - 60%
-    ShortDoubleClickStrong1100,     // 短时间强力双击 1 - 100%
-    ShortDoubleClickStrong280,      // 短时间强力双击 2 - 80%
-    ShortDoubleClickStrong360,      // 短时间强力双击 3 - 60%
-    ShortDoubleClickStrong430,      // 短时间强力双击 4 - 30%
-    ShortDoubleClickMedium1100,     // 短时间中等强度双击 1 - 100%
-    ShortDoubleClickMedium280,      // 短时间中等强度双击 2 - 80%
-    ShortDoubleClickMedium360,      // 短时间中等强度双击 3 - 60%
-    ShortSharpTick1100,             // 短时间猛击节拍 1 - 100%
-    ShortSharpTick280,              // 短时间猛击节拍 2 - 80%
-    ShortSharpTick360,              // 短时间猛击节拍 3 - 60%
-    LongDoubleSharpClickStrong1100, // 长时间双次强力猛击 1 - 100%
-    LongDoubleSharpClickStrong280,  // 长时间双次强力猛击 2 - 80%
-    LongDoubleSharpClickStrong360,  // 长时间双次强力猛击 3 - 60%
-    LongDoubleSharpClickStrong430,  // 长时间双次强力猛击 4 - 30%
-    LongDoubleSharpClickMedium1100, // 长时间双次中度猛击 1 - 100%
-    LongDoubleSharpClickMedium280,  // 长时间双次中度猛击 2 - 80%
-    LongDoubleSharpClickMedium360,  // 长时间双次中度猛击 3 - 60%
-    LongDoubleSharpClickMedium440,  // 长时间双次中度猛击 4 - 40%
-    Buzz1100,                       // 蜂鸣 1 - 100%
-    Buzz280,                        // 蜂鸣 2 - 80%
-    Buzz360,                        // 蜂鸣 3 - 60%
-    Buzz440,                        // 蜂鸣 4 - 40%
-    Buzz520,                        // 蜂鸣 5 - 20%
-    StrongPulse1100,                // 强脉冲 1 - 100%
-    StrongPulse260,                 // 强脉冲 2 - 60%
-    MediumPulse1100,                // 中等脉冲 1 - 100%
-    MediumPulse260,                 // 中等脉冲 2 - 60%
-    SharpPulse1100,                 // 剧烈脉冲 1 - 100%
-    SharpPulse260,                  // 剧烈脉冲 2 - 60%
-    TransitionClick1100,            // 转换点击 1 - 100%
-    TransitionClick280,             // 转换点击 2 - 80%
-    TransitionClick360,             // 转换点击 3 - 60%
-    TransitionClick440,             // 转换点击 4 - 40%
-    TransitionClick520,             // 转换点击 5 - 20%
-    TransitionClick610,             // 转换点击 6 - 10%
-    TransitionHum1100,              // 转换噪声 1 - 100%
-    TransitionHum280,               // 转换噪声 2 - 80%
-    TransitionHum360,               // 转换噪声 3 - 60%
-    TransitionHum440,               // 转换噪声 4 - 40%
-    TransitionHum520,               // 转换噪声 5 - 20%
-    TransitionHum610,               // 转换噪声 6 - 10%
-    LongRampDown1100To0,            // 长时间平缓斜降转换 1 - 100 至 0%
-    LongRampDown2100To0,            // 长时间平缓斜降转换 2 - 100 至 0%
-    MediumRampDown1100To0,          // 中等时间平缓斜降转换 1 - 100 至 0%
-    MediumRampDown2100To0,          // 中等时间平缓斜降转换 2 - 100 至 0%
-    ShortRampDown1100To0,           // 短时间平缓斜降转换 1 - 100 至 0%
-    ShortRampDown2100To0,           // 短时间平缓斜降转换 2 - 100 至 0%
-    LongRampDownStrong1100To0,      // 长时间剧烈斜降转换 1 - 100 至 0%
-    LongRampDownStrong2100To0,      // 长时间剧烈斜降转换 2 - 100 至 0%
-    MediumRampDownStrong1100To0,    // 中等时间剧烈斜降转换 1 - 100 至 0%
-    MediumRampDownStrong2100To0,    // 中等时间剧烈斜降转换 2 - 100 至 0%
-    ShortRampDownStrong1100To0,     // 短时间剧烈斜降转换 1 - 100 至 0%
-    ShortRampDownStrong2100To0,     // 短时间剧烈斜降转换 2 - 100 至 0%
-    LongRampUp10To100,              // 长时间平缓斜升转换 1 - 0 至 100%
-    LongRampUp20To100,              // 长时间平缓斜升转换 2 - 0 至 100%
-    MediumRampUp10To100,            // 中等时间平缓斜升转换 1 - 0 至 100%
-    MediumRampUp20To100,            // 中等时间平缓斜升转换 2 - 0 至 100%
-    ShortRampUp10To100,             // 短时间平缓斜升转换 1 - 0 至 100%
-    ShortRampUp20To100,             // 短时间平缓斜升转换 2 - 0 至 100%
-    LongRampUpStrong10To100,        // 长时间剧烈斜升转换 1 - 0 至 100%
-    LongRampUpStrong20To100,        // 长时间剧烈斜升转换 2 - 0 至 100%
-    MediumRampUpStrong10To100,      // 中等时间剧烈斜升转换 1 - 0 至 100%
-    MediumRampUpStrong20To100,      // 中等时间剧烈斜升转换 2 - 0 至 100%
-    ShortRampUpStrong10To100,       // 短时间剧烈斜升转换 1 - 0 至 100%
-    ShortRampUpStrong20To100,       // 短时间剧烈斜升转换 2 - 0 至 100%
-    LongRampDown150To0,             // 长时间平缓斜降转换 1 - 50 至 0%
-    LongRampDown250To0,             // 长时间平缓斜降转换 2 - 50 至 0%
-    MediumRampDown150To0,           // 中等时间平缓斜降转换 1 - 50 至 0%
-    MediumRampDown250To0,           // 中等时间平缓斜降转换 2 - 50 至 0%
-    ShortRampDown150To0,            // 短时间平缓斜降转换 1 - 50 至 0%
-    ShortRampDown250To0,            // 短时间平缓斜降转换 2 - 50 至 0%
-    LongRampUp50To100,              // 长时间平缓斜升转换 1 - 50 至 100%
-    LongRampUp250To100,             // 长时间平缓斜升转换 2 - 50 至 100%
-    MediumRampUp50To100,            // 中等时间平缓斜升转换 1 - 50 至 100%
-    MediumRampUp250To100,           // 中等时间平缓斜升转换 2 - 50 至 100%
-    ShortRampUp50To100,             // 短时间平缓斜升转换 1 - 50 至 100%
-    ShortRampUp250To100             // 短时间平缓斜升转换 2 - 50 至 100%
+    STRONG_CLICK_100 = 1,                          // 强力点击 - 100%
+    STRONG_CLICK_60,                               // 强力点击 - 60%
+    STRONG_CLICK_30,                               // 强力点击 - 30%
+    SHARP_CLICK_100,                               // 强力点击 - 30%
+    SHARP_CLICK_60,                                // 猛击 - 60%
+    SHARP_CLICK_30,                                // 猛击 - 30%
+    SOFT_BUMP_100,                                 // 软冲击 - 100%
+    SOFT_BUMP_60,                                  // 软冲击 - 60%
+    SOFT_BUMP_30,                                  // 软冲击 - 30%
+    DOUBLE_CLICK_100,                              // 双次点击 - 100%
+    DOUBLE_CLICK_60,                               // 双次点击 - 60%
+    TRIPLE_CLICK_100,                              // 三次点击 - 100%
+    SOFT_FUZZ_60,                                  // 小毛刺 - 60%
+    STRONG_BUZZ_100,                               // 剧烈蜂鸣 - 100%
+    ALERT_750_MS_100,                              // 750ms 报警 100%
+    ALERT_1000_MS_100,                             // 1000ms 报警 100%
+    STRONG_CLICK_1_100,                            // 强力点击 1 - 100%
+    STRONG_CLICK_2_80,                             // 强力点击 2 - 80%
+    STRONG_CLICK_3_60,                             // 强力点击 3 - 60%
+    STRONG_CLICK_4_30,                             // 强力点击 4 - 30%
+    MEDIUM_CLICK_1_100,                            // 中等力度点击 1 - 100%
+    MEDIUM_CLICK_2_80,                             // 中等力度点击 2 - 80%
+    MEDIUM_CLICK_3_60,                             // 中等力度点击 3 - 60%
+    SHARP_TICK_1_100,                              // 猛击节拍 1 - 100%
+    SHARP_TICK_2_80,                               // 猛击节拍 2 - 80%
+    SHARP_TICK_3_60,                               // 猛击节拍 3 - 60%
+    SHORT_DOUBLE_CLICK_STRONG_1_100,               // 短时间强力双击 1 – 100%
+    SHORT_DOUBLE_CLICK_STRONG_2_80,                // 短时间强力双击 2 – 80%
+    SHORT_DOUBLE_CLICK_STRONG_3_60,                // 短时间强力双击 3 – 60%
+    SHORT_DOUBLE_CLICK_STRONG_4_30,                // 短时间强力双击 4 – 30%
+    SHORT_DOUBLE_CLICK_MEDIUM_1_100,               // 短时间中等强度双击 1 – 100%
+    SHORT_DOUBLE_CLICK_MEDIUM_2_80,                // 短时间中等强度双击 2 – 80%
+    SHORT_DOUBLE_CLICK_MEDIUM_3_60,                // 短时间中等强度双击 3 – 60%
+    SHORT_DOUBLE_SHARP_TICK_1_100,                 // 短时间双次猛击节拍 1 – 100%
+    SHORT_DOUBLE_SHARP_TICK_2_80,                  // 短时间双次猛击节拍 2 – 80%
+    SHORT_DOUBLE_SHARP_TICK_3_60,                  // 短时间双次猛击节拍 3 – 60%
+    LONG_DOUBLE_SHARP_CLICK_STRONG_1_100,          // 长时间双次强力猛击 1 – 100%
+    LONG_DOUBLE_SHARP_CLICK_STRONG_2_80,           // 长时间双次强力猛击 2 – 80%
+    LONG_DOUBLE_SHARP_CLICK_STRONG_3_60,           // 长时间双次强力猛击 3 – 60%
+    LONG_DOUBLE_SHARP_CLICK_STRONG_4_30,           // 长时间双次强力猛击 4 – 30%
+    LONG_DOUBLE_SHARP_CLICK_MEDIUM_1_100,          // 长时间双次中度猛击 1 – 100%
+    LONG_DOUBLE_SHARP_CLICK_MEDIUM_2_80,           // 长时间双次中度猛击 2 – 80%
+    LONG_DOUBLE_SHARP_CLICK_MEDIUM_3_60,           // 长时间双次中度猛击 3 – 60%
+    LONG_DOUBLE_SHARP_TICK_1_100,                  // 长时间双次猛击节拍 1 – 100%
+    LONG_DOUBLE_SHARP_TICK_2_80,                   // 长时间双次猛击节拍 2 – 80%
+    LONG_DOUBLE_SHARP_TICK_3_60,                   // 长时间双次猛击节拍 3 – 60%
+    BUZZ_1_100,                                    // 蜂鸣 1 – 100%
+    BUZZ_2_80,                                     // 蜂鸣 2 – 80%
+    BUZZ_3_60,                                     // 蜂鸣 3 – 60%
+    BUZZ_4_40,                                     // 蜂鸣 4 – 40%
+    BUZZ_5_20,                                     // 蜂鸣 5 – 20%
+    PULSING_STRONG_1_100,                          // 强脉冲 1 – 100%
+    PULSING_STRONG_2_60,                           // 强脉冲 2 – 60%
+    PULSING_MEDIUM_1_100,                          // 中等脉冲 1 – 100%
+    PULSING_MEDIUM_2_60,                           // 中等脉冲 2 – 60%
+    PULSING_SHARP_1_100,                           // 剧烈脉冲 1 – 100%
+    PULSING_SHARP_2_60,                            // 剧烈脉冲 2 – 60%
+    TRANSITION_CLICK_1_100,                        // 转换点击 1 - 100%
+    TRANSITION_CLICK_2_80,                         // 转换点击 1 - 100%
+    TRANSITION_CLICK_3_60,                         // 转换点击 3 - 60%
+    TRANSITION_CLICK_4_40,                         // 转换点击 4 - 40%
+    TRANSITION_CLICK_5_20,                         // 转换点击 5 - 20%
+    TRANSITION_CLICK_6_10,                         // 转换点击 6 - 10%
+    TRANSITION_HUM_1_100,                          // 转换噪声 1 - 100%
+    TRANSITION_HUM_2_80,                           // 转换噪声 2 - 80%
+    TRANSITION_HUM_3_60,                           // 转换噪声 3 - 60%
+    TRANSITION_HUM_4_40,                           // 转换噪声 4 - 40%
+    TRANSITION_HUM_5_20,                           // 转换噪声 5 - 20%
+    TRANSITION_HUM_6_10,                           // 转换噪声 6 - 10%
+    TRANSITION_RAMP_DOWN_LONG_SMOOTH_1_100_TO_0,   // 长时间平缓斜降转换 1 – 100 至 0%
+    TRANSITION_RAMP_DOWN_LONG_SMOOTH_2_100_TO_0,   // 长时间平缓斜降转换 2 – 100 至 0%
+    TRANSITION_RAMP_DOWN_MEDIUM_SMOOTH_1_100_TO_0, // 中等时间平缓斜降转换 1 – 100 至 0%
+    TRANSITION_RAMP_DOWN_MEDIUM_SMOOTH_2_100_TO_0, // 中等时间平缓斜降转换 2 – 100 至 0%
+    TRANSITION_RAMP_DOWN_SHORT_SMOOTH_1_100_TO_0,  // 短时间平缓斜降转换 1 – 100 至 0%
+    TRANSITION_RAMP_DOWN_SHORT_SMOOTH_2_100_TO_0,  // 短时间平缓斜降转换 2 – 100 至 0%
+    TRANSITION_RAMP_DOWN_LONG_SHARP_1_100_TO_0,    // 长时间剧烈斜降转换 1 – 100 至 0%
+    TRANSITION_RAMP_DOWN_LONG_SHARP_2_100_TO_0,    // 长时间剧烈斜降转换 2 – 100 至 0%
+    TRANSITION_RAMP_DOWN_MEDIUM_SHARP_1_100_TO_0,  // 中等时间剧烈斜降转换 1 – 100 至 0%
+    TRANSITION_RAMP_DOWN_MEDIUM_SHARP_2_100_TO_0,  // 中等时间剧烈斜降转换 2 – 100 至 0%
+    TRANSITION_RAMP_DOWN_SHORT_SHARP_1_100_TO_0,   // 短时间剧烈斜降转换 1 – 100 至 0%
+    TRANSITION_RAMP_DOWN_SHORT_SHARP_2_100_TO_0,   // 短时间剧烈斜降转换 2 – 100 至 0%
+    TRANSITION_RAMP_UP_LONG_SMOOTH_1_0_TO_100,     // 长时间平缓斜升转换 1 – 0 至 100%
+    TRANSITION_RAMP_UP_LONG_SMOOTH_2_0_TO_100,     // 长时间平缓斜升转换 2 – 0 至 100%
+    TRANSITION_RAMP_UP_MEDIUM_SMOOTH_1_0_TO_100,   // 中等时间平缓斜升转换 1 – 0 至 100%
+    TRANSITION_RAMP_UP_MEDIUM_SMOOTH_2_0_TO_100,   // 中等时间平缓斜升转换 2 – 0 至 100%
+    TRANSITION_RAMP_UP_SHORT_SMOOTH_1_0_TO_100,    // 短时间平缓斜升转换 1 – 0 至 100%
+    TRANSITION_RAMP_UP_SHORT_SMOOTH_2_0_TO_100,    // 短时间平缓斜升转换 2 – 0 至 100%
+    TRANSITION_RAMP_UP_LONG_SHARP_1_0_TO_100,      // 长时间剧烈斜升转换 1 – 0 至 100%
+    TRANSITION_RAMP_UP_LONG_SHARP_2_0_TO_100,      // 长时间剧烈斜升转换 2 – 0 至 100%
+    TRANSITION_RAMP_UP_MEDIUM_SHARP_1_0_TO_100,    // 长时间剧烈斜升转换 2 – 0 至 100%
+    TRANSITION_RAMP_UP_MEDIUM_SHARP_2_0_TO_100,    // 中等时间剧烈斜升转换 2 – 0 至 100%
+    TRANSITION_RAMP_UP_SHORT_SHARP_1_0_TO_100,     // 短时间剧烈斜升转换 1 – 0 至 100%
+    TRANSITION_RAMP_UP_SHORT_SHARP_2_0_TO_100,     // 短时间剧烈斜升转换 2 – 0 至 100%
+    TRANSITION_RAMP_DOWN_LONG_SMOOTH_1_50_TO_0,    // 长时间平缓斜降转换 1 – 50 至 0%
+    TRANSITION_RAMP_DOWN_LONG_SMOOTH_2_50_TO_0,    // 长时间平缓斜降转换 2 – 50 至 0%
+    TRANSITION_RAMP_DOWN_MEDIUM_SMOOTH_1_50_TO_0,  // 中等时间平缓斜降转换 1 – 50 至 0%
+    TRANSITION_RAMP_DOWN_MEDIUM_SMOOTH_2_50_TO_0,  // 中等时间平缓斜降转换 2 – 50 至 0%
+    TRANSITION_RAMP_DOWN_SHORT_SMOOTH_1_50_TO_0,   // 短时间平缓斜降转换 1 – 50 至 0%
+    TRANSITION_RAMP_DOWN_SHORT_SMOOTH_2_50_TO_0,   // 短时间平缓斜降转换 2 – 50 至 0%
+    TRANSITION_RAMP_DOWN_LONG_SHARP_1_50_TO_0,     // 长时间剧烈斜降转换 1 – 50 至 0%
+    TRANSITION_RAMP_DOWN_LONG_SHARP_2_50_TO_0,     // 长时间剧烈斜降转换 2 – 50 至 0%
+    TRANSITION_RAMP_DOWN_MEDIUM_SHARP_1_50_TO_0,   // 中等时间剧烈斜降转换 1 – 50 至 0%
+    TRANSITION_RAMP_DOWN_MEDIUM_SHARP_2_50_TO_0,   // 中等时间剧烈斜降转换 2 – 50 至 0%
+    TRANSITION_RAMP_DOWN_SHORT_SHARP_1_50_TO_0,    // 短时间剧烈斜降转换 1 – 50 至 0%
+    TRANSITION_RAMP_DOWN_SHORT_SHARP_2_50_TO_0,    // 短时间剧烈斜降转换 2 – 50 至 0%
+    TRANSITION_RAMP_UP_LONG_SMOOTH_1_0_TO_50,      // 长时间平缓斜升转换 1 – 0 至 50%
+    TRANSITION_RAMP_UP_LONG_SMOOTH_2_0_TO_50,      // 长时间平缓斜升转换 2 – 0 至 50%
+    TRANSITION_RAMP_UP_MEDIUM_SMOOTH_1_0_TO_50,    // 中等时间平缓斜升转换 1 – 0 至 50%
+    TRANSITION_RAMP_UP_MEDIUM_SMOOTH_2_0_TO_50,    // 中等时间平缓斜升转换 2 – 0 至 50%
+    TRANSITION_RAMP_UP_SHORT_SMOOTH_1_0_TO_50,     // 短时间平缓斜升转换 1 – 0 至 50%
+    TRANSITION_RAMP_UP_SHORT_SMOOTH_2_0_TO_50,     // 短时间平缓斜升转换 2 – 0 至 50%
+    TRANSITION_RAMP_UP_LONG_SHARP_1_0_TO_50,       // 长时间剧烈斜升转换 1 – 0 至 50%
+    TRANSITION_RAMP_UP_LONG_SHARP_2_0_TO_50,       // 长时间剧烈斜升转换 2 – 0 至 50%
+    TRANSITION_RAMP_UP_MEDIUM_SHARP_1_0_TO_50,     // 中等时间剧烈斜升转换 1 – 0 至 50%
+    TRANSITION_RAMP_UP_MEDIUM_SHARP_2_0_TO_50,     // 中等时间剧烈斜升转换 2 – 0 至 50%
+    TRANSITION_RAMP_UP_SHORT_SHARP_1_0_TO_50,      // 短时间剧烈斜升转换 1 – 0 至 50%
+    TRANSITION_RAMP_UP_SHORT_SHARP_2_0_TO_50,      // 短时间剧烈斜升转换 2 – 0 至 50%
+    LONG_BUZZ_FOR_PROGRAMMATIC_STOPPING_100,       // 编程停止导致长时间蜂鸣 – 100%
+    SMOOTH_HUM_1_NO_KICK_OR_BRAKE_50,              // 平缓噪声 1（无回弹或制动脉冲） – 50%
+    SMOOTH_HUM_2_NO_KICK_OR_BRAKE_40,              // 平缓噪声 2（无回弹或制动脉冲） – 40%
+    SMOOTH_HUM_3_NO_KICK_OR_BRAKE_30,              // 平缓噪声 3（无回弹或制动脉冲） – 30%
+    SMOOTH_HUM_4_NO_KICK_OR_BRAKE_20,              // 平缓噪声 4（无回弹或制动脉冲） – 20%
+    SMOOTH_HUM_5_NO_KICK_OR_BRAKE_10               // 平缓噪声 5（无回弹或制动脉冲） – 10%
 };
 }
 
