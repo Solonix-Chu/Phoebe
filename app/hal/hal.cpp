@@ -60,7 +60,7 @@ void HAL::Destroy()
 /* -------------------------------------------------------------------------- */
 /*                              Components Getter                             */
 /* -------------------------------------------------------------------------- */
-// 组件获取接口，如果当前没有实例，则懒加载一个基类，这样就算某个平台没有适配某个组件，也不会崩溃
+// 组件获取接口，如果当前没有实例，则懒加载一个基类，这样就算某个平台没有适配某个组件，也不会炸
 
 hal_components::SystemControlBase& HAL::HalBase::SysCtrl()
 {
@@ -105,4 +105,13 @@ hal_components::DisplayBase& HAL::HalBase::Display()
         _components.display = std::make_unique<hal_components::DisplayBase>();
     }
     return *_components.display.get();
+}
+
+hal_components::HapticEngine& HAL::HalBase::HapticEngine()
+{
+    if (!_components.haptic_engine) {
+        mclog::tagWarn(_tag, "getting null haptic engine component");
+        _components.haptic_engine = std::make_unique<hal_components::HapticEngine>();
+    }
+    return *_components.haptic_engine.get();
 }
