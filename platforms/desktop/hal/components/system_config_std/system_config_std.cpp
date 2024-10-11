@@ -17,6 +17,8 @@
 
 using namespace mooncake;
 
+static const char* _tag = "syscfg";
+
 SystemConfigStd::SystemConfigStd(const std::string& rootPath)
 {
     _system_config_path = rootPath + "system_config.json";
@@ -24,7 +26,7 @@ SystemConfigStd::SystemConfigStd(const std::string& rootPath)
 
 bool SystemConfigStd::loadConfig()
 {
-    mclog::info("load config from fs");
+    mclog::tagInfo(_tag, "load config from fs");
 
     // 打开配置文件
     FILE* config_file = fopen(_system_config_path.c_str(), "rb");
@@ -51,7 +53,7 @@ bool SystemConfigStd::loadConfig()
         mclog::error("malloc failed, size: {}", file_length);
 
         std::string backup_path = _system_config_path + ".bk";
-        mclog::info("try {}", backup_path);
+        mclog::tagInfo(_tag, "try {}", backup_path);
 
         config_file = fopen(backup_path.c_str(), "rb");
 
@@ -70,7 +72,7 @@ bool SystemConfigStd::loadConfig()
     // 解析 json 内容并保存到当前配置
     if (!parse_json_and_copy_config(file_content)) {
         // 如果解析失败，则重建
-        mclog::info(" try recreating..");
+        mclog::tagInfo(_tag, " try recreating..");
         saveConfig();
         backup_config_file();
     }
@@ -81,7 +83,7 @@ bool SystemConfigStd::loadConfig()
 
 bool SystemConfigStd::saveConfig()
 {
-    mclog::info("save config to fs");
+    mclog::tagInfo(_tag, "save config to fs");
 
     // 备份原来的
     backup_config_file();
@@ -90,7 +92,7 @@ bool SystemConfigStd::saveConfig()
     std::string json_content = create_config_json();
 
     // 打开配置文件并写入
-    mclog::info("open {}", _system_config_path);
+    mclog::tagInfo(_tag, "open {}", _system_config_path);
     FILE* config_file = fopen(_system_config_path.c_str(), "wb");
     if (config_file == NULL) {
         mclog::error("open failed");
@@ -100,7 +102,7 @@ bool SystemConfigStd::saveConfig()
     fputs(json_content.c_str(), config_file);
     fclose(config_file);
 
-    mclog::info("config saved at {}", _system_config_path);
+    mclog::tagInfo(_tag, "config saved at {}", _system_config_path);
     return true;
 }
 
@@ -142,10 +144,10 @@ bool SystemConfigStd::parse_json_and_copy_config(char* jsonContent)
 
 void SystemConfigStd::backup_config_file()
 {
-    mclog::info("create config backup");
+    mclog::tagInfo(_tag, "create config backup");
 
     // 打开配置文件
-    mclog::info("try open {}", _system_config_path);
+    mclog::tagInfo(_tag, "try open {}", _system_config_path);
     FILE* config_file = fopen(_system_config_path.c_str(), "rb");
     if (config_file == NULL) {
         mclog::error("open failed");
@@ -154,7 +156,7 @@ void SystemConfigStd::backup_config_file()
 
     // 创建备份配置文件
     std::string backup_path = _system_config_path + ".bk";
-    mclog::info("try open {}", backup_path);
+    mclog::tagInfo(_tag, "try open {}", backup_path);
     FILE* config_backup_file = fopen(backup_path.c_str(), "wb");
     if (config_backup_file == NULL) {
         mclog::error("open failed");
@@ -175,7 +177,7 @@ void SystemConfigStd::backup_config_file()
 
 void SystemConfigStd::logConfig()
 {
-    mclog::info("current system config:");
+    mclog::tagInfo(_tag, "current system config:");
     fmt::println("mute: {}", _config.mute);
     fmt::println("hapticFeedback: {}", _config.hapticFeedback);
     fmt::println("watchFace: {}", _config.watchFace);
