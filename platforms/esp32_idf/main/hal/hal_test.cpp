@@ -10,8 +10,10 @@
  */
 #include "esp32-hal.h"
 #include "hal_esp32.h"
+#include "hal_config.h"
 #include <mooncake_log.h>
 #include <Arduino.h>
+#include "components/utils/Adafruit_DRV2605/Adafruit_DRV2605.h"
 
 using namespace mooncake;
 
@@ -20,6 +22,7 @@ void HalEsp32::hal_test()
     /* ---------------------------------- Test ---------------------------------- */
     // imu_test();
     // buzzer_test();
+    haptic_test();
 }
 
 void HalEsp32::imu_test()
@@ -67,5 +70,40 @@ void HalEsp32::buzzer_test()
             interval -= 20;
             HAL::SysCtrl().feedTheDog();
         }
+    }
+}
+
+void HalEsp32::haptic_test()
+{
+    // https://github.com/adafruit/Adafruit_DRV2605_Library/blob/master/examples/basic/basic.ino
+
+    pinMode(HAL_PIN_HAPTIC_EN, OUTPUT);
+    digitalWrite(HAL_PIN_HAPTIC_EN, 1);
+    delay(100);
+
+    Adafruit_DRV2605 shit;
+    shit.init(HAL_I2C_BUS_PORT_NUM);
+    shit.selectLibrary(6);
+    shit.setMode(DRV2605_MODE_INTTRIG);
+
+    uint8_t effect = 1;
+    while (1) {
+        // set the effect to play
+        shit.setWaveform(0, effect); // play effect
+        shit.setWaveform(1, 0);      // end waveform
+
+        // play the effect!
+        mclog::info("effect: {}", effect);
+        shit.go();
+
+        // wait a bit
+        delay(1000);
+
+        effect++;
+        if (effect > 117) {
+            effect = 1;
+        }
+
+        HAL::SysCtrl().feedTheDog();
     }
 }

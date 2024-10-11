@@ -28,4 +28,5 @@ private:
     void hal_test();
     void imu_test();
     void buzzer_test();
+    void haptic_test();
 };
