@@ -32,4 +32,5 @@ private:
     void haptic_test();
     void haptic_engine_test();
     void max1704_test();
+    void battery_monitor_test();
 };

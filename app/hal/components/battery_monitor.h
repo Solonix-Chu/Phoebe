@@ -11,6 +11,16 @@
 #pragma once
 #include <functional>
 
+namespace BatteryState {
+enum BatteryState_t {
+    NotConnected = 0, // 没接
+    Charging,         // 充电
+    Normal,           // 正常放电
+    Low,              // 低电量
+    Dead,             // 似了（
+};
+}
+
 namespace hal_components {
 
 /**
@@ -34,16 +44,18 @@ public:
         return 0.0f;
     }
 
-    virtual bool isCharging()
+    virtual BatteryState::BatteryState_t state()
     {
-        return false;
+        return BatteryState::NotConnected;
     }
 
     virtual void onChargingStart(std::function<void()> callback) {}
 
-    virtual void onChargingComplete(std::function<void()> callback) {}
+    virtual void onChargingStop(std::function<void()> callback) {}
 
-    virtual void onLowBattery(std::function<void()> callback) {}
+    virtual void onBatteryLow(std::function<void()> callback) {}
+
+    virtual void onBatterDead(std::function<void()> callback) {}
 };
 
 } // namespace hal_components

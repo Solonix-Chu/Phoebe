@@ -16,6 +16,8 @@
 
 using namespace mooncake;
 
+static const char* _tag = "SysCtrl";
+
 // 看门狗线程
 static uint8_t _dog = 0;
 static std::mutex _feed_mutex;
@@ -26,9 +28,9 @@ static void _daemon_watch_dog(void* param)
         _feed_mutex.lock();
         _dog++;
         if (_dog > HAL_WATCH_DOG_TIMEOUT_S) {
-            mclog::error(":(");
-            mclog::error("watch dog timeout");
-            mclog::error("rebooting..");
+            mclog::tagInfo(_tag, ":(");
+            mclog::tagInfo(_tag, "watch dog timeout");
+            mclog::tagInfo(_tag, "rebooting..");
             vTaskDelay(pdMS_TO_TICKS(100));
             esp_restart();
         }
@@ -39,15 +41,15 @@ static void _daemon_watch_dog(void* param)
 
 void SystemControlArduino::init()
 {
-    mclog::info("system control init");
+    mclog::tagInfo(_tag, "init");
 
     // 锁定电源 MOS 管
-    mclog::info("lock power mos");
+    mclog::tagInfo(_tag, "lock power mos");
     pinMode(HAL_PIN_PWR_HOLD, OUTPUT);
     digitalWrite(HAL_PIN_PWR_HOLD, 1);
 
     // 创建看门狗线程
-    mclog::info("create watch dog deamon");
+    mclog::tagInfo(_tag, "create watch dog deamon");
     xTaskCreate(_daemon_watch_dog, "wd", 2000, NULL, configMAX_PRIORITIES - 1, NULL);
 }
 
@@ -63,13 +65,13 @@ void SystemControlArduino::delay(std::uint32_t ms)
 
 void SystemControlArduino::reboot()
 {
-    mclog::info("reboot system..");
+    mclog::tagInfo(_tag, "reboot system..");
     esp_restart();
 }
 
 void SystemControlArduino::powerOff()
 {
-    mclog::info("power off..");
+    mclog::tagInfo(_tag, "power off..");
     delay(100);
 
     // 释放电源 mos 管

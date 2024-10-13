@@ -10,6 +10,7 @@
  */
 #include "esp32-hal-gpio.h"
 #include "esp32-hal.h"
+#include "hal/hal.h"
 #include "hal_esp32.h"
 #include "hal_config.h"
 #include <mooncake_log.h>
@@ -27,7 +28,8 @@ void HalEsp32::hal_test()
     // buzzer_test();
     // haptic_test();
     // haptic_engine_test();
-    max1704_test();
+    // max1704_test();
+    // battery_monitor_test();
 }
 
 void HalEsp32::imu_test()
@@ -169,5 +171,33 @@ void HalEsp32::max1704_test()
         // 刷新 LVGL
         lv_timer_handler(); // 刷新 LVGL 的任务处理
         delay(1000);
+    }
+}
+
+void HalEsp32::battery_monitor_test()
+{
+    // 创建一个标签用于显示电压和电量
+    lv_obj_t* label = lv_label_create(lv_scr_act()); // 在当前活动屏幕上创建标签
+    lv_label_set_text(label, "Initializing...");     // 设置初始文本
+    lv_obj_align(label, LV_ALIGN_TOP_MID, 0, 10);    // 将标签对齐到屏幕顶部中间位置
+
+    while (1) {
+        // 获取电压和电量百分比
+        float voltage = HAL::BatteryMonitor().voltage();
+        float percentage = HAL::BatteryMonitor().percent();
+        int state = (int)HAL::BatteryMonitor().state();
+
+        // 打印到控制台
+        mclog::info("v: {:.3f}v p: {:.1f}% state: {}", voltage, percentage, state);
+
+        // 更新标签内容
+        lv_label_set_text(label, fmt::format("v: {:.3f}v\np: {:.1f}%\nstate: {}", voltage, percentage, state).c_str());
+
+        // 喂狗（防止看门狗复位）
+        HAL::SysCtrl().feedTheDog();
+
+        // 刷新 LVGL
+        lv_timer_handler(); // 刷新 LVGL 的任务处理
+        delay(500);
     }
 }

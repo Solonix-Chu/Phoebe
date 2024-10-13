@@ -15,6 +15,7 @@
 #include "components/imu/imu.h"
 #include "components/buzzer/buzzer.h"
 #include "components/haptic_engine/haptic_engine.h"
+#include "components/battery_monitor/battery_monitor.h"
 #include <mooncake_log.h>
 #include <Arduino.h>
 #include <driver/i2c.h>
@@ -34,6 +35,10 @@ void HalEsp32::init()
 
     // I2C
     i2c_init();
+
+    // 电池监视
+    _components.battery_monitor = std::make_unique<BatteryMonitorMAX17048>();
+    _components.battery_monitor->init();
 
     // IMU
     _components.imu = std::make_unique<ImuBmi270>();

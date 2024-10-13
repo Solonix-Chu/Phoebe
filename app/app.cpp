@@ -53,10 +53,8 @@ void APP::Update()
     // 更新 Mooncake
     GetMooncake().update();
 
-    // 重置看门狗，建议实现这个看门狗，避免某个生命周期长时间阻塞
-#if HAL_ENABLE_COMPONENT_SYSTEM_CONTROL
+    // 重置看门狗，建议实现这个看门狗，避免某个生命周期回调卡死了
     HAL::SysCtrl().feedTheDog();
-#endif
 }
 
 bool APP::IsDone()
