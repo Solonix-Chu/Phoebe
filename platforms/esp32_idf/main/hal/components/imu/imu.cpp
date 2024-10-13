@@ -26,9 +26,11 @@ using namespace mooncake;
 #define ACCEL UINT8_C(0x00)
 #define GYRO  UINT8_C(0x01)
 
+static const char* _tag = "imu";
+
 void ImuBmi270::init()
 {
-    mclog::info("imu bmi270 init");
+    mclog::tagInfo(_tag, "bmi270 init");
 
     /* Status of api are returned to this variable. */
     int8_t rslt;
@@ -83,7 +85,7 @@ void ImuBmi270::bmi2_error_codes_print_result(int8_t rslt)
 {
     // 没必要吧兄弟
     if (rslt != BMI2_OK) {
-        mclog::tagError("bmi270", "shit happened bro");
+        mclog::tagError(_tag, "shit happened bro");
     }
 }
 

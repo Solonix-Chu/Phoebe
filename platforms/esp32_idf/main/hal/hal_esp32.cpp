@@ -65,7 +65,8 @@ void HalEsp32::init()
 /* -------------------------------------------------------------------------- */
 void HalEsp32::i2c_init()
 {
-    mclog::info("i2c init");
+    const std::string tag = "i2c";
+    mclog::tagInfo(tag, "init");
 
     // 初始化
     i2c_config_t conf;
@@ -79,7 +80,7 @@ void HalEsp32::i2c_init()
     i2c_param_config(HAL_I2C_BUS_PORT_NUM, &conf);
 
     if (i2c_driver_install(HAL_I2C_BUS_PORT_NUM, conf.mode, 0, 0, 0) != ESP_OK) {
-        mclog::error("i2c driver install failed");
+        mclog::tagError(tag, "i2c driver install failed");
     }
 
     // 扫描
@@ -87,7 +88,7 @@ void HalEsp32::i2c_init()
     uint8_t WRITE_BIT = I2C_MASTER_WRITE;
     uint8_t ACK_CHECK_EN = 0x1;
     uint8_t address;
-    mclog::info("scan bus..");
+    mclog::tagInfo(tag, "scan bus..");
     for (int i = 0; i < 128; i += 16) {
         for (int j = 0; j < 16; j++) {
             fflush(stdout);
@@ -101,12 +102,12 @@ void HalEsp32::i2c_init()
             if (ret == ESP_OK) {
                 if (address == 0)
                     continue;
-                mclog::info(">> {:#X}", address);
+                mclog::tagInfo(tag, ">> {:#X}", address);
                 device_num++;
             }
         }
     }
-    mclog::info("found {} device", device_num);
+    mclog::tagInfo(tag, "found {} device", device_num);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -117,7 +118,8 @@ static SharpeMlcd* _sharp_mlcd = nullptr;
 
 void HalEsp32::display_init()
 {
-    mclog::info("display init");
+    const std::string tag = "display";
+    mclog::tagInfo(tag, "init");
 
     _sharp_mlcd = new SharpeMlcd;
     _sharp_mlcd->setConfig().screen_width = HAL_SCREEN_WIDTH;
@@ -157,22 +159,23 @@ static void lvgl_tick_timer(void* arg)
 
 void HalEsp32::lvgl_init()
 {
-    mclog::info("lvgl init");
+    const std::string tag = "lvgl";
+    mclog::tagInfo(tag, "init");
 
     lv_init();
 
     // Display
-    mclog::info("create lvgl display");
+    mclog::tagInfo(tag, "create display");
     auto display = lv_display_create(HAL_SCREEN_WIDTH, HAL_SCREEN_HEIGHT);
     lv_display_set_flush_cb(display, lvgl_flush_cb);
 
-    mclog::info("create display buffer");
+    mclog::tagInfo(tag, "create display buffer");
     static uint8_t* buf1 = (uint8_t*)malloc(HAL_SCREEN_WIDTH * HAL_SCREEN_HEIGHT * sizeof(uint16_t));
     lv_display_set_buffers(display, (void*)buf1, NULL, HAL_SCREEN_WIDTH * HAL_SCREEN_HEIGHT * sizeof(uint16_t),
                            LV_DISPLAY_RENDER_MODE_FULL);
 
     // Tick
-    mclog::info("create lvgl tick timer");
+    mclog::tagInfo(tag, "create tick timer");
     const esp_timer_create_args_t periodic_timer_args = {.callback = &lvgl_tick_timer, .name = "lvgl_tick_timer"};
     esp_timer_handle_t periodic_timer;
     ESP_ERROR_CHECK(esp_timer_create(&periodic_timer_args, &periodic_timer));
