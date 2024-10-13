@@ -16,6 +16,7 @@
 #include "components/buzzer/buzzer.h"
 #include "components/haptic_engine/haptic_engine.h"
 #include "components/battery_monitor/battery_monitor.h"
+#include "components/button/button.h"
 #include <mooncake_log.h>
 #include <Arduino.h>
 #include <driver/i2c.h>
@@ -32,6 +33,10 @@ void HalEsp32::init()
     // 系统控制
     _components.system_control = std::make_unique<SystemControlArduino>();
     _components.system_control->init();
+
+    // 按钮
+    _components.button = std::make_unique<ButtonArduino>();
+    _components.button->init();
 
     // I2C
     i2c_init();

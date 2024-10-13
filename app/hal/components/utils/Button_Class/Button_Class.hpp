@@ -6,7 +6,6 @@
 
 #include <cstdint>
 // https://github.com/m5stack/M5Unified/blob/master/src/utility/Button_Class.hpp
-// 改 HAL 单例 API
 
 // namespace m5 {
 namespace hal_components {

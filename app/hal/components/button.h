@@ -29,6 +29,8 @@ namespace hal_components {
  */
 class ButtonBase {
 public:
+    virtual void init() {}
+
     /**
      * @brief 最基础的按钮状态获取，比如引脚电平
      *
