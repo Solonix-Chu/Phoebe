@@ -8,12 +8,15 @@
  * @copyright Copyright (c) 2024
  *
  */
+#include "esp32-hal-gpio.h"
 #include "esp32-hal.h"
 #include "hal_esp32.h"
 #include "hal_config.h"
 #include <mooncake_log.h>
 #include <Arduino.h>
+#include <lvgl.h>
 #include "components/utils/Adafruit_DRV2605/Adafruit_DRV2605.h"
+#include "components/utils/Adafruit_MAX1704X/Adafruit_MAX1704X.h"
 
 using namespace mooncake;
 
@@ -23,7 +26,8 @@ void HalEsp32::hal_test()
     // imu_test();
     // buzzer_test();
     // haptic_test();
-    haptic_engine_test();
+    // haptic_engine_test();
+    max1704_test();
 }
 
 void HalEsp32::imu_test()
@@ -130,5 +134,40 @@ void HalEsp32::haptic_engine_test()
         }
 
         HAL::SysCtrl().feedTheDog();
+    }
+}
+
+void HalEsp32::max1704_test()
+{
+    Adafruit_MAX17048 shit;
+    mclog::info("init: {}", shit.begin(HAL_I2C_BUS_PORT_NUM));
+    mclog::info("chip id: 0x{:02X}", shit.getChipID());
+
+    // 创建一个标签用于显示电压和电量
+    lv_obj_t* label = lv_label_create(lv_scr_act()); // 在当前活动屏幕上创建标签
+    lv_label_set_text(label, "Initializing...");     // 设置初始文本
+    lv_obj_align(label, LV_ALIGN_TOP_MID, 0, 10);    // 将标签对齐到屏幕顶部中间位置
+
+    pinMode(HAL_PIN_PWR_IS_USB_IN, INPUT);
+
+    while (1) {
+        // 获取电压和电量百分比
+        float voltage = shit.cellVoltage();
+        float percentage = shit.cellPercent();
+        bool usb_in = digitalRead(HAL_PIN_PWR_IS_USB_IN) == 1;
+
+        // 打印到控制台
+        mclog::info("v: {:.3f}v p: {:.1f}% usb in: {}", voltage, percentage, usb_in);
+
+        // 更新标签内容
+        lv_label_set_text(label,
+                          fmt::format("v: {:.3f}v\np: {:.1f}%\nusb in: {}", voltage, percentage, usb_in).c_str());
+
+        // 喂狗（防止看门狗复位）
+        HAL::SysCtrl().feedTheDog();
+
+        // 刷新 LVGL
+        lv_timer_handler(); // 刷新 LVGL 的任务处理
+        delay(1000);
     }
 }

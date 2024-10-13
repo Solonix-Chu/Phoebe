@@ -17,6 +17,7 @@
 #include "components/system_config.h"
 #include "components/display.h"
 #include "components/haptic_engine.h"
+#include "components/battery_monitor.h"
 
 /**
  * @brief 硬件抽象层
@@ -67,6 +68,7 @@ public:
     hal_components::SystemConfigBase& SysCfg();
     hal_components::DisplayBase& Display();
     hal_components::HapticEngineBase& HapticEngine();
+    hal_components::BatteryMonitorBase& BatteryMonitor();
 
 protected:
     // 组件实例管理
@@ -77,6 +79,7 @@ protected:
         std::unique_ptr<hal_components::SystemConfigBase> system_config;
         std::unique_ptr<hal_components::DisplayBase> display;
         std::unique_ptr<hal_components::HapticEngineBase> haptic_engine;
+        std::unique_ptr<hal_components::BatteryMonitorBase> battery_monitor;
     };
     Components_t _components;
 };
@@ -130,6 +133,10 @@ inline hal_components::DisplayBase& Display()
 inline hal_components::HapticEngineBase& HapticEngine()
 {
     return Get().HapticEngine();
+}
+inline hal_components::BatteryMonitorBase& BatteryMonitor()
+{
+    return Get().BatteryMonitor();
 }
 
 } // namespace HAL

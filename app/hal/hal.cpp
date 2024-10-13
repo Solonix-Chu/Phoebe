@@ -9,6 +9,7 @@
  *
  */
 #include "hal.h"
+#include "hal/components/battery_monitor.h"
 #include <memory>
 #include <string>
 #include <mooncake_log.h>
@@ -114,4 +115,13 @@ hal_components::HapticEngineBase& HAL::HalBase::HapticEngine()
         _components.haptic_engine = std::make_unique<hal_components::HapticEngineBase>();
     }
     return *_components.haptic_engine.get();
+}
+
+hal_components::BatteryMonitorBase& HAL::HalBase::BatteryMonitor()
+{
+    if (!_components.battery_monitor) {
+        mclog::tagWarn(_tag, "getting null battery monitor component");
+        _components.battery_monitor = std::make_unique<hal_components::BatteryMonitorBase>();
+    }
+    return *_components.battery_monitor.get();
 }

@@ -25,9 +25,11 @@ private:
     void display_init();
     void lvgl_init();
 
+    // 调驱动用
     void hal_test();
     void imu_test();
     void buzzer_test();
     void haptic_test();
     void haptic_engine_test();
+    void max1704_test();
 };
