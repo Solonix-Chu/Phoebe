@@ -10,6 +10,7 @@
  */
 #include "hal.h"
 #include "hal/components/battery_monitor.h"
+#include "hal/components/button.h"
 #include <memory>
 #include <string>
 #include <mooncake_log.h>
@@ -124,4 +125,13 @@ hal_components::BatteryMonitorBase& HAL::HalBase::BatteryMonitor()
         _components.battery_monitor = std::make_unique<hal_components::BatteryMonitorBase>();
     }
     return *_components.battery_monitor.get();
+}
+
+hal_components::ButtonBase& HAL::HalBase::Button()
+{
+    if (!_components.button) {
+        mclog::tagWarn(_tag, "getting null button component");
+        _components.button = std::make_unique<hal_components::ButtonBase>();
+    }
+    return *_components.button.get();
 }

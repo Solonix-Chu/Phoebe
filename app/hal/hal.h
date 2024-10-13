@@ -18,6 +18,8 @@
 #include "components/display.h"
 #include "components/haptic_engine.h"
 #include "components/battery_monitor.h"
+#include "components/button.h"
+#include "hal/components/utils/Button_Class/Button_Class.hpp"
 
 /**
  * @brief 硬件抽象层
@@ -69,6 +71,7 @@ public:
     hal_components::DisplayBase& Display();
     hal_components::HapticEngineBase& HapticEngine();
     hal_components::BatteryMonitorBase& BatteryMonitor();
+    hal_components::ButtonBase& Button();
 
 protected:
     // 组件实例管理
@@ -80,6 +83,7 @@ protected:
         std::unique_ptr<hal_components::DisplayBase> display;
         std::unique_ptr<hal_components::HapticEngineBase> haptic_engine;
         std::unique_ptr<hal_components::BatteryMonitorBase> battery_monitor;
+        std::unique_ptr<hal_components::ButtonBase> button;
     };
     Components_t _components;
 };
@@ -137,6 +141,26 @@ inline hal_components::HapticEngineBase& HapticEngine()
 inline hal_components::BatteryMonitorBase& BatteryMonitor()
 {
     return Get().BatteryMonitor();
+}
+inline void BtnUpdate()
+{
+    Get().Button().update();
+}
+inline hal_components::Button_Class& BtnPower()
+{
+    return Get().Button().BtnPower;
+}
+inline hal_components::Button_Class& BtnUp()
+{
+    return Get().Button().BtnUp;
+}
+inline hal_components::Button_Class& BtnOk()
+{
+    return Get().Button().BtnOk;
+}
+inline hal_components::Button_Class& BtnDown()
+{
+    return Get().Button().BtnDown;
 }
 
 } // namespace HAL

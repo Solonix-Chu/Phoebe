@@ -104,6 +104,18 @@ void AppTemplate::onRunning()
 {
     update_clock();
     lv_timer_handler();
+
+    HAL::BtnUpdate();
+    if (HAL::BtnPower().wasClicked()) {
+        mclog::info("??");
+    }
+    if (HAL::BtnPower().wasDoubleClicked()) {
+        mclog::info("bye");
+        HAL::SysCtrl().powerOff();
+    }
+    if (HAL::BtnPower().wasHold()) {
+        mclog::info("jijiji");
+    }
 }
 
 void AppTemplate::onClose()
