@@ -25,8 +25,18 @@ public:
 
     void update();
 
-    SmoothUIToolKit::Transition2D& Postion();
+    SmoothUIToolKit::Transition2D& Position();
     SmoothUIToolKit::Transition2D& Size();
+
+    void autoDestroyPosition(bool autoDestroy)
+    {
+        _transitions.auto_destroy_position = autoDestroy;
+    }
+
+    void autoDestroySize(bool autoDestroy)
+    {
+        _transitions.auto_destroy_size = autoDestroy;
+    }
 
 private:
     lv_obj_t* _lv_obj = NULL;
@@ -34,6 +44,8 @@ private:
     struct Transitions_t {
         std::unique_ptr<SmoothUIToolKit::Transition2D> position;
         std::unique_ptr<SmoothUIToolKit::Transition2D> size;
+        bool auto_destroy_position = false;
+        bool auto_destroy_size = false;
     };
     Transitions_t _transitions;
 };

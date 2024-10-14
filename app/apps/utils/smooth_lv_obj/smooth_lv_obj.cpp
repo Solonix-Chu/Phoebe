@@ -35,20 +35,20 @@ void SmoothLvObj::update()
     if (_transitions.position) {
         _transitions.position->update(HAL::SysCtrl().millis());
         lv_obj_set_pos(_lv_obj, _transitions.position->getValue().x, _transitions.position->getValue().y);
-        if (_transitions.position->isFinish()) {
+        if (_transitions.auto_destroy_position && _transitions.position->isFinish()) {
             _transitions.position.reset();
         }
     }
     if (_transitions.size) {
         _transitions.size->update(HAL::SysCtrl().millis());
         lv_obj_set_size(_lv_obj, _transitions.size->getValue().x, _transitions.size->getValue().y);
-        if (_transitions.size->isFinish()) {
+        if (_transitions.auto_destroy_size && _transitions.size->isFinish()) {
             _transitions.size.reset();
         }
     }
 }
 
-Transition2D& SmoothLvObj::Postion()
+Transition2D& SmoothLvObj::Position()
 {
     if (!_transitions.position) {
         _transitions.position = std::make_unique<Transition2D>();

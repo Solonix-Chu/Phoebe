@@ -50,19 +50,27 @@ void AppTestShit::onOpen()
     _obj->Size().setTransitionPath(EasingPath::easeOutBack);
     _obj->Size().setDuration(300);
     _obj->Size().moveTo(30, 120);
+
+    _obj->Position().jumpTo(50, 5);
+    _obj->Position().setTransitionPath(EasingPath::easeOutBack);
+    _obj->Position().setDuration(300);
+    _obj->Position().moveTo(30, 30);
 }
 
 void AppTestShit::onRunning()
 {
     HAL::BtnUpdate();
+
     if (HAL::BtnOk().wasClicked()) {
         Vector2D_t new_shit;
-        new_shit.x = math::getRandomInt(0, 200);
-        new_shit.y = math::getRandomInt(0, 200);
+        new_shit.x = math::getRandomInt(1, 114);
+        new_shit.y = math::getRandomInt(1, 114);
         mclog::info("new shit: {} {}", new_shit.x, new_shit.y);
-        _obj->Size().setTransitionPath(EasingPath::easeOutBack);
-        _obj->Size().setDuration(300);
         _obj->Size().moveTo(new_shit);
+
+        new_shit.x = math::getRandomInt(1, 114);
+        new_shit.y = math::getRandomInt(1, 114);
+        _obj->Position().moveTo(new_shit);
     }
 
     _obj->update();
