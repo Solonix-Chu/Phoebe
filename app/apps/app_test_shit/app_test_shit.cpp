@@ -13,7 +13,9 @@
 #include <hal/hal.h>
 #include <lvgl.h>
 #include <src/core/lv_obj.h>
+#include <src/core/lv_obj_style_gen.h>
 #include <src/display/lv_display.h>
+#include <src/misc/lv_color.h>
 #include "../utils/smooth_lv_widgets/lv_obj.h"
 #include "../utils/math/math.h"
 #include "core/easing_path/easing_path.h"
@@ -56,6 +58,8 @@ void AppTestShit::onOpen()
     _obj->Position().setTransitionPath(EasingPath::easeOutBack);
     _obj->Position().setDuration(500);
     _obj->Position().moveTo(30, 30);
+
+    lv_obj_set_style_bg_color(_obj->get(), lv_color_black(), 0);
 }
 
 void AppTestShit::onRunning()
@@ -64,8 +68,8 @@ void AppTestShit::onRunning()
 
     if (HAL::BtnOk().wasClicked()) {
         Vector2D_t new_shit;
-        new_shit.x = math::getRandomInt(1, 114);
-        new_shit.y = math::getRandomInt(1, 114);
+        new_shit.x = math::getRandomInt(5, 114);
+        new_shit.y = math::getRandomInt(5, 114);
         mclog::info("new shit: {} {}", new_shit.x, new_shit.y);
         _obj->Size().moveTo(new_shit);
 

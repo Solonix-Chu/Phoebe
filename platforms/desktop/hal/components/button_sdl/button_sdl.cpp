@@ -23,9 +23,9 @@ bool ButtonSDL::getButton(ButtonId::ButtonId_t id)
         case ButtonId::Up:
             return current_key_states[SDL_SCANCODE_W] != 0;
         case ButtonId::Ok:
-            return current_key_states[SDL_SCANCODE_D] != 0;
-        case ButtonId::Down:
             return current_key_states[SDL_SCANCODE_E] != 0;
+        case ButtonId::Down:
+            return current_key_states[SDL_SCANCODE_S] != 0;
         default:
             return false;
     }
