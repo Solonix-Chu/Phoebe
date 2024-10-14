@@ -14,7 +14,7 @@
 #include <lvgl.h>
 #include <src/core/lv_obj.h>
 #include <src/display/lv_display.h>
-#include "../utils/smooth_lv_obj/smooth_lv_obj.h"
+#include "../utils/smooth_lv_widgets/lv_obj.h"
 #include "../utils/math/math.h"
 #include "core/easing_path/easing_path.h"
 #include "core/types/types.h"
@@ -22,6 +22,7 @@
 using namespace mooncake;
 using namespace SmoothUIToolKit;
 using namespace math;
+using namespace smooth_lv_widgets;
 
 #define _tag (getAppInfo().name)
 
@@ -39,21 +40,21 @@ void AppTestShit::onCreate()
     open();
 }
 
-SmoothLvObj* _obj;
+LvObj* _obj;
 
 void AppTestShit::onOpen()
 {
     mclog::tagInfo(_tag, "on open");
 
-    _obj = new SmoothLvObj(lv_obj_create(lv_screen_active()));
+    _obj = new LvObj(lv_obj_create(lv_screen_active()));
     _obj->Size().jumpTo(50, 5);
     _obj->Size().setTransitionPath(EasingPath::easeOutBack);
-    _obj->Size().setDuration(300);
+    _obj->Size().setDuration(500);
     _obj->Size().moveTo(30, 120);
 
     _obj->Position().jumpTo(50, 5);
     _obj->Position().setTransitionPath(EasingPath::easeOutBack);
-    _obj->Position().setDuration(300);
+    _obj->Position().setDuration(500);
     _obj->Position().moveTo(30, 30);
 }
 

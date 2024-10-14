@@ -13,17 +13,19 @@
 #include <lvgl.h>
 #include <memory>
 
-class SmoothLvObj {
+namespace smooth_lv_widgets {
+
+class LvObj {
 public:
-    SmoothLvObj(lv_obj_t* lvObj);
-    ~SmoothLvObj();
+    LvObj(lv_obj_t* lvObj);
+    ~LvObj();
 
     lv_obj_t* get()
     {
         return _lv_obj;
     }
 
-    void update();
+    virtual void update();
 
     SmoothUIToolKit::Transition2D& Position();
     SmoothUIToolKit::Transition2D& Size();
@@ -49,3 +51,5 @@ private:
     };
     Transitions_t _transitions;
 };
+
+} // namespace smooth_lv_widgets

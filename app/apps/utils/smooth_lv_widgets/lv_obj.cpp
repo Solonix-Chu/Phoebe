@@ -8,29 +8,29 @@
  * @copyright Copyright (c) 2024
  *
  */
-#include "smooth_lv_obj.h"
+#include "lv_obj.h"
 #include <memory>
 #include <smooth_ui_toolkit.h>
 #include <lvgl.h>
 #include <hal/hal.h>
-#include <src/core/lv_obj_pos.h>
 
 using namespace SmoothUIToolKit;
+using namespace smooth_lv_widgets;
 
-SmoothLvObj::SmoothLvObj(lv_obj_t* lvObj)
+LvObj::LvObj(lv_obj_t* lvObj)
 {
     _lv_obj = lvObj;
     lv_obj_null_on_delete(&_lv_obj);
 }
 
-SmoothLvObj::~SmoothLvObj()
+LvObj::~LvObj()
 {
     if (_lv_obj != NULL) {
         lv_obj_delete_async(_lv_obj);
     }
 }
 
-void SmoothLvObj::update()
+void LvObj::update()
 {
     if (_transitions.position) {
         _transitions.position->update(HAL::SysCtrl().millis());
@@ -48,7 +48,7 @@ void SmoothLvObj::update()
     }
 }
 
-Transition2D& SmoothLvObj::Position()
+Transition2D& LvObj::Position()
 {
     if (!_transitions.position) {
         _transitions.position = std::make_unique<Transition2D>();
@@ -56,7 +56,7 @@ Transition2D& SmoothLvObj::Position()
     return *_transitions.position.get();
 }
 
-Transition2D& SmoothLvObj::Size()
+Transition2D& LvObj::Size()
 {
     if (!_transitions.size) {
         _transitions.size = std::make_unique<Transition2D>();
