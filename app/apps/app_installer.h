@@ -13,6 +13,7 @@
 #include <memory>
 #include "app_template/app_template.h"
 #include "app_test_clock_shit/app_test_clock_shit.h"
+#include "app_test_shit/app_test_shit.h"
 /* Header files locator (Don't remove) */
 
 /**
@@ -24,7 +25,8 @@ inline void on_install_apps()
 {
     // 安装 App
     // mooncake::GetMooncake().installApp(std::make_unique<MyApp>());
-    mooncake::GetMooncake().installApp(std::make_unique<AppTemplate>());
+    // mooncake::GetMooncake().installApp(std::make_unique<AppTemplate>());
     // mooncake::GetMooncake().installApp(std::make_unique<AppTemplatejijiji>());
+    mooncake::GetMooncake().installApp(std::make_unique<AppTestShit>());
     /* Install app locator (Don't remove) */
 }
