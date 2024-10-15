@@ -13,6 +13,7 @@
 #include <smooth_ui_toolkit.h>
 #include <lvgl.h>
 #include <hal/hal.h>
+#include <src/core/lv_obj_pos.h>
 
 using namespace SmoothUIToolKit;
 using namespace smooth_lv_widgets;
@@ -62,4 +63,39 @@ Transition2D& LvObj::Size()
         _transitions.size = std::make_unique<Transition2D>();
     }
     return *_transitions.size.get();
+}
+
+void LvObj::align(lv_align_t align, int32_t x_ofs, int32_t y_ofs)
+{
+    lv_obj_align(_lv_obj, align, x_ofs, y_ofs);
+}
+
+void LvObj::alignTo(const lv_obj_t* base, lv_align_t align, int32_t x_ofs, int32_t y_ofs)
+{
+    lv_obj_align_to(_lv_obj, base, align, x_ofs, y_ofs);
+}
+
+void LvObj::setAlign(lv_align_t align)
+{
+    lv_obj_set_align(_lv_obj, align);
+}
+
+void LvObj::setScrollbarMode(lv_scrollbar_mode_t mode)
+{
+    lv_obj_set_scrollbar_mode(_lv_obj, mode);
+}
+
+void LvObj::setRadius(int32_t value, lv_style_selector_t selector)
+{
+    lv_obj_set_style_radius(_lv_obj, value, selector);
+}
+
+void LvObj::setBgColor(lv_color_t value, lv_style_selector_t selector)
+{
+    lv_obj_set_style_bg_color(_lv_obj, value, selector);
+}
+
+void LvObj::setBorderWidth(int32_t value, lv_style_selector_t selector)
+{
+    lv_obj_set_style_border_width(_lv_obj, value, selector);
 }

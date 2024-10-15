@@ -9,6 +9,7 @@
  *
  */
 #pragma once
+#include <cstdint>
 #include <smooth_ui_toolkit.h>
 #include <lvgl.h>
 #include <memory>
@@ -39,6 +40,14 @@ public:
     {
         _transitions.auto_destroy_size = autoDestroy;
     }
+
+    void align(lv_align_t align, int32_t x_ofs, int32_t y_ofs);
+    void alignTo(const lv_obj_t* base, lv_align_t align, int32_t x_ofs, int32_t y_ofs);
+    void setAlign(lv_align_t align);
+    void setScrollbarMode(lv_scrollbar_mode_t mode);
+    void setRadius(int32_t value, lv_style_selector_t selector = LV_PART_MAIN);
+    void setBgColor(lv_color_t value, lv_style_selector_t selector = LV_PART_MAIN);
+    void setBorderWidth(int32_t value, lv_style_selector_t selector = LV_PART_MAIN);
 
 private:
     lv_obj_t* _lv_obj = NULL;

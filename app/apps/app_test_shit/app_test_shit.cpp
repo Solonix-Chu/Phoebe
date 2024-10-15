@@ -13,8 +13,11 @@
 #include <hal/hal.h>
 #include <lvgl.h>
 #include <src/core/lv_obj.h>
+#include <src/core/lv_obj_pos.h>
+#include <src/core/lv_obj_scroll.h>
 #include <src/core/lv_obj_style_gen.h>
 #include <src/display/lv_display.h>
+#include <src/misc/lv_area.h>
 #include <src/misc/lv_color.h>
 #include "../utils/smooth_lv_widgets/lv_obj.h"
 #include "../utils/math/math.h"
@@ -48,6 +51,8 @@ void AppTestShit::onOpen()
 {
     mclog::tagInfo(_tag, "on open");
 
+    lv_obj_set_scrollbar_mode(lv_screen_active(), LV_SCROLLBAR_MODE_OFF);
+
     _obj = new LvObj(lv_obj_create(lv_screen_active()));
     _obj->Size().jumpTo(50, 5);
     _obj->Size().setTransitionPath(EasingPath::easeOutBack);
@@ -56,10 +61,14 @@ void AppTestShit::onOpen()
 
     _obj->Position().jumpTo(50, 5);
     _obj->Position().setTransitionPath(EasingPath::easeOutBack);
-    _obj->Position().setDuration(500);
+    _obj->Position().setDuration(300);
     _obj->Position().moveTo(30, 30);
 
-    lv_obj_set_style_bg_color(_obj->get(), lv_color_black(), 0);
+    // _obj->setAlign(LV_ALIGN_CENTER);
+    _obj->setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
+    _obj->setRadius(12);
+    _obj->setBgColor(lv_color_black());
+    _obj->setBorderWidth(0);
 }
 
 void AppTestShit::onRunning()
@@ -68,8 +77,8 @@ void AppTestShit::onRunning()
 
     if (HAL::BtnOk().wasClicked()) {
         Vector2D_t new_shit;
-        new_shit.x = math::getRandomInt(5, 114);
-        new_shit.y = math::getRandomInt(5, 114);
+        new_shit.x = math::getRandomInt(20, 114);
+        new_shit.y = math::getRandomInt(20, 114);
         mclog::info("new shit: {} {}", new_shit.x, new_shit.y);
         _obj->Size().moveTo(new_shit);
 
