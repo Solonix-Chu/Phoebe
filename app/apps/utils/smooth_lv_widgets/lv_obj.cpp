@@ -10,10 +10,9 @@
  */
 #include "lv_obj.h"
 #include <memory>
-#include <smooth_ui_toolkit.h>
 #include <lvgl.h>
 #include <hal/hal.h>
-#include <src/core/lv_obj_pos.h>
+#include <smooth_ui_toolkit.h>
 
 using namespace SmoothUIToolKit;
 using namespace smooth_lv_widgets;

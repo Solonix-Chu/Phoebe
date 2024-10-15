@@ -64,7 +64,7 @@ void AppTestShit::onOpen()
     _obj->Position().setDuration(300);
     _obj->Position().moveTo(30, 30);
 
-    // _obj->setAlign(LV_ALIGN_CENTER);
+    _obj->setAlign(LV_ALIGN_CENTER);
     _obj->setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
     _obj->setRadius(12);
     _obj->setBgColor(lv_color_black());
@@ -82,12 +82,21 @@ void AppTestShit::onRunning()
         mclog::info("new shit: {} {}", new_shit.x, new_shit.y);
         _obj->Size().moveTo(new_shit);
 
-        new_shit.x = math::getRandomInt(1, 114);
-        new_shit.y = math::getRandomInt(1, 114);
+        new_shit.x = math::getRandomInt(-60, 60);
+        new_shit.y = math::getRandomInt(-60, 60);
         _obj->Position().moveTo(new_shit);
     }
 
-    _obj->update();
+    if (HAL::BtnPower().wasClicked()) {
+        mclog::info("bye");
+        delete _obj;
+        _obj = nullptr;
+    }
+
+    if (_obj) {
+        _obj->update();
+    }
+
     lv_timer_handler();
 }
 
