@@ -17,6 +17,7 @@ add_subdirectory(dependencies/ArduinoJson)
 # SDL
 find_package(SDL2 REQUIRED SDL2)
 include_directories(PUBLIC ${SDL2_INCLUDE_DIRS})
+target_include_directories(lvgl PUBLIC ${SDL2_INCLUDE_DIRS})
 
 # Mooncake 
 set(MOONCAKE_BUILD_EXAMPLE OFF)
