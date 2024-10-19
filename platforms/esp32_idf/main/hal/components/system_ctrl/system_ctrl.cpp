@@ -85,3 +85,8 @@ void SystemControlArduino::feedTheDog()
     _dog = 0;
     _feed_mutex.unlock();
 }
+
+size_t SystemControlArduino::freeHeapSize()
+{
+    return ESP.getFreeHeap();
+}

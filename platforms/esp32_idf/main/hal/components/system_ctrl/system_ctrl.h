@@ -20,4 +20,5 @@ public:
     void reboot() override;
     void powerOff() override;
     void feedTheDog() override;
+    size_t freeHeapSize() override;
 };
