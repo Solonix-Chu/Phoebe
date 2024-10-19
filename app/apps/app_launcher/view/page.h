@@ -10,7 +10,9 @@
  */
 #pragma once
 #include "ability/ability.h"
+#include <memory>
 #include <mooncake.h>
+#include "../../utils/smooth_lv_widgets/lv_obj.h"
 
 /**
  * @brief 启动器页面基类，在 UIAbility 基础上加上二级页面状态，方便页面接管按键输入事件
@@ -50,6 +52,9 @@ public:
     void onBackground() override;
     void onHide() override;
     // void onDestroy() override {}
+
+private:
+    std::unique_ptr<smooth_lv_widgets::LvObj> _canvas;
 };
 
 class LauncherPageNotification : public LauncherPageBase {

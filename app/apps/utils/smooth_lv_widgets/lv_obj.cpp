@@ -21,6 +21,12 @@ LvObj::LvObj(lv_obj_t* lvObj)
 {
     _lv_obj = lvObj;
     lv_obj_null_on_delete(&_lv_obj);
+
+    // Commom presets
+    setRadius(10);
+    setBorderWidth(0);
+    setBgColor(lv_color_black());
+    setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
 }
 
 LvObj::~LvObj()

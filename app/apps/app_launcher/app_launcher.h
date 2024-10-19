@@ -37,4 +37,5 @@ private:
     void create_page_list();
     void update_page_list();
     void destory_page_list();
+    void reset_lv_screen();
 };
