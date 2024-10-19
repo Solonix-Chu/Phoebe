@@ -75,6 +75,9 @@ public:
     void onBackground() override;
     void onHide() override;
     // void onDestroy() override {}
+
+private:
+    std::unique_ptr<smooth_lv_widgets::LvObj> _canvas;
 };
 
 class LauncherPageAppList : public LauncherPageBase {

@@ -34,13 +34,16 @@ void LauncherPageWatchFace::onShow()
 
     if (!_canvas) {
         _canvas = std::make_unique<smooth_lv_widgets::LvObj>(lv_obj_create(lv_screen_active()));
-
+        _canvas->Position().setTransitionPath(EasingPath::easeOutBack);
+        _canvas->Size().setTransitionPath(EasingPath::easeOutBack);
         _canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
         _canvas->Size().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
     }
 
-    _canvas->Position().setDuration(200);
-    _canvas->Size().setDuration(350);
+    // _canvas->Position().setDelay(100);
+    // _canvas->Size().setDelay(100);
+    _canvas->Position().setDuration(600);
+    _canvas->Size().setDuration(1000);
     _canvas->Position().moveTo(_canvas_x, _canvas_y);
     _canvas->Size().moveTo(_canvas_w, _canvas_h);
 }
@@ -67,8 +70,10 @@ void LauncherPageWatchFace::onHide()
 {
     mclog::tagInfo(_tag, "on hide");
 
-    _canvas->Position().setDuration(350);
-    _canvas->Size().setDuration(200);
+    _canvas->Position().setDelay(0);
+    _canvas->Size().setDelay(0);
+    _canvas->Position().setDuration(600);
+    _canvas->Size().setDuration(400);
     _canvas->Position().moveTo(_canvas_start_up_x, _canvas_start_up_y);
     _canvas->Size().moveTo(_canvas_start_up_w, _canvas_start_up_h);
 }

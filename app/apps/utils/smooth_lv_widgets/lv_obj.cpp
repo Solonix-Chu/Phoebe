@@ -24,7 +24,7 @@ LvObj::LvObj(lv_obj_t* lvObj)
 
     // Commom presets
     setRadius(10);
-    setBorderWidth(0);
+    // setBorderWidth(0);
     setBgColor(lv_color_black());
     setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
 }
