@@ -49,8 +49,6 @@ void AppTemplate::onRunning()
     if (HAL::BtnPower().wasHold()) {
         mclog::info("jijiji");
     }
-
-    lv_timer_handler();
 }
 
 void AppTemplate::onClose()

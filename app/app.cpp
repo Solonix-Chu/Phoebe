@@ -14,6 +14,7 @@
 #include <mooncake.h>
 #include <mooncake_log.h>
 #include <string>
+#include <lvgl.h>
 
 using namespace mooncake;
 
@@ -52,6 +53,9 @@ void APP::Update()
 {
     // 更新 Mooncake
     GetMooncake().update();
+
+    // 更新 Lvgl
+    lv_timer_handler();
 
     // 重置看门狗，建议实现这个看门狗，避免某个生命周期回调卡死了
     HAL::SysCtrl().feedTheDog();

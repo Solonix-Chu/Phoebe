@@ -9,6 +9,7 @@
  *
  */
 #pragma once
+#include <cstddef>
 #include <cstdint>
 
 namespace hal_components {
@@ -61,6 +62,11 @@ public:
      *
      */
     virtual void feedTheDog() {}
+
+    virtual size_t freeHeapSize()
+    {
+        return 0;
+    }
 };
 
 } // namespace hal_components

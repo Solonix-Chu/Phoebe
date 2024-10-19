@@ -11,96 +11,137 @@
 #include "app_test_shit.h"
 #include <mooncake_log.h>
 #include <hal/hal.h>
-#include <lvgl.h>
-#include <src/core/lv_obj.h>
-#include <src/core/lv_obj_pos.h>
-#include <src/core/lv_obj_scroll.h>
-#include <src/core/lv_obj_style_gen.h>
-#include <src/display/lv_display.h>
-#include <src/misc/lv_area.h>
-#include <src/misc/lv_color.h>
-#include "../utils/smooth_lv_widgets/lv_obj.h"
-#include "../utils/math/math.h"
-#include "core/easing_path/easing_path.h"
-#include "core/types/types.h"
+#include "../utils/duktape/duktape.h"
+#include "../utils/duktape/duk_console.h"
 
 using namespace mooncake;
-using namespace SmoothUIToolKit;
-using namespace math;
-using namespace smooth_lv_widgets;
 
 #define _tag (getAppInfo().name)
 
+duk_context* _duktape_ctx;
+
+std::string _script = R"(
+var app_name = "app sb";
+
+function onAppOpen() {
+  console.log(app_name + " on open");
+}
+
+function onAppUpdate() {
+  console.log(app_name + " on update");
+  // var sss = "ssssss s s s s 2152fg ";
+  // var a = 6;
+  // for (var i = 0; i < 24; i++) {
+  //   a += i;
+  // }
+  // console.log(a);
+  // console.log(sss);
+}
+
+function onAppClose() {
+  console.log(app_name + " on close");
+}
+)";
+
+static const char* _script_api_on_app_open = "onAppOpen";
+static const char* _script_api_on_app_update = "onAppUpdate";
+static const char* _script_api_on_app_close = "onAppClose";
+
+void _call_script_api(duk_context* ctx, const char* api)
+{
+    duk_get_global_string(ctx, api);
+    if (duk_pcall(ctx, 0) != 0) {
+        // printf("Error: %s\n", duk_safe_to_string(ctx, -1));
+        mclog::error("call script api: {} error: {}", api, duk_safe_to_string(ctx, -1));
+    }
+    duk_pop(ctx); /* ignore result */
+}
+
 AppTestShit::AppTestShit()
 {
-    // 配置 App 信息
     setAppInfo().name = "AppTestShit";
 }
 
 void AppTestShit::onCreate()
 {
     mclog::tagInfo(_tag, "on create");
-
-    // 打开自己
     open();
 }
-
-LvObj* _obj;
 
 void AppTestShit::onOpen()
 {
     mclog::tagInfo(_tag, "on open");
 
-    lv_obj_set_scrollbar_mode(lv_screen_active(), LV_SCROLLBAR_MODE_OFF);
+    fmt::println("heap before: {}", HAL::SysCtrl().freeHeapSize());
 
-    _obj = new LvObj(lv_obj_create(lv_screen_active()));
-    _obj->Size().jumpTo(50, 5);
-    _obj->Size().setTransitionPath(EasingPath::easeOutBack);
-    _obj->Size().setDuration(500);
-    _obj->Size().moveTo(30, 120);
+    _duktape_ctx = duk_create_heap_default();
 
-    _obj->Position().jumpTo(50, 5);
-    _obj->Position().setTransitionPath(EasingPath::easeOutBack);
-    _obj->Position().setDuration(300);
-    _obj->Position().moveTo(30, 30);
+    duk_console_init(_duktape_ctx, DUK_CONSOLE_STDOUT_ONLY);
 
-    _obj->setAlign(LV_ALIGN_CENTER);
-    _obj->setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
-    _obj->setRadius(12);
-    _obj->setBgColor(lv_color_black());
-    _obj->setBorderWidth(0);
+    duk_eval_string(_duktape_ctx, _script.c_str());
+
+    _call_script_api(_duktape_ctx, _script_api_on_app_open);
+    // for (int i = 0; i < 10; i++) {
+    //     _call_script_api(_duktape_ctx, _script_api_on_app_update);
+    // }
+    // _call_script_api(_duktape_ctx, _script_api_on_app_close);
+    // duk_destroy_heap(_duktape_ctx);
+
+    fmt::println("heap after: {}", HAL::SysCtrl().freeHeapSize());
 }
 
 void AppTestShit::onRunning()
 {
-    HAL::BtnUpdate();
+    // static uint32_t time_count = HAL::SysCtrl().millis();
+    // fmt::println("r {} ", HAL::SysCtrl().millis() - time_count);
+    // time_count = HAL::SysCtrl().millis();
 
-    if (HAL::BtnOk().wasClicked()) {
-        Vector2D_t new_shit;
-        new_shit.x = math::getRandomInt(20, 114);
-        new_shit.y = math::getRandomInt(20, 114);
-        mclog::info("new shit: {} {}", new_shit.x, new_shit.y);
-        _obj->Size().moveTo(new_shit);
+    // static uint32_t time_count_py;
+    // time_count_py = HAL::SysCtrl().millis();
+    _call_script_api(_duktape_ctx, _script_api_on_app_update);
+    // fmt::println("s {} f {}", HAL::SysCtrl().millis() - time_count_py, HAL::SysCtrl().freeHeapSize());
 
-        new_shit.x = math::getRandomInt(-60, 60);
-        new_shit.y = math::getRandomInt(-60, 60);
-        _obj->Position().moveTo(new_shit);
-    }
+    // Benchmark:
 
-    if (HAL::BtnPower().wasClicked()) {
-        mclog::info("bye");
-        delete _obj;
-        _obj = nullptr;
-    }
+    // Pika:
+    // r 0
+    // s 26 f 240076 好几把慢
+    // 2128 used
+    // 才 2K，6
 
-    if (_obj) {
-        _obj->update();
-    }
+    // Duktape:
+    // r 0
+    // s 4 f 166904
+    // 但是：
+    // heap before: 242204
+    // heap after: 166904
+    // 75300 used
 
-    lv_timer_handler();
+    // lvgl: 124KB + 48KB, mlcd: 3K, duktape: 80KB
+
+    // 改 lvgl 用标准 c malloc 正常了，沙比 lvgl
+    // heap before: 321360
+    // heap after: 246084
+    // 75276 used
+    // s 4 f 246060
+    // 就你了 :)
+
+    // PikaPython：
+    // 耗时：26ms
+    // 内存占用：2KB
+
+    // Duktape：
+    // 耗时：4ms
+    // 内存占用：75KB
+
+    // HAL::BtnUpdate();
+    // if (HAL::BtnDown().wasClicked()) {
+    //     HAL::SysCtrl().powerOff();
+    // }
 }
 
 void AppTestShit::onClose()
 {
     mclog::tagInfo(_tag, "on close");
+    duk_destroy_heap(_duktape_ctx);
 }
