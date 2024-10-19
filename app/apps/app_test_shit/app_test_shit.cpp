@@ -29,13 +29,13 @@ function onAppOpen() {
 
 function onAppUpdate() {
   console.log(app_name + " on update");
-  var sss = "ssssss s s s s 2152fg ";
-  var a = 6;
-  for (var i = 0; i < 24; i++) {
-    a += i;
-  }
-  console.log(a);
-  console.log(sss);
+  // var sss = "ssssss s s s s 2152fg ";
+  // var a = 6;
+  // for (var i = 0; i < 24; i++) {
+  //   a += i;
+  // }
+  // console.log(a);
+  // console.log(sss);
 }
 
 function onAppClose() {
@@ -96,10 +96,10 @@ void AppTestShit::onRunning()
     // fmt::println("r {} ", HAL::SysCtrl().millis() - time_count);
     // time_count = HAL::SysCtrl().millis();
 
-    static uint32_t time_count_py;
-    time_count_py = HAL::SysCtrl().millis();
+    // static uint32_t time_count_py;
+    // time_count_py = HAL::SysCtrl().millis();
     _call_script_api(_duktape_ctx, _script_api_on_app_update);
-    fmt::println("s {} f {}", HAL::SysCtrl().millis() - time_count_py, HAL::SysCtrl().freeHeapSize());
+    // fmt::println("s {} f {}", HAL::SysCtrl().millis() - time_count_py, HAL::SysCtrl().freeHeapSize());
 
     // Benchmark:
 
@@ -134,10 +134,10 @@ void AppTestShit::onRunning()
     // 耗时：4ms
     // 内存占用：75KB
 
-    HAL::BtnUpdate();
-    if (HAL::BtnDown().wasClicked()) {
-        HAL::SysCtrl().powerOff();
-    }
+    // HAL::BtnUpdate();
+    // if (HAL::BtnDown().wasClicked()) {
+    //     HAL::SysCtrl().powerOff();
+    // }
 }
 
 void AppTestShit::onClose()
