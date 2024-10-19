@@ -106,6 +106,8 @@ void AppTestShit::onRunning()
     // Pika:
     // r 0
     // s 26 f 240076 好几把慢
+    // 2128 used
+    // 才 2K，6
 
     // Duktape:
     // r 0
@@ -114,6 +116,23 @@ void AppTestShit::onRunning()
     // heap before: 242204
     // heap after: 166904
     // 75300 used
+
+    // lvgl: 124KB + 48KB, mlcd: 3K, duktape: 80KB
+
+    // 改 lvgl 用标准 c malloc 正常了，沙比 lvgl
+    // heap before: 321360
+    // heap after: 246084
+    // 75276 used
+    // s 4 f 246060
+    // 就你了 :)
+
+    // PikaPython：
+    // 耗时：26ms
+    // 内存占用：2KB
+
+    // Duktape：
+    // 耗时：4ms
+    // 内存占用：75KB
 
     HAL::BtnUpdate();
     if (HAL::BtnDown().wasClicked()) {
