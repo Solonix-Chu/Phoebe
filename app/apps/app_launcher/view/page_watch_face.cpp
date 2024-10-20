@@ -13,6 +13,7 @@
 #include <memory>
 #include <mooncake_log.h>
 #include <src/core/lv_obj_scroll.h>
+#include <src/lv_api_map_v8.h>
 
 using namespace mooncake;
 using namespace SmoothUIToolKit;
@@ -44,6 +45,7 @@ void LauncherPageWatchFace::onShow()
     _canvas->Size().setDuration(1000);
     _canvas->Position().moveTo(_canvas_x, _canvas_y);
     _canvas->Size().moveTo(_canvas_w, _canvas_h);
+    lv_obj_move_foreground(_canvas->get());
 }
 
 void LauncherPageWatchFace::onForeground()
@@ -72,4 +74,5 @@ void LauncherPageWatchFace::onHide()
     _canvas->Size().setDuration(400);
     _canvas->Position().moveTo(_canvas_start_up_x, _canvas_start_up_y);
     _canvas->Size().moveTo(_canvas_start_up_w, _canvas_start_up_h);
+    lv_obj_move_background(_canvas->get());
 }

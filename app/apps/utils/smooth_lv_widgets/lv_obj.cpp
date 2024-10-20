@@ -29,7 +29,7 @@ LvObj::LvObj(lv_obj_t* lvObj)
     setBorderWidth(2);
     // setBorderColor(lv_color_hex(0xAFAFAC));
     setBorderColor(lv_color_black());
-    setBgColor(lv_color_hex(0xAFAFAC));
+    // setBgColor(lv_color_hex(0xAFAFAC));
     // setBgColor(lv_color_black());
     setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
 

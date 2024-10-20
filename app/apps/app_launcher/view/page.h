@@ -60,12 +60,15 @@ private:
 
 class LauncherPageNotification : public LauncherPageBase {
 public:
-    // void onCreate() override {}
+    void onCreate() override;
     void onShow() override;
     void onForeground() override;
     void onBackground() override;
     void onHide() override;
     // void onDestroy() override {}
+
+private:
+    std::vector<std::unique_ptr<smooth_lv_widgets::LvObj>> _canvas_list;
 };
 
 class LauncherPageWidgets : public LauncherPageBase {
