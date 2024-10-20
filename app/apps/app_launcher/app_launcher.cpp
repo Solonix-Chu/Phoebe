@@ -19,6 +19,8 @@
 #include <src/core/lv_obj_tree.h>
 #include <src/display/lv_display.h>
 #include <src/misc/lv_color.h>
+#include <src/themes/lv_theme.h>
+#include <src/themes/simple/lv_theme_simple.h>
 
 using namespace mooncake;
 
@@ -138,8 +140,6 @@ void AppLauncher::destory_page_list()
 void AppLauncher::reset_lv_screen()
 {
     lv_obj_clean(lv_screen_active());
-    // lv_theme_t* theme_mono = lv_theme_mono_init(lv_display_get_default(), false, &lv_font_montserrat_14);
-    // lv_display_set_theme(lv_display_get_default(), theme_mono);
-    // lv_obj_set_style_bg_color(lv_screen_active(), lv_color_white(), 0);
+    lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0xAFAFAC), 0);
     lv_obj_set_scrollbar_mode(lv_screen_active(), LV_SCROLLBAR_MODE_OFF);
 }

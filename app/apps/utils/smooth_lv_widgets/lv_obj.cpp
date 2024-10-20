@@ -13,6 +13,8 @@
 #include <lvgl.h>
 #include <hal/hal.h>
 #include <smooth_ui_toolkit.h>
+#include <src/core/lv_obj_style_gen.h>
+#include <src/misc/lv_color.h>
 
 using namespace SmoothUIToolKit;
 using namespace smooth_lv_widgets;
@@ -24,9 +26,15 @@ LvObj::LvObj(lv_obj_t* lvObj)
 
     // Commom presets
     setRadius(10);
-    // setBorderWidth(0);
-    setBgColor(lv_color_black());
+    setBorderWidth(2);
+    // setBorderColor(lv_color_hex(0xAFAFAC));
+    setBorderColor(lv_color_black());
+    setBgColor(lv_color_hex(0xAFAFAC));
+    // setBgColor(lv_color_black());
     setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
+
+    // lv_obj_set_style_outline_width(_lv_obj, 2, 0);
+    // lv_obj_set_style_outline_color(_lv_obj, lv_color_black(), 0);
 }
 
 LvObj::~LvObj()
@@ -103,4 +111,19 @@ void LvObj::setBgColor(lv_color_t value, lv_style_selector_t selector)
 void LvObj::setBorderWidth(int32_t value, lv_style_selector_t selector)
 {
     lv_obj_set_style_border_width(_lv_obj, value, selector);
+}
+
+void LvObj::setBorderColor(lv_color_t value, lv_style_selector_t selector)
+{
+    lv_obj_set_style_border_color(_lv_obj, value, selector);
+}
+
+void LvObj::setPos(int32_t x, int32_t y)
+{
+    lv_obj_set_pos(_lv_obj, x, y);
+}
+
+void LvObj::setSize(int32_t w, int32_t h)
+{
+    lv_obj_set_size(_lv_obj, w, h);
 }

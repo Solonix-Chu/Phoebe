@@ -20,7 +20,7 @@ using namespace SmoothUIToolKit;
 static const char* _tag = "PageWatchFace";
 
 static constexpr int _canvas_start_up_x = 150;
-static constexpr int _canvas_start_up_y = 36;
+static constexpr int _canvas_start_up_y = 12;
 static constexpr int _canvas_start_up_w = 20;
 static constexpr int _canvas_start_up_h = 40;
 static constexpr int _canvas_x = -4;
@@ -40,8 +40,6 @@ void LauncherPageWatchFace::onShow()
         _canvas->Size().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
     }
 
-    // _canvas->Position().setDelay(100);
-    // _canvas->Size().setDelay(100);
     _canvas->Position().setDuration(600);
     _canvas->Size().setDuration(1000);
     _canvas->Position().moveTo(_canvas_x, _canvas_y);
@@ -70,8 +68,6 @@ void LauncherPageWatchFace::onHide()
 {
     mclog::tagInfo(_tag, "on hide");
 
-    _canvas->Position().setDelay(0);
-    _canvas->Size().setDelay(0);
     _canvas->Position().setDuration(600);
     _canvas->Size().setDuration(400);
     _canvas->Position().moveTo(_canvas_start_up_x, _canvas_start_up_y);

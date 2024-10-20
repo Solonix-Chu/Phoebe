@@ -12,6 +12,7 @@
 #include "ability/ability.h"
 #include <memory>
 #include <mooncake.h>
+#include <vector>
 #include "../../utils/smooth_lv_widgets/lv_obj.h"
 
 /**
@@ -69,7 +70,7 @@ public:
 
 class LauncherPageWidgets : public LauncherPageBase {
 public:
-    // void onCreate() override {}
+    void onCreate() override;
     void onShow() override;
     void onForeground() override;
     void onBackground() override;
@@ -77,7 +78,7 @@ public:
     // void onDestroy() override {}
 
 private:
-    std::unique_ptr<smooth_lv_widgets::LvObj> _canvas;
+    std::vector<std::unique_ptr<smooth_lv_widgets::LvObj>> _canvas_list;
 };
 
 class LauncherPageAppList : public LauncherPageBase {
@@ -88,4 +89,7 @@ public:
     void onBackground() override;
     void onHide() override;
     // void onDestroy() override {}
+
+private:
+    std::unique_ptr<smooth_lv_widgets::LvObj> _canvas;
 };

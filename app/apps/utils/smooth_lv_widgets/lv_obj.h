@@ -48,6 +48,9 @@ public:
     void setRadius(int32_t value, lv_style_selector_t selector = LV_PART_MAIN);
     void setBgColor(lv_color_t value, lv_style_selector_t selector = LV_PART_MAIN);
     void setBorderWidth(int32_t value, lv_style_selector_t selector = LV_PART_MAIN);
+    void setBorderColor(lv_color_t value, lv_style_selector_t selector = LV_PART_MAIN);
+    void setPos(int32_t x, int32_t y);
+    void setSize(int32_t w, int32_t h);
 
 private:
     lv_obj_t* _lv_obj = NULL;
