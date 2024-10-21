@@ -14,6 +14,13 @@
 #include <mooncake_log.h>
 #include <hal/hal.h>
 #include <lvgl.h>
+#include <src/core/lv_obj_scroll.h>
+#include <src/core/lv_obj_style_gen.h>
+#include <src/core/lv_obj_tree.h>
+#include <src/display/lv_display.h>
+#include <src/misc/lv_color.h>
+#include <src/themes/lv_theme.h>
+#include <src/themes/simple/lv_theme_simple.h>
 
 using namespace mooncake;
 
@@ -33,6 +40,7 @@ void AppLauncher::onCreate()
 void AppLauncher::onOpen()
 {
     mclog::tagInfo(_tag, "on open");
+    reset_lv_screen();
     create_page_list();
 }
 
@@ -96,6 +104,10 @@ void AppLauncher::handle_page_change()
         // Update index
         _current_page_index = _new_page_index;
     }
+
+    if (HAL::BtnPower().wasHold()) {
+        HAL::SysCtrl().powerOff();
+    }
 }
 
 void AppLauncher::create_page_list()
@@ -127,4 +139,11 @@ void AppLauncher::destory_page_list()
         static_cast<AbilityBase*>(page.get())->baseDestroy();
     }
     _page_list.clear();
+}
+
+void AppLauncher::reset_lv_screen()
+{
+    lv_obj_clean(lv_screen_active());
+    // lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0xAFAFAC), 0);
+    lv_obj_set_scrollbar_mode(lv_screen_active(), LV_SCROLLBAR_MODE_OFF);
 }
