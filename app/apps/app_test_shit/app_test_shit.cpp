@@ -14,7 +14,6 @@
 #include "../utils/duktape/duktape.h"
 #include "../utils/duktape/duk_console.h"
 #include "../utils/duktape/duk_hal.h"
-#include "lgfx/v1/misc/enum.hpp"
 
 using namespace mooncake;
 

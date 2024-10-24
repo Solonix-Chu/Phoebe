@@ -34,9 +34,6 @@ add_subdirectory(dependencies/mooncake_event)
 # Smooth ui shit
 add_subdirectory(dependencies/smooth_ui_toolkit)
 
-# M5GFX
-include(platforms/desktop/m5gfx.cmake)
-
 # App layer
 file(GLOB_RECURSE APP_LAYER_SRCS
     app/*.c
@@ -65,7 +62,6 @@ target_link_libraries(app_desktop_build PUBLIC
     ${SDL2_LIBRARIES} 
     ArduinoJson
     smooth_ui_toolkit
-    m5gfx
 )
 
 # 设置构建路径

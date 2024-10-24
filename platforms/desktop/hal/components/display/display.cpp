@@ -10,7 +10,6 @@
  */
 #include "display.h"
 #include "../../hal_config.h"
-#include "lgfx/v1/misc/enum.hpp"
 #include <SDL.h>
 #include <cstdint>
 #include <lvgl.h>
