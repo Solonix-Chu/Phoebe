@@ -13,6 +13,7 @@
 #include <hal/hal.h>
 #include "../utils/duktape/duktape.h"
 #include "../utils/duktape/duk_console.h"
+#include "../utils/duktape/duk_hal.h"
 
 using namespace mooncake;
 
@@ -28,14 +29,8 @@ function onAppOpen() {
 }
 
 function onAppUpdate() {
-  console.log(app_name + " on update");
-  // var sss = "ssssss s s s s 2152fg ";
-  // var a = 6;
-  // for (var i = 0; i < 24; i++) {
-  //   a += i;
-  // }
-  // console.log(a);
-  // console.log(sss);
+  console.log(app_name + " on update " + hal.sysCtrl.millis());
+  hal.sysCtrl.delay(200)
 }
 
 function onAppClose() {
@@ -72,72 +67,19 @@ void AppTestShit::onOpen()
 {
     mclog::tagInfo(_tag, "on open");
 
-    fmt::println("heap before: {}", HAL::SysCtrl().freeHeapSize());
-
     _duktape_ctx = duk_create_heap_default();
 
     duk_console_init(_duktape_ctx, DUK_CONSOLE_STDOUT_ONLY);
+    duk_hal_init(_duktape_ctx);
 
     duk_eval_string(_duktape_ctx, _script.c_str());
 
     _call_script_api(_duktape_ctx, _script_api_on_app_open);
-    // for (int i = 0; i < 10; i++) {
-    //     _call_script_api(_duktape_ctx, _script_api_on_app_update);
-    // }
-    // _call_script_api(_duktape_ctx, _script_api_on_app_close);
-    // duk_destroy_heap(_duktape_ctx);
-
-    fmt::println("heap after: {}", HAL::SysCtrl().freeHeapSize());
 }
 
 void AppTestShit::onRunning()
 {
-    // static uint32_t time_count = HAL::SysCtrl().millis();
-    // fmt::println("r {} ", HAL::SysCtrl().millis() - time_count);
-    // time_count = HAL::SysCtrl().millis();
-
-    // static uint32_t time_count_py;
-    // time_count_py = HAL::SysCtrl().millis();
     _call_script_api(_duktape_ctx, _script_api_on_app_update);
-    // fmt::println("s {} f {}", HAL::SysCtrl().millis() - time_count_py, HAL::SysCtrl().freeHeapSize());
-
-    // Benchmark:
-
-    // Pika:
-    // r 0
-    // s 26 f 240076 好几把慢
-    // 2128 used
-    // 才 2K，6
-
-    // Duktape:
-    // r 0
-    // s 4 f 166904
-    // 但是：
-    // heap before: 242204
-    // heap after: 166904
-    // 75300 used
-
-    // lvgl: 124KB + 48KB, mlcd: 3K, duktape: 80KB
-
-    // 改 lvgl 用标准 c malloc 正常了，沙比 lvgl
-    // heap before: 321360
-    // heap after: 246084
-    // 75276 used
-    // s 4 f 246060
-    // 就你了 :)
-
-    // PikaPython：
-    // 耗时：26ms
-    // 内存占用：2KB
-
-    // Duktape：
-    // 耗时：4ms
-    // 内存占用：75KB
-
-    // HAL::BtnUpdate();
-    // if (HAL::BtnDown().wasClicked()) {
-    //     HAL::SysCtrl().powerOff();
-    // }
 }
 
 void AppTestShit::onClose()
