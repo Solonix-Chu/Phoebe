@@ -38,17 +38,39 @@ function onAppUpdate() {
   //   hal.sysCtrl.feedTheDog()
   // }
 
-  hal.imu.update();
-  var imuData = hal.imu.getData();
-  console.log(
-    'IMU Data - accelX: ' + imuData.accelX.toFixed(1) + ', accelY: ' + imuData.accelY.toFixed(1) + ', accelZ: ' + imuData.accelZ.toFixed(1) + ', ' +
-    'gyroX: ' + imuData.gyroX.toFixed(1) + ', gyroY: ' + imuData.gyroY.toFixed(1) + ', gyroZ: ' + imuData.gyroZ.toFixed(1)
-  );
+  // hal.imu.update();
+  // var imuData = hal.imu.getData();
+  // console.log(
+  //   'IMU Data - accelX: ' + imuData.accelX.toFixed(1) + ', accelY: ' + imuData.accelY.toFixed(1) + ', accelZ: ' + imuData.accelZ.toFixed(1) + ', ' +
+  //   'gyroX: ' + imuData.gyroX.toFixed(1) + ', gyroY: ' + imuData.gyroY.toFixed(1) + ', gyroZ: ' + imuData.gyroZ.toFixed(1)
+  // );
 
-  console.log("bat: " + hal.batteryMonitor.voltage().toFixed(1) + "v " + hal.batteryMonitor.percent().toFixed(1) + "%")
+  // console.log("bat: " + hal.batteryMonitor.voltage().toFixed(1) + "v " + hal.batteryMonitor.percent().toFixed(1) + "%")
 
-  hal.haptic.playEffects([1, 2, 3, 4]);
-  hal.sysCtrl.delay(800)
+  // hal.haptic.playEffects([1, 2, 3, 4]);
+  // hal.sysCtrl.delay(800)
+
+  hal.btnUpdate()
+
+  if (hal.btnPower.wasClicked()) {
+    console.log("ppp cc");
+  } else if (hal.btnPower.wasDoubleClicked()) {
+    console.log("ppp ddcc");
+  } else if (hal.btnPower.wasHold()) {
+    console.log("ppp hhh");
+  }
+
+  if (hal.btnUp.wasClicked()) {
+    console.log("up cc");
+  }
+
+  if (hal.btnOk.wasClicked()) {
+    console.log("ok cc");
+  }
+
+  if (hal.btnDown.wasClicked()) {
+    console.log("down cc");
+  }
 }
 
 function onAppClose() {
@@ -81,16 +103,35 @@ void AppTestShit::onCreate()
     open();
 }
 
+void _log_free_heap_shit()
+{
+    static auto current_free_heap = HAL::SysCtrl().freeHeapSize();
+    mclog::info("free heap: {}, {} used", HAL::SysCtrl().freeHeapSize(),
+                current_free_heap - HAL::SysCtrl().freeHeapSize());
+    current_free_heap = HAL::SysCtrl().freeHeapSize();
+}
+
 void AppTestShit::onOpen()
 {
     mclog::tagInfo(_tag, "on open");
 
+    _log_free_heap_shit();
+
+    mclog::info("create duk heap..");
     _duktape_ctx = duk_create_heap_default();
+    _log_free_heap_shit();
 
+    mclog::info("load console api..");
     duk_console_init(_duktape_ctx, DUK_CONSOLE_STDOUT_ONLY);
-    duk_hal_init(_duktape_ctx);
+    _log_free_heap_shit();
 
+    mclog::info("load hal api..");
+    duk_hal_init(_duktape_ctx);
+    _log_free_heap_shit();
+
+    mclog::info("laod script..");
     duk_eval_string(_duktape_ctx, _script.c_str());
+    _log_free_heap_shit();
 
     _call_script_api(_duktape_ctx, _script_api_on_app_open);
 }

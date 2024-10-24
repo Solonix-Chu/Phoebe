@@ -9,6 +9,8 @@
  *
  */
 #include "duk_hal.h"
+#include "apps/utils/duktape/duktape.h"
+#include "hal/components/button.h"
 #include <mooncake_log.h>
 #include <hal/hal.h>
 
@@ -235,6 +237,124 @@ static void _duk_hal_battery_init(duk_context* ctx)
     duk_put_prop_string(ctx, -2, "batteryMonitor");
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                   Button                                   */
+/* -------------------------------------------------------------------------- */
+#define _BTN_ID_POWER 0
+#define _BTN_ID_UP    1
+#define _BTN_ID_OK    2
+#define _BTN_ID_DOWN  3
+
+static hal_components::Button_Class& _get_btn_by_id(duk_int_t buttonId)
+{
+    switch (buttonId) {
+        case _BTN_ID_POWER: {
+            return HAL::BtnPower();
+        }
+        case _BTN_ID_UP: {
+            return HAL::BtnUp();
+        }
+        case _BTN_ID_OK: {
+            return HAL::BtnOk();
+        }
+        case _BTN_ID_DOWN: {
+            return HAL::BtnDown();
+        }
+        default: {
+            mclog::tagError(_tag, "no btn id {}", (int)buttonId);
+            return HAL::BtnOk();
+        }
+    }
+}
+
+#define _BTN_API_ID_WAS_CLICKED        0
+#define _BTN_API_ID_WAS_DOUBLE_CLICKED 1
+#define _BTN_API_ID_WAS_HOLD           2
+#define _BTN_API_ID_IS_PRESSED         3
+#define _BTN_API_ID_IS_HOLDING         4
+
+static duk_ret_t _hal_btn_api(duk_context* ctx)
+{
+    // 取 magic flag 的十位为按钮 id，个位为 api id
+    duk_int_t magic_flag = duk_get_current_magic(ctx);
+    int button_id = magic_flag / 10;
+    int api_id = magic_flag % 10;
+
+    bool result = false;
+    switch (api_id) {
+        case _BTN_API_ID_WAS_CLICKED: {
+            result = _get_btn_by_id(button_id).wasClicked();
+            break;
+        }
+        case _BTN_API_ID_WAS_DOUBLE_CLICKED: {
+            result = _get_btn_by_id(button_id).wasDoubleClicked();
+            break;
+        }
+        case _BTN_API_ID_WAS_HOLD: {
+            result = _get_btn_by_id(button_id).wasHold();
+            break;
+        }
+        case _BTN_API_ID_IS_PRESSED: {
+            result = _get_btn_by_id(button_id).isPressed();
+            break;
+        }
+        case _BTN_API_ID_IS_HOLDING: {
+            result = _get_btn_by_id(button_id).isHolding();
+            break;
+        }
+        default: {
+            mclog::tagError(_tag, "no btn api {}", (int)api_id);
+        }
+    }
+
+    duk_push_boolean(ctx, result);
+    return 1;
+}
+
+static duk_ret_t _hal_btn_update(duk_context* ctx)
+{
+    HAL::BtnUpdate();
+    return 0;
+}
+
+static void _duk_add_hal_btn(duk_context* ctx, int buttonId, const char* buttonName)
+{
+    duk_push_object(ctx);
+
+    duk_push_c_function(ctx, _hal_btn_api, 0);
+    duk_set_magic(ctx, -1, buttonId * 10 + _BTN_API_ID_WAS_CLICKED);
+    duk_put_prop_string(ctx, -2, "wasClicked");
+
+    duk_push_c_function(ctx, _hal_btn_api, 0);
+    duk_set_magic(ctx, -1, buttonId * 10 + _BTN_API_ID_WAS_DOUBLE_CLICKED);
+    duk_put_prop_string(ctx, -2, "wasDoubleClicked");
+
+    duk_push_c_function(ctx, _hal_btn_api, 0);
+    duk_set_magic(ctx, -1, buttonId * 10 + _BTN_API_ID_WAS_HOLD);
+    duk_put_prop_string(ctx, -2, "wasHold");
+
+    duk_push_c_function(ctx, _hal_btn_api, 0);
+    duk_set_magic(ctx, -1, buttonId * 10 + _BTN_API_ID_IS_PRESSED);
+    duk_put_prop_string(ctx, -2, "isPressed");
+
+    duk_push_c_function(ctx, _hal_btn_api, 0);
+    duk_set_magic(ctx, -1, buttonId * 10 + _BTN_API_ID_IS_HOLDING);
+    duk_put_prop_string(ctx, -2, "isHolding");
+
+    duk_put_prop_string(ctx, -2, buttonName);
+}
+
+static void _duk_hal_btn_init(duk_context* ctx)
+{
+    duk_push_c_function(ctx, _hal_btn_update, 0);
+    duk_put_prop_string(ctx, -2, "btnUpdate");
+
+    _duk_add_hal_btn(ctx, _BTN_ID_POWER, "btnPower");
+    _duk_add_hal_btn(ctx, _BTN_ID_UP, "btnUp");
+    _duk_add_hal_btn(ctx, _BTN_ID_OK, "btnOk");
+    _duk_add_hal_btn(ctx, _BTN_ID_DOWN, "btnDown");
+}
+
 void duk_hal_init(duk_context* ctx)
 {
     mclog::tagInfo(_tag, "init");
@@ -244,15 +364,6 @@ void duk_hal_init(duk_context* ctx)
     _duk_hal_buzzer_init(ctx);
     _duk_hal_haptic_init(ctx);
     _duk_hal_battery_init(ctx);
+    _duk_hal_btn_init(ctx);
     duk_put_global_string(ctx, "hal");
-
-    // HAL::BtnUpdate();
-    // HAL::BtnUp().wasClicked();
-    // HAL::BtnUp().wasDoubleClicked();
-    // HAL::BtnUp().wasHold();
-    // HAL::BtnUp().isPressed();
-    // HAL::BtnUp().isHolding();
-    // HAL::BtnPower()...
-    // HAL::BtnOk()...
-    // HAL::BtnDown()...
 }
