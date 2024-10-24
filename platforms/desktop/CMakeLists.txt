@@ -34,6 +34,9 @@ add_subdirectory(dependencies/mooncake_event)
 # Smooth ui shit
 add_subdirectory(dependencies/smooth_ui_toolkit)
 
+# M5GFX
+include(platforms/desktop/m5gfx.cmake)
+
 # App layer
 file(GLOB_RECURSE APP_LAYER_SRCS
     app/*.c
@@ -43,27 +46,6 @@ file(GLOB_RECURSE APP_LAYER_SRCS
 set(APP_LAYER_INCS
     app/
 )
-# add_library(app_layer ${APP_LAYER_SRCS})
-# target_include_directories(app_layer PUBLIC ${APP_LAYER_INCS})
-# target_link_libraries(app_layer PUBLIC mooncake mooncake_log mooncake_event)
-
-# 串口插件
-option(ENABLE_SERIAL_DESKTOP "Enable serial desktop" OFF)
-if(ENABLE_SERIAL_DESKTOP)
-    add_definitions(-DENABLE_SERIAL_DESKTOP)
-    # Require: https://github.com/wjwwood/serial
-    find_package(serial REQUIRED)
-    # target_link_libraries(app_layer PUBLIC serial)
-endif()
-
-# PNG 转 RGB565 插件
-option(ENABLE_PNG_CONVERTOR "Enable png convertor" OFF)
-if(ENABLE_PNG_CONVERTOR)
-    add_definitions(-DENABLE_PNG_CONVERTOR)
-    # libpng
-    find_package(PNG REQUIRED)
-    # target_link_libraries(app_layer PUBLIC ${PNG_LIBRARY})
-endif()
 
 # 桌面端源文件
 file(GLOB_RECURSE APP_DESKTOP_BUILD_SRCS
@@ -83,6 +65,7 @@ target_link_libraries(app_desktop_build PUBLIC
     ${SDL2_LIBRARIES} 
     ArduinoJson
     smooth_ui_toolkit
+    m5gfx
 )
 
 # 设置构建路径
