@@ -208,6 +208,33 @@ static void _duk_hal_haptic_init(duk_context* ctx)
     duk_put_prop_string(ctx, -2, "haptic");
 }
 
+/* -------------------------------------------------------------------------- */
+/*                               Battery Monitor                              */
+/* -------------------------------------------------------------------------- */
+static duk_ret_t _hal_battery_voltage(duk_context* ctx)
+{
+    float voltage = HAL::BatteryMonitor().voltage();
+    duk_push_number(ctx, voltage);
+    return 1;
+}
+
+static duk_ret_t _hal_battery_percent(duk_context* ctx)
+{
+    float percent = HAL::BatteryMonitor().percent();
+    duk_push_number(ctx, percent);
+    return 1;
+}
+
+static void _duk_hal_battery_init(duk_context* ctx)
+{
+    duk_push_object(ctx);
+    duk_push_c_function(ctx, _hal_battery_voltage, 0);
+    duk_put_prop_string(ctx, -2, "voltage");
+    duk_push_c_function(ctx, _hal_battery_percent, 0);
+    duk_put_prop_string(ctx, -2, "percent");
+    duk_put_prop_string(ctx, -2, "batteryMonitor");
+}
+
 void duk_hal_init(duk_context* ctx)
 {
     mclog::tagInfo(_tag, "init");
@@ -216,5 +243,16 @@ void duk_hal_init(duk_context* ctx)
     _duk_hal_imu_init(ctx);
     _duk_hal_buzzer_init(ctx);
     _duk_hal_haptic_init(ctx);
+    _duk_hal_battery_init(ctx);
     duk_put_global_string(ctx, "hal");
+
+    // HAL::BtnUpdate();
+    // HAL::BtnUp().wasClicked();
+    // HAL::BtnUp().wasDoubleClicked();
+    // HAL::BtnUp().wasHold();
+    // HAL::BtnUp().isPressed();
+    // HAL::BtnUp().isHolding();
+    // HAL::BtnPower()...
+    // HAL::BtnOk()...
+    // HAL::BtnDown()...
 }

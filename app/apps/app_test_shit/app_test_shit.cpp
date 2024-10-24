@@ -38,17 +38,17 @@ function onAppUpdate() {
   //   hal.sysCtrl.feedTheDog()
   // }
 
-  // hal.imu.update();
-  // var imuData = hal.imu.getData();
-  // console.log(
-  //   'IMU Data - accelX: ' + imuData.accelX.toFixed(1) + ', accelY: ' + imuData.accelY.toFixed(1) + ', accelZ: ' + imuData.accelZ.toFixed(1) + ', ' +
-  //   'gyroX: ' + imuData.gyroX.toFixed(1) + ', gyroY: ' + imuData.gyroY.toFixed(1) + ', gyroZ: ' + imuData.gyroZ.toFixed(1)
-  // );
+  hal.imu.update();
+  var imuData = hal.imu.getData();
+  console.log(
+    'IMU Data - accelX: ' + imuData.accelX.toFixed(1) + ', accelY: ' + imuData.accelY.toFixed(1) + ', accelZ: ' + imuData.accelZ.toFixed(1) + ', ' +
+    'gyroX: ' + imuData.gyroX.toFixed(1) + ', gyroY: ' + imuData.gyroY.toFixed(1) + ', gyroZ: ' + imuData.gyroZ.toFixed(1)
+  );
 
-  // hal.haptic.playEffects([1, 2, 3, 4]);
+  console.log("bat: " + hal.batteryMonitor.voltage().toFixed(1) + "v " + hal.batteryMonitor.percent().toFixed(1) + "%")
 
-  console.log(app_name + " on update " + hal.sysCtrl.millis() + " " + hal.sysCtrl.freeHeapSize());
-  hal.sysCtrl.delay(1000)
+  hal.haptic.playEffects([1, 2, 3, 4]);
+  hal.sysCtrl.delay(800)
 }
 
 function onAppClose() {
