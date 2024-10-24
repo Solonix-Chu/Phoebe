@@ -14,6 +14,7 @@
 #include "../utils/duktape/duktape.h"
 #include "../utils/duktape/duk_console.h"
 #include "../utils/duktape/duk_hal.h"
+#include "lgfx/v1/misc/enum.hpp"
 
 using namespace mooncake;
 
@@ -134,11 +135,34 @@ void AppTestShit::onOpen()
     _log_free_heap_shit();
 
     _call_script_api(_duktape_ctx, _script_api_on_app_open);
+
+    HAL::Display().resetScreen();
+
+    HAL::Display().fillScreen(TFT_BLACK);
+    // HAL::Display().fillSmoothRoundRect(50, 70, 25, 88, 12, TFT_RED);
+    HAL::Display().fillRoundRect(50, 70, 25, 88, 12, TFT_WHITE);
+    HAL::Display().drawCircle(30, 40, 50, TFT_WHITE);
+    HAL::Display().setTextSize(2);
+    HAL::Display().drawString("????niafsfjiJIJ", 5, 100);
+    HAL::Display().pushToScreen();
+
+    // HAL::Display().resetScreen();
+
+    // while (1) {
+    // }
 }
 
 void AppTestShit::onRunning()
 {
     _call_script_api(_duktape_ctx, _script_api_on_app_update);
+
+    // HAL::Display().fillScreen(TFT_BLACK);
+    // // HAL::Display().fillSmoothRoundRect(50, 70, 25, 88, 12, TFT_RED);
+    // HAL::Display().fillRoundRect(50, 70, 25, 88, 12, TFT_WHITE);
+    // HAL::Display().drawCircle(30, 40, 50, TFT_WHITE);
+    // HAL::Display().setTextSize(2);
+    // HAL::Display().drawString("????niafsfjiJIJ", 5, 100);
+    // HAL::Display().pushToScreen();
 }
 
 void AppTestShit::onClose()

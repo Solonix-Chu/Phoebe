@@ -9,6 +9,8 @@
  *
  */
 #include "display.h"
+#include "../../hal_config.h"
+#include "lgfx/v1/misc/enum.hpp"
 #include <SDL.h>
 #include <cstdint>
 #include <lvgl.h>
@@ -58,12 +60,14 @@ void render_from_uint16(SDL_Renderer* renderer, uint16_t* pixel_data, int width,
 
 void DisplaySDL::init()
 {
-    createSprite(144, 168);
-    setColorDepth(16);
+    // 内存多，直接申请一个
+    setColorDepth(lgfx::color_depth_t::rgb565_nonswapped);
+    createSprite(HAL_SCREEN_WIDTH, HAL_SCREEN_HEIGHT);
 }
 
 void DisplaySDL::push_buffer_to_display(void* buffer)
 {
+    // 从 lvgl 那里拿个 sdl renderer 实例来用
     auto sdl_render = (SDL_Renderer*)lv_sdl_window_get_renderer(lv_display_get_default());
-    render_from_uint16(sdl_render, (uint16_t*)buffer, 144, 168);
+    render_from_uint16(sdl_render, (uint16_t*)buffer, width(), height());
 }

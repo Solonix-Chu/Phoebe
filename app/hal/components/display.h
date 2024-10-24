@@ -9,13 +9,13 @@
  *
  */
 #pragma once
-#include <cstdint>
 #include <lgfx/v1/LGFX_Sprite.hpp>
+#include <lvgl.h>
 
 namespace hal_components {
 
 /**
- * @brief 显示屏基类，这里继承 lgfx::LGFX_Sprite 来获得图形渲染方法
+ * @brief 显示屏基类，这里直接继承 lgfx::LGFX_Sprite 的图形渲染方法，总不能自己写吧😊
  *
  */
 class DisplayBase : public lgfx::LGFX_Sprite {
@@ -28,23 +28,24 @@ public:
      */
     virtual void init() {}
 
-    void pushToScreen()
+    /**
+     * @brief 重置屏幕内容
+     *
+     */
+    void resetScreen()
     {
-        push_buffer_to_display(getBuffer());
+        lv_obj_clean(lv_screen_active());
+        lv_obj_invalidate(lv_screen_active());
+        lv_timer_handler();
     }
 
     /**
-     * @brief Lvgl 刷新标志位，用来暂停/恢复 lvgl 的刷新渲染
+     * @brief 将改动推送到屏幕
      *
      */
-    bool updateLvgl = true;
-    void pauseLvgl()
+    void pushToScreen()
     {
-        updateLvgl = false;
-    }
-    void rusumeLvgl()
-    {
-        updateLvgl = true;
+        push_buffer_to_display(getBuffer());
     }
 
 protected:

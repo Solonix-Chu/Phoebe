@@ -29,6 +29,7 @@ void HalDesktop::init()
     _components.system_config = std::make_unique<SystemConfigStd>();
     _components.button = std::make_unique<ButtonSDL>();
     _components.display = std::make_unique<DisplaySDL>();
+    _components.display->init();
 
     // 拉取一下保存的配置
     HAL::SysCfg().loadConfig();
