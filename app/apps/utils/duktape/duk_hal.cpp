@@ -159,6 +159,55 @@ static void _duk_hal_buzzer_init(duk_context* ctx)
     duk_put_prop_string(ctx, -2, "buzzer");
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                Haptic Engine                               */
+/* -------------------------------------------------------------------------- */
+static duk_ret_t _hal_haptic_enable(duk_context* ctx)
+{
+    HAL::HapticEngine().enable();
+    return 0;
+}
+
+static duk_ret_t _hal_haptic_disable(duk_context* ctx)
+{
+    HAL::HapticEngine().disable();
+    return 0;
+}
+
+static duk_ret_t _hal_haptic_playEffect(duk_context* ctx)
+{
+    HAL::HapticEngine().playEffect(static_cast<HapticEffect::HapticEffect_t>(duk_to_uint(ctx, 0)));
+    return 0;
+}
+
+static duk_ret_t _hal_haptic_playEffects(duk_context* ctx)
+{
+    duk_require_object_coercible(ctx, 0);
+    std::vector<HapticEffect::HapticEffect_t> effectSequence;
+    duk_enum(ctx, 0, DUK_ENUM_ARRAY_INDICES_ONLY);
+
+    while (duk_next(ctx, -1, 1)) {
+        effectSequence.push_back(static_cast<HapticEffect::HapticEffect_t>(duk_to_uint(ctx, -1)));
+        duk_pop_2(ctx); // pop key and value
+    }
+    HAL::HapticEngine().playEffects(effectSequence);
+    return 0;
+}
+
+static void _duk_hal_haptic_init(duk_context* ctx)
+{
+    duk_push_object(ctx);
+    duk_push_c_function(ctx, _hal_haptic_enable, 0);
+    duk_put_prop_string(ctx, -2, "enable");
+    duk_push_c_function(ctx, _hal_haptic_disable, 0);
+    duk_put_prop_string(ctx, -2, "disable");
+    duk_push_c_function(ctx, _hal_haptic_playEffect, 1);
+    duk_put_prop_string(ctx, -2, "playEffect");
+    duk_push_c_function(ctx, _hal_haptic_playEffects, 1);
+    duk_put_prop_string(ctx, -2, "playEffects");
+    duk_put_prop_string(ctx, -2, "haptic");
+}
+
 void duk_hal_init(duk_context* ctx)
 {
     mclog::tagInfo(_tag, "init");
@@ -166,5 +215,6 @@ void duk_hal_init(duk_context* ctx)
     _duk_hal_sysCtrl_init(ctx);
     _duk_hal_imu_init(ctx);
     _duk_hal_buzzer_init(ctx);
+    _duk_hal_haptic_init(ctx);
     duk_put_global_string(ctx, "hal");
 }
