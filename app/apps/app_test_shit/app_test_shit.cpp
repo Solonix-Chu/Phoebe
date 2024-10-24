@@ -29,8 +29,21 @@ function onAppOpen() {
 }
 
 function onAppUpdate() {
-  console.log(app_name + " on update " + hal.sysCtrl.millis());
-  hal.sysCtrl.delay(200)
+  // console.log(app_name + " on update " + hal.sysCtrl.millis() + " " + hal.sysCtrl.freeHeapSize());
+  // hal.sysCtrl.delay(200)
+
+  // while (1) {
+  //   console.log(app_name + " on update " + hal.sysCtrl.millis() + " " + hal.sysCtrl.freeHeapSize());
+  //   hal.sysCtrl.delay(200)
+  //   hal.sysCtrl.feedTheDog()
+  // }
+
+  hal.imu.update();
+  var imuData = hal.imu.getData();
+  console.log(
+    'IMU Data - accelX: ' + imuData.accelX.toFixed(1) + ', accelY: ' + imuData.accelY.toFixed(1) + ', accelZ: ' + imuData.accelZ.toFixed(1) + ', ' +
+    'gyroX: ' + imuData.gyroX.toFixed(1) + ', gyroY: ' + imuData.gyroY.toFixed(1) + ', gyroZ: ' + imuData.gyroZ.toFixed(1)
+  );
 }
 
 function onAppClose() {
