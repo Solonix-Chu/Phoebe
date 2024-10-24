@@ -22,7 +22,7 @@ public:
 
 private:
     void i2c_init();
-    void display_init();
+    void mlcd_init();
     void lvgl_init();
 
     // 调驱动用

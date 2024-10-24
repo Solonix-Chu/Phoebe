@@ -59,6 +59,7 @@ function onAppUpdate() {
     console.log("ppp ddcc");
   } else if (hal.btnPower.wasHold()) {
     console.log("ppp hhh");
+    hal.sysCtrl.powerOff()
   }
 
   if (hal.btnUp.wasClicked()) {

@@ -17,6 +17,8 @@
 #include "components/haptic_engine/haptic_engine.h"
 #include "components/battery_monitor/battery_monitor.h"
 #include "components/button/button.h"
+#include "components/display/display.h"
+#include <cstdint>
 #include <mooncake_log.h>
 #include <Arduino.h>
 #include <driver/i2c.h>
@@ -56,11 +58,15 @@ void HalEsp32::init()
     _components.haptic_engine = std::make_unique<HapticEngineDRV2605L>();
     _components.haptic_engine->init();
 
-    // 显示屏
-    display_init();
+    // 夏普 MLCD
+    mlcd_init();
 
     // Lvgl
     lvgl_init();
+
+    // 显示屏组件
+    _components.display = std::make_unique<DisplayMlcd>();
+    _components.display->init();
 
     hal_test();
 }
@@ -116,12 +122,18 @@ void HalEsp32::i2c_init()
 }
 
 /* -------------------------------------------------------------------------- */
-/*                                   Display                                  */
+/*                                    MLCD                                    */
 /* -------------------------------------------------------------------------- */
 
 static SharpeMlcd* _sharp_mlcd = nullptr;
 
-void HalEsp32::display_init()
+// 暴露给 Display 组件用
+SharpeMlcd* __get_sharp_mlcd()
+{
+    return _sharp_mlcd;
+}
+
+void HalEsp32::mlcd_init()
 {
     const std::string tag = "display";
     mclog::tagInfo(tag, "init");
@@ -142,6 +154,13 @@ void HalEsp32::display_init()
 /* -------------------------------------------------------------------------- */
 /*                                    Lvgl                                    */
 /* -------------------------------------------------------------------------- */
+static uint8_t* _lvgl_buffer = nullptr;
+
+// 暴露给 Display 组件用
+uint8_t* __get_lvgl_buffer()
+{
+    return _lvgl_buffer;
+}
 
 static void lvgl_flush_cb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map)
 {
@@ -175,8 +194,8 @@ void HalEsp32::lvgl_init()
     lv_display_set_flush_cb(display, lvgl_flush_cb);
 
     mclog::tagInfo(tag, "create display buffer");
-    static uint8_t* buf1 = (uint8_t*)malloc(HAL_SCREEN_WIDTH * HAL_SCREEN_HEIGHT * sizeof(uint16_t));
-    lv_display_set_buffers(display, (void*)buf1, NULL, HAL_SCREEN_WIDTH * HAL_SCREEN_HEIGHT * sizeof(uint16_t),
+    _lvgl_buffer = (uint8_t*)malloc(HAL_SCREEN_WIDTH * HAL_SCREEN_HEIGHT * sizeof(uint16_t));
+    lv_display_set_buffers(display, (void*)_lvgl_buffer, NULL, HAL_SCREEN_WIDTH * HAL_SCREEN_HEIGHT * sizeof(uint16_t),
                            LV_DISPLAY_RENDER_MODE_FULL);
 
     // Tick

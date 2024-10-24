@@ -15,8 +15,9 @@
 namespace hal_components {
 
 /**
- * @brief 显示屏基类，这里直接继承 lgfx::LGFX_Sprite 的图形渲染方法，总不能自己写吧😊
+ * @brief 显示屏基类，提供相对方便直接的绘图接口
  *
+ * 这里直接继承 lgfx::LGFX_Sprite 的图形渲染方法，总不能自己写吧😊
  */
 class DisplayBase : public lgfx::LGFX_Sprite {
 public:
@@ -50,7 +51,7 @@ public:
 
 protected:
     /**
-     * @brief 这里要实现对 LGFX_Sprite 的 buffer 对屏幕的推送
+     * @brief 这里要实现 LGFX_Sprite 的 buffer 对屏幕的推送
      *
      * @param buffer
      */
