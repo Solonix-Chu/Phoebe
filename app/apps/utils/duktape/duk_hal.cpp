@@ -19,59 +19,59 @@ static const char* _tag = "DukHal";
 /* -------------------------------------------------------------------------- */
 /*                               System control                               */
 /* -------------------------------------------------------------------------- */
-static duk_ret_t _hal_sys_ctrl_delay(duk_context* ctx)
+static duk_ret_t _hal_sysCtrl_delay(duk_context* ctx)
 {
     std::uint32_t ms = (std::uint32_t)duk_to_uint(ctx, 0);
     HAL::SysCtrl().delay(ms);
     return 0;
 }
 
-static duk_ret_t _hal_sys_ctrl_millis(duk_context* ctx)
+static duk_ret_t _hal_sysCtrl_millis(duk_context* ctx)
 {
     std::uint32_t ms = HAL::SysCtrl().millis();
     duk_push_uint(ctx, ms);
     return 1;
 }
 
-static duk_ret_t _hal_sys_ctrl_reboot(duk_context* ctx)
+static duk_ret_t _hal_sysCtrl_reboot(duk_context* ctx)
 {
     HAL::SysCtrl().reboot();
     return 0;
 }
 
-static duk_ret_t _hal_sys_ctrl_powerOff(duk_context* ctx)
+static duk_ret_t _hal_sysCtrl_powerOff(duk_context* ctx)
 {
     HAL::SysCtrl().powerOff();
     return 0;
 }
 
-static duk_ret_t _hal_sys_ctrl_feedTheDog(duk_context* ctx)
+static duk_ret_t _hal_sysCtrl_feedTheDog(duk_context* ctx)
 {
     HAL::SysCtrl().feedTheDog();
     return 0;
 }
 
-static duk_ret_t _hal_sys_ctrl_freeHeapSize(duk_context* ctx)
+static duk_ret_t _hal_sysCtrl_freeHeapSize(duk_context* ctx)
 {
     size_t size = HAL::SysCtrl().freeHeapSize();
     duk_push_uint(ctx, (duk_uint_t)size);
     return 1;
 }
 
-static void _duk_hal_sys_ctrl_init(duk_context* ctx)
+static void _duk_hal_sysCtrl_init(duk_context* ctx)
 {
     duk_push_object(ctx);
-    duk_push_c_function(ctx, _hal_sys_ctrl_delay, 1);
+    duk_push_c_function(ctx, _hal_sysCtrl_delay, 1);
     duk_put_prop_string(ctx, -2, "delay");
-    duk_push_c_function(ctx, _hal_sys_ctrl_millis, 0);
+    duk_push_c_function(ctx, _hal_sysCtrl_millis, 0);
     duk_put_prop_string(ctx, -2, "millis");
-    duk_push_c_function(ctx, _hal_sys_ctrl_reboot, 0);
+    duk_push_c_function(ctx, _hal_sysCtrl_reboot, 0);
     duk_put_prop_string(ctx, -2, "reboot");
-    duk_push_c_function(ctx, _hal_sys_ctrl_powerOff, 0);
+    duk_push_c_function(ctx, _hal_sysCtrl_powerOff, 0);
     duk_put_prop_string(ctx, -2, "powerOff");
-    duk_push_c_function(ctx, _hal_sys_ctrl_feedTheDog, 0);
+    duk_push_c_function(ctx, _hal_sysCtrl_feedTheDog, 0);
     duk_put_prop_string(ctx, -2, "feedTheDog");
-    duk_push_c_function(ctx, _hal_sys_ctrl_freeHeapSize, 0);
+    duk_push_c_function(ctx, _hal_sysCtrl_freeHeapSize, 0);
     duk_put_prop_string(ctx, -2, "freeHeapSize");
     duk_put_prop_string(ctx, -2, "sysCtrl");
 }
@@ -114,11 +114,57 @@ static void _duk_hal_imu_init(duk_context* ctx)
     duk_put_prop_string(ctx, -2, "imu");
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                   Buzzer                                   */
+/* -------------------------------------------------------------------------- */
+static duk_ret_t _hal_buzzer_beep(duk_context* ctx)
+{
+    float frequency = (float)duk_to_number(ctx, 0);
+    std::uint32_t duration = (std::uint32_t)duk_opt_uint(ctx, 1, 0xFFFFFFFF);
+    HAL::Buzzer().beep(frequency, duration);
+    return 0;
+}
+
+static duk_ret_t _hal_buzzer_stop(duk_context* ctx)
+{
+    HAL::Buzzer().stop();
+    return 0;
+}
+
+static duk_ret_t _hal_buzzer_playRtttlMusic(duk_context* ctx)
+{
+    const char* rtttlMusic = duk_to_string(ctx, 0);
+    HAL::Buzzer().playRtttlMusic(rtttlMusic);
+    return 0;
+}
+
+static duk_ret_t _hal_buzzer_isPlaying(duk_context* ctx)
+{
+    bool isPlaying = HAL::Buzzer().isPlaying();
+    duk_push_boolean(ctx, isPlaying);
+    return 1;
+}
+
+static void _duk_hal_buzzer_init(duk_context* ctx)
+{
+    duk_push_object(ctx);
+    duk_push_c_function(ctx, _hal_buzzer_beep, 2);
+    duk_put_prop_string(ctx, -2, "beep");
+    duk_push_c_function(ctx, _hal_buzzer_stop, 0);
+    duk_put_prop_string(ctx, -2, "stop");
+    duk_push_c_function(ctx, _hal_buzzer_playRtttlMusic, 1);
+    duk_put_prop_string(ctx, -2, "playRtttlMusic");
+    duk_push_c_function(ctx, _hal_buzzer_isPlaying, 0);
+    duk_put_prop_string(ctx, -2, "isPlaying");
+    duk_put_prop_string(ctx, -2, "buzzer");
+}
+
 void duk_hal_init(duk_context* ctx)
 {
     mclog::tagInfo(_tag, "init");
     duk_push_object(ctx);
-    _duk_hal_sys_ctrl_init(ctx);
+    _duk_hal_sysCtrl_init(ctx);
     _duk_hal_imu_init(ctx);
+    _duk_hal_buzzer_init(ctx);
     duk_put_global_string(ctx, "hal");
 }
