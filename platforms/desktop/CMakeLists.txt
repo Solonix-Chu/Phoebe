@@ -24,7 +24,7 @@ set(MOONCAKE_BUILD_EXAMPLE OFF)
 add_subdirectory(dependencies/mooncake)
 
 # Mooncake log
-set(MOONCAKE_EVENT_BUILD_EXAMPLE OFF)
+set(MOONCAKE_LOG_BUILD_EXAMPLE OFF)
 add_subdirectory(dependencies/mooncake_log)
 
 # Mooncake event
@@ -33,6 +33,10 @@ add_subdirectory(dependencies/mooncake_event)
 
 # Smooth ui shit
 add_subdirectory(dependencies/smooth_ui_toolkit)
+
+# Lgfx slim
+set(LGFX_SLIM_BUILD_EXAMPLE OFF)
+add_subdirectory(dependencies/lgfx_slim)
 
 # App layer
 file(GLOB_RECURSE APP_LAYER_SRCS
@@ -62,6 +66,7 @@ target_link_libraries(app_desktop_build PUBLIC
     ${SDL2_LIBRARIES} 
     ArduinoJson
     smooth_ui_toolkit
+    lgfx_slim
 )
 
 # 设置构建路径

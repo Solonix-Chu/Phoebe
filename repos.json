@@ -28,5 +28,10 @@
         "url": "https://github.com/Forairaaaaa/smooth_ui_toolkit.git",
         "path": "dependencies/smooth_ui_toolkit",
         "branch": "main"
+    },
+    {
+        "url": "https://github.com/Forairaaaaa/lgfx_slim.git",
+        "path": "dependencies/lgfx_slim",
+        "branch": "main"
     }
 ]

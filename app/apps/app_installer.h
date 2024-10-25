@@ -28,7 +28,7 @@ inline void on_install_apps()
     // mooncake::GetMooncake().installApp(std::make_unique<MyApp>());
     // mooncake::GetMooncake().installApp(std::make_unique<AppTemplate>());
     // mooncake::GetMooncake().installApp(std::make_unique<AppTemplatejijiji>());
-    // mooncake::GetMooncake().installApp(std::make_unique<AppTestShit>());
-    mooncake::GetMooncake().installApp(std::make_unique<AppLauncher>());
+    mooncake::GetMooncake().installApp(std::make_unique<AppTestShit>());
+    // mooncake::GetMooncake().installApp(std::make_unique<AppLauncher>());
     /* Install app locator (Don't remove) */
 }

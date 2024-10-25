@@ -9,7 +9,7 @@
  *
  */
 #pragma once
-#include "utils/lgfx/v1/LGFX_Sprite.hpp"
+#include <lgfx_slim.h>
 #include <lvgl.h>
 
 namespace hal_components {
