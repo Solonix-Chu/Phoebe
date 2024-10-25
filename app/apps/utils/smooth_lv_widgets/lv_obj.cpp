@@ -33,6 +33,11 @@ LvObj::LvObj(lv_obj_t* lvObj)
     // setBgColor(lv_color_black());
     setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
 
+    lv_obj_set_style_pad_top(_lv_obj, 0, 0);
+    lv_obj_set_style_pad_bottom(_lv_obj, 0, 0);
+    lv_obj_set_style_pad_left(_lv_obj, 0, 0);
+    lv_obj_set_style_pad_right(_lv_obj, 0, 0);
+
     // lv_obj_set_style_outline_width(_lv_obj, 2, 0);
     // lv_obj_set_style_outline_color(_lv_obj, lv_color_black(), 0);
 }

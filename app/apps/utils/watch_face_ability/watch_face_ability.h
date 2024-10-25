@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <functional>
 #include <mooncake.h>
+#include <src/misc/lv_types.h>
 
 class WatchFaceAbility : public mooncake::WorkerAbility {
 public:
@@ -22,6 +23,11 @@ public:
 
     void pushScript(const char* scriptContent);
 
+    void setRenderCanvas(lv_obj_t* canvas)
+    {
+        _render_canvas = canvas;
+    }
+
     void onCreate() override;
     void onResume() override;
     void onRunning() override;
@@ -29,9 +35,7 @@ public:
     void onDestroy() override;
 
 private:
-    struct Data_t {
-        duk_context* duktape_ctx = NULL;
-        uint32_t tick_time_count = 0;
-    };
-    Data_t _data;
+    duk_context* _duktape_ctx = NULL;
+    lv_obj_t* _render_canvas = NULL;
+    uint32_t _tick_time_count = 0;
 };

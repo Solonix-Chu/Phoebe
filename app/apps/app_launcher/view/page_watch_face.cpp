@@ -13,7 +13,9 @@
 #include <memory>
 #include <mooncake_log.h>
 #include <src/core/lv_obj_scroll.h>
+#include <src/core/lv_obj_style_gen.h>
 #include <src/lv_api_map_v8.h>
+#include <src/misc/lv_style.h>
 
 using namespace mooncake;
 using namespace SmoothUIToolKit;
@@ -51,8 +53,15 @@ void LauncherPageWatchFace::onCreate()
 {
     mclog::tagInfo(_tag, "on create");
 
+    _canvas = std::make_unique<smooth_lv_widgets::LvObj>(lv_obj_create(lv_screen_active()));
+    _canvas->Position().setTransitionPath(EasingPath::easeOutBack);
+    _canvas->Size().setTransitionPath(EasingPath::easeOutBack);
+    _canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
+    _canvas->Size().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
+
     // Create watch face ability
     _watch_face_ability = std::make_unique<WatchFaceAbility>();
+    _watch_face_ability->setRenderCanvas(_canvas->get());
     // Load watch face script
     _watch_face_ability->pushScript(_temp_wf_script.c_str());
     // Trigger ability on create
@@ -62,14 +71,6 @@ void LauncherPageWatchFace::onCreate()
 void LauncherPageWatchFace::onShow()
 {
     mclog::tagInfo(_tag, "on show");
-
-    if (!_canvas) {
-        _canvas = std::make_unique<smooth_lv_widgets::LvObj>(lv_obj_create(lv_screen_active()));
-        _canvas->Position().setTransitionPath(EasingPath::easeOutBack);
-        _canvas->Size().setTransitionPath(EasingPath::easeOutBack);
-        _canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
-        _canvas->Size().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
-    }
 
     _canvas->Position().setDuration(600);
     _canvas->Size().setDuration(1000);
@@ -86,19 +87,13 @@ void LauncherPageWatchFace::onForeground()
         quitSubPage();
     }
 
-    if (_canvas) {
-        _canvas->update();
-    }
-
+    _canvas->update();
     _watch_face_ability->baseUpdate();
 }
 
 void LauncherPageWatchFace::onBackground()
 {
-    if (_canvas) {
-        _canvas->update();
-    }
-
+    _canvas->update();
     _watch_face_ability->baseUpdate();
 }
 
