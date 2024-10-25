@@ -50,12 +50,17 @@ void WatchFaceAbility::onCreate()
 
     // Test shit
     // lv_obj_create(lv_obj_t *parent)
-    static auto shit = new WidgetBase(_render_canvas);
+    auto shit = new WidgetBase(_render_canvas);
     shit->setBgColor("#000000");
     shit->setSize(60, 30);
     shit->setPos(20, 60);
 
     // delete shit;
+
+    auto shit2 = new WidgetLabel(_render_canvas);
+    shit2->setText("oiuhfgsiguh***(??");
+    shit2->setPos(30, 100);
+    shit2->setTextColor("#000000");
 }
 
 void WatchFaceAbility::onResume()

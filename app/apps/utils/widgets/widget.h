@@ -43,9 +43,10 @@ protected:
     lv_obj_t* _lv_obj = NULL;
 };
 
-class Label : public WidgetBase {
+class WidgetLabel : public WidgetBase {
 public:
-    Label(lv_obj_t* parent);
+    WidgetLabel() = default;
+    WidgetLabel(lv_obj_t* parent);
 
     void setTextColor(const char* hexColor);
     void setText(const char* text);

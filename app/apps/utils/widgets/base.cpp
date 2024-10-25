@@ -17,9 +17,8 @@ using namespace widget_helper;
 
 WidgetBase::WidgetBase(lv_obj_t* parent)
 {
+    // Create and setup basic props
     _lv_obj = lv_obj_create(parent);
-
-    // Basic props setup
     lv_obj_null_on_delete(&_lv_obj);
     setRadius(10);
     setBorderWidth(2);
