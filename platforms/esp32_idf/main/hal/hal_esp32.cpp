@@ -18,6 +18,9 @@
 #include "components/battery_monitor/battery_monitor.h"
 #include "components/button/button.h"
 #include "components/display/display.h"
+extern "C" {
+#include "components/utils/wear_levelling/wear_levelling.h"
+}
 #include <cstdint>
 #include <mooncake_log.h>
 #include <Arduino.h>
@@ -31,6 +34,9 @@ using namespace mooncake;
 void HalEsp32::init()
 {
     initArduino();
+
+    // 文件系统
+    fs_init();
 
     // 系统控制
     _components.system_control = std::make_unique<SystemControlArduino>();
@@ -204,4 +210,17 @@ void HalEsp32::lvgl_init()
     esp_timer_handle_t periodic_timer;
     ESP_ERROR_CHECK(esp_timer_create(&periodic_timer_args, &periodic_timer));
     ESP_ERROR_CHECK(esp_timer_start_periodic(periodic_timer, 10 * 1000));
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                     FS                                     */
+/* -------------------------------------------------------------------------- */
+void HalEsp32::fs_init()
+{
+    const std::string tag = "fs";
+    mclog::tagInfo(tag, "init");
+
+    if (!wl_fs_init()) {
+        mclog::tagError(tag, "failed");
+    }
 }
