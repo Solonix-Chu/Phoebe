@@ -120,7 +120,7 @@ void AppLauncher::create_page_list()
     _page_list[3] = std::make_unique<LauncherPageAppList>();
 
     for (auto& page : _page_list) {
-        static_cast<AbilityBase*>(page.get())->baseCreate();
+        page.get()->baseCreate();
     }
 
     _page_list[1]->show();
@@ -129,14 +129,14 @@ void AppLauncher::create_page_list()
 void AppLauncher::update_page_list()
 {
     for (auto& page : _page_list) {
-        static_cast<AbilityBase*>(page.get())->baseUpdate();
+        page.get()->baseUpdate();
     }
 }
 
 void AppLauncher::destory_page_list()
 {
     for (auto& page : _page_list) {
-        static_cast<AbilityBase*>(page.get())->baseDestroy();
+        page.get()->baseDestroy();
     }
     _page_list.clear();
 }

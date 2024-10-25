@@ -20,6 +20,24 @@ using namespace SmoothUIToolKit;
 
 static const char* _tag = "PageWatchFace";
 
+static std::string _temp_wf_script = R"(
+function wf_on_create() {
+  console.log("on create")
+}
+
+function wf_on_resume() {
+  console.log("on resume")
+}
+
+function wf_on_tick() {
+  console.log("on tick")
+}
+
+function wf_on_pause() {
+  console.log("on pause")
+}
+)";
+
 static constexpr int _canvas_start_up_x = 150;
 static constexpr int _canvas_start_up_y = 12;
 static constexpr int _canvas_start_up_w = 20;
@@ -28,6 +46,18 @@ static constexpr int _canvas_x = -4;
 static constexpr int _canvas_y = -4;
 static constexpr int _canvas_w = 152;
 static constexpr int _canvas_h = 176;
+
+void LauncherPageWatchFace::onCreate()
+{
+    mclog::tagInfo(_tag, "on create");
+
+    // Create watch face ability
+    _watch_face_ability = std::make_unique<WatchFaceAbility>();
+    // Load watch face script
+    _watch_face_ability->pushScript(_temp_wf_script.c_str());
+    // Trigger ability on create
+    _watch_face_ability->baseCreate();
+}
 
 void LauncherPageWatchFace::onShow()
 {
@@ -46,6 +76,8 @@ void LauncherPageWatchFace::onShow()
     _canvas->Position().moveTo(_canvas_x, _canvas_y);
     _canvas->Size().moveTo(_canvas_w, _canvas_h);
     lv_obj_move_foreground(_canvas->get());
+
+    _watch_face_ability->resume();
 }
 
 void LauncherPageWatchFace::onForeground()
@@ -57,6 +89,8 @@ void LauncherPageWatchFace::onForeground()
     if (_canvas) {
         _canvas->update();
     }
+
+    _watch_face_ability->baseUpdate();
 }
 
 void LauncherPageWatchFace::onBackground()
@@ -64,6 +98,8 @@ void LauncherPageWatchFace::onBackground()
     if (_canvas) {
         _canvas->update();
     }
+
+    _watch_face_ability->baseUpdate();
 }
 
 void LauncherPageWatchFace::onHide()
@@ -75,4 +111,6 @@ void LauncherPageWatchFace::onHide()
     _canvas->Position().moveTo(_canvas_start_up_x, _canvas_start_up_y);
     _canvas->Size().moveTo(_canvas_start_up_w, _canvas_start_up_h);
     lv_obj_move_background(_canvas->get());
+
+    _watch_face_ability->pause();
 }
