@@ -9,7 +9,11 @@
  *
  */
 #pragma once
+#include <cstdint>
 #include <lvgl.h>
+#include <memory>
+#include <src/misc/lv_color.h>
+#include <src/misc/lv_types.h>
 
 namespace widget {
 
@@ -27,6 +31,7 @@ public:
     void setRadius(int32_t value);
     void setBorderWidth(int32_t value);
     void setBorderColor(const char* hexColor);
+    void setRotation(int32_t value);
 
     lv_obj_t* get()
     {
@@ -57,6 +62,33 @@ public:
     Img(lv_obj_t* parent);
 
     void setSrc(const char* imageSrc);
+};
+
+class WidgetClock : public WidgetBase {
+public:
+    WidgetClock() = default;
+    WidgetClock(lv_obj_t* parent);
+    ~WidgetClock();
+
+    int centerX = 50;
+    int centerY = 50;
+    int hourHandWidth = 5;
+    int hourHandLength = 26;
+    int minHandWidth = 4;
+    int minHandLength = 40;
+    int secHandWidth = 2;
+    int secHandLength = 60;
+    lv_color_t handColor = lv_color_black();
+
+    void update();
+
+private:
+    lv_obj_t* _hour_hand = NULL;
+    lv_obj_t* _minute_hand = NULL;
+    lv_obj_t* _second_hand = NULL;
+    lv_point_precise_t _hour_points[2];
+    lv_point_precise_t _minute_points[2];
+    lv_point_precise_t _second_points[2];
 };
 
 } // namespace widget

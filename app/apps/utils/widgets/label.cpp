@@ -10,10 +10,9 @@
  */
 #include "widget.h"
 #include <lvgl.h>
-#include <src/core/lv_obj_style_gen.h>
-#include <src/widgets/label/lv_label.h>
 
 using namespace widget;
+using namespace widget_helper;
 
 WidgetLabel::WidgetLabel(lv_obj_t* parent)
 {
@@ -25,7 +24,7 @@ WidgetLabel::WidgetLabel(lv_obj_t* parent)
 
 void WidgetLabel::setTextColor(const char* hexColor)
 {
-    lv_obj_set_style_text_color(_lv_obj, widget_helper::get_lv_color_by_string(hexColor), LV_PART_MAIN);
+    lv_obj_set_style_text_color(_lv_obj, get_lv_color_by_string(hexColor), LV_PART_MAIN);
 }
 
 void WidgetLabel::setText(const char* text)
@@ -35,5 +34,5 @@ void WidgetLabel::setText(const char* text)
 
 void WidgetLabel::setFont(const char* fontName)
 {
-    lv_obj_set_style_text_font(_lv_obj, widget_helper::get_lv_font_by_string(fontName), LV_PART_MAIN);
+    lv_obj_set_style_text_font(_lv_obj, get_lv_font_by_string(fontName), LV_PART_MAIN);
 }

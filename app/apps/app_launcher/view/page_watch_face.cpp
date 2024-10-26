@@ -41,19 +41,20 @@ function wf_on_pause() {
 )";
 
 static constexpr int _canvas_start_up_x = 150;
-static constexpr int _canvas_start_up_y = 12;
+static constexpr int _canvas_start_up_y = 32;
 static constexpr int _canvas_start_up_w = 20;
 static constexpr int _canvas_start_up_h = 40;
-static constexpr int _canvas_x = -4;
-static constexpr int _canvas_y = -4;
-static constexpr int _canvas_w = 152;
-static constexpr int _canvas_h = 176;
+static constexpr int _canvas_x = 0;
+static constexpr int _canvas_y = 0;
+static constexpr int _canvas_w = 144;
+static constexpr int _canvas_h = 168;
 
 void LauncherPageWatchFace::onCreate()
 {
     mclog::tagInfo(_tag, "on create");
 
     _canvas = std::make_unique<smooth_lv_widgets::LvObj>(lv_obj_create(lv_screen_active()));
+    _canvas->setBorderWidth(0);
     _canvas->Position().setTransitionPath(EasingPath::easeOutBack);
     _canvas->Size().setTransitionPath(EasingPath::easeOutBack);
     _canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
@@ -73,7 +74,7 @@ void LauncherPageWatchFace::onShow()
     mclog::tagInfo(_tag, "on show");
 
     _canvas->Position().setDuration(600);
-    _canvas->Size().setDuration(1000);
+    _canvas->Size().setDuration(600);
     _canvas->Position().moveTo(_canvas_x, _canvas_y);
     _canvas->Size().moveTo(_canvas_w, _canvas_h);
     lv_obj_move_foreground(_canvas->get());

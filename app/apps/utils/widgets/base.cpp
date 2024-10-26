@@ -11,6 +11,7 @@
 #include "widget.h"
 #include <lvgl.h>
 #include <src/core/lv_obj_pos.h>
+#include <src/core/lv_obj_style_gen.h>
 
 using namespace widget;
 using namespace widget_helper;
@@ -71,4 +72,9 @@ void WidgetBase::setBorderWidth(int32_t value)
 void WidgetBase::setBorderColor(const char* hexColor)
 {
     lv_obj_set_style_border_color(_lv_obj, get_lv_color_by_string(hexColor), LV_PART_MAIN);
+}
+
+void WidgetBase::setRotation(int32_t value)
+{
+    lv_obj_set_style_transform_rotation(_lv_obj, value, LV_PART_MAIN);
 }
