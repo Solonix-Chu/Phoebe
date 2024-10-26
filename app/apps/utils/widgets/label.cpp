@@ -35,5 +35,5 @@ void WidgetLabel::setText(const char* text)
 
 void WidgetLabel::setFont(const char* fontName)
 {
-    // TODO
+    lv_obj_set_style_text_font(_lv_obj, widget_helper::get_lv_font_by_string(fontName), LV_PART_MAIN);
 }

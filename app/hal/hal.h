@@ -22,7 +22,7 @@
 #include "hal/components/utils/Button_Class/Button_Class.hpp"
 
 /**
- * @brief 硬件抽象层
+ * @brief 硬件抽象层，提供统一的硬件、平台相关行为接口
  *
  */
 namespace HAL {
