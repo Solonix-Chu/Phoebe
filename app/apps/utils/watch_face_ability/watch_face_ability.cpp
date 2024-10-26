@@ -17,6 +17,7 @@
 #include <hal/hal.h>
 #include <assets/assets.h>
 #include <src/core/lv_obj_style_gen.h>
+#include <src/misc/lv_color.h>
 
 using namespace mooncake;
 using namespace widget;
@@ -45,30 +46,95 @@ void WatchFaceAbility::pushScript(const char* scriptContent)
     duk_eval_string(_duktape_ctx, scriptContent);
 }
 
+WidgetClock* _clock;
+
 void WatchFaceAbility::onCreate()
 {
     mclog::tagInfo(_tag, "on create");
     duk_helper::call_script_function(_duktape_ctx, _wf_callback_on_create);
 
-    // Test shit
-    // lv_obj_create(lv_obj_t *parent)
-    auto shit = new WidgetBase(_render_canvas);
-    shit->setBgColor("#000000");
-    shit->setSize(15, 15);
-    shit->setPos(130, 0);
+    // // Test shit
+    // // lv_obj_create(lv_obj_t *parent)
+    // auto shit = new WidgetBase(_render_canvas);
+    // shit->setBgColor("#000000");
+    // shit->setSize(15, 15);
+    // shit->setPos(130, 0);
 
     // delete shit;
 
-    auto shit2 = new WidgetLabel(_render_canvas);
-    shit2->setText("10.21 FRI. 啊？！，。\n默抱緊你もあ\nなた的人。");
-    // shit2->setText("10.21 FRI. ??@");
-    shit2->setPos(5, 5);
-    shit2->setTextColor("#000000");
+    // auto shit2 = new WidgetLabel(_render_canvas);
+    // // shit2->setText("10.21 FRI. 啊？！，。\n默抱緊你もあ\nなた的人。");
+    // // shit2->setText("10.21 FRI. ??@");
+    // shit2->setText(":)");
+    // shit2->setPos(5, 5);
+    // shit2->setTextColor("#000000");
 
-    // lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().Zpix12, LV_PART_MAIN);
-    // lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().RajdhaniBold144, LV_PART_MAIN);
+    // // lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().Zpix12, LV_PART_MAIN);
+    // lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().RajdhaniBold16, LV_PART_MAIN);
 
-    shit2->setFont("RajdhaniBold48");
+    // shit2->setFont("RajdhaniBold48");
+
+    {
+        auto shit = new WidgetBase(_render_canvas);
+        shit->setBgColor("#000000");
+        shit->setAlign("lv_align_top_right");
+        shit->setPos(0, 0);
+        shit->setSize(128, 168);
+        shit->setBorderWidth(0);
+        shit->setRadius(5);
+    }
+
+    {
+        auto shit = new WidgetLabel(_render_canvas);
+        shit->setPos(-6, 90);
+        shit->setAlign("lv_align_top_right");
+        shit->setFont("RajdhaniBold48");
+        shit->setTextColor("#FFFFFF");
+        shit->setText("17:37");
+    }
+
+    {
+        auto shit = new WidgetLabel(_render_canvas);
+        shit->setPos(-6, 135);
+        shit->setAlign("lv_align_top_right");
+        shit->setFont("RajdhaniBold24");
+        shit->setTextColor("#FFFFFF");
+        shit->setText("10.26 SAT.");
+    }
+
+    {
+        auto shit = new WidgetLabel(_render_canvas);
+        shit->setPos(14, -3);
+        shit->setFont("RajdhaniBold16");
+        shit->setRotation(900);
+        shit->setTextColor("#000000");
+        shit->setText("DATE: 2024.10.26 BAT: 96%");
+    }
+
+    {
+        auto shit = new WidgetLabel(_render_canvas);
+        shit->setPos(32, -3);
+        shit->setFont("RajdhaniBold16");
+        shit->setRotation(900);
+        shit->setTextColor("#FFFFFF");
+        shit->setText("SETPS: 2333.");
+    }
+
+    _clock = new WidgetClock(_render_canvas);
+    _clock->centerX = 94;
+    _clock->centerY = 45;
+    _clock->handColor = lv_color_white();
+    _clock->update();
+}
+
+void _test_on_tick_update_shit()
+{
+    _clock->update();
+
+    time_t now;
+    struct tm* tm_info;
+    time(&now);
+    tm_info = localtime(&now);
 }
 
 void WatchFaceAbility::onResume()
@@ -82,6 +148,9 @@ void WatchFaceAbility::onRunning()
     // Call on tick every 1s
     if (HAL::SysCtrl().millis() - _tick_time_count > 1000) {
         duk_helper::call_script_function(_duktape_ctx, _wf_callback_on_tick);
+
+        _test_on_tick_update_shit();
+
         _tick_time_count = HAL::SysCtrl().millis();
     }
 }
