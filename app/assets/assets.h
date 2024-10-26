@@ -33,7 +33,7 @@ struct AssetPool_t {
         const lv_font_t* RajdhaniBold72 = nullptr;
         const lv_font_t* RajdhaniBold96 = nullptr;
         const lv_font_t* RajdhaniBold144 = nullptr;
-        const lv_font_t* zpix12 = nullptr;
+        const lv_font_t* Zpix12 = nullptr;
     };
     Font_t Font;
 };

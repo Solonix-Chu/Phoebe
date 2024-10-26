@@ -65,8 +65,10 @@ void WatchFaceAbility::onCreate()
     shit2->setPos(5, 5);
     shit2->setTextColor("#000000");
 
-    lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().zpix12, LV_PART_MAIN);
+    // lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().Zpix12, LV_PART_MAIN);
     // lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().RajdhaniBold144, LV_PART_MAIN);
+
+    shit2->setFont("RajdhaniBold48");
 }
 
 void WatchFaceAbility::onResume()

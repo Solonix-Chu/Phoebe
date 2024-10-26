@@ -10,7 +10,6 @@
  */
 #pragma once
 #include <lvgl.h>
-#include <src/misc/lv_area.h>
 
 namespace widget {
 
@@ -66,5 +65,6 @@ namespace widget_helper {
 
 lv_align_t get_lv_align_by_string(const char* align);
 lv_color_t get_lv_color_by_string(const char* hexColor);
+const lv_font_t* get_lv_font_by_string(const char* fontName);
 
 } // namespace widget_helper

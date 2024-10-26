@@ -22,5 +22,5 @@ void AssetPool::on_asset_pool_init(AssetPool_t& assetPool)
     assetPool.Font.RajdhaniBold72 = &ui_font_RajdhaniBold72;
     assetPool.Font.RajdhaniBold96 = &ui_font_RajdhaniBold96;
     assetPool.Font.RajdhaniBold144 = &ui_font_RajdhaniBold144;
-    assetPool.Font.zpix12 = &ui_font_zpix12;
+    assetPool.Font.Zpix12 = &ui_font_zpix12;
 }
