@@ -12,9 +12,11 @@
 #include <hal/hal.h>
 #include <memory>
 #include <mooncake_log.h>
+#include <src/core/lv_obj.h>
 #include <src/core/lv_obj_scroll.h>
 #include <src/core/lv_obj_style_gen.h>
 #include <src/lv_api_map_v8.h>
+#include <src/misc/lv_color.h>
 #include <src/misc/lv_style.h>
 
 using namespace mooncake;
@@ -55,6 +57,9 @@ void LauncherPageWatchFace::onCreate()
 
     _canvas = std::make_unique<smooth_lv_widgets::LvObj>(lv_obj_create(lv_screen_active()));
     _canvas->setBorderWidth(0);
+    _canvas->setRadius(5);
+    lv_obj_set_style_outline_width(_canvas->get(), 2, LV_PART_MAIN);
+    lv_obj_set_style_outline_color(_canvas->get(), lv_color_black(), LV_PART_MAIN);
     _canvas->Position().setTransitionPath(EasingPath::easeOutBack);
     _canvas->Size().setTransitionPath(EasingPath::easeOutBack);
     _canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
@@ -73,8 +78,10 @@ void LauncherPageWatchFace::onShow()
 {
     mclog::tagInfo(_tag, "on show");
 
-    _canvas->Position().setDuration(600);
-    _canvas->Size().setDuration(600);
+    _canvas->Position().setDuration(800);
+    _canvas->Position().setDelay(0);
+    _canvas->Size().setDuration(800);
+    _canvas->Size().setDelay(100);
     _canvas->Position().moveTo(_canvas_x, _canvas_y);
     _canvas->Size().moveTo(_canvas_w, _canvas_h);
     lv_obj_move_foreground(_canvas->get());
@@ -102,8 +109,10 @@ void LauncherPageWatchFace::onHide()
 {
     mclog::tagInfo(_tag, "on hide");
 
-    _canvas->Position().setDuration(600);
-    _canvas->Size().setDuration(400);
+    _canvas->Position().setDuration(800);
+    _canvas->Position().setDelay(100);
+    _canvas->Size().setDuration(800);
+    _canvas->Size().setDelay(0);
     _canvas->Position().moveTo(_canvas_start_up_x, _canvas_start_up_y);
     _canvas->Size().moveTo(_canvas_start_up_w, _canvas_start_up_h);
     lv_obj_move_background(_canvas->get());

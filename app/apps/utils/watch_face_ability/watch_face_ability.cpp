@@ -77,14 +77,16 @@ void WatchFaceAbility::onCreate()
     {
         auto shit = new WidgetBase(_render_canvas);
         shit->setBgColor("#000000");
-        shit->setPos(18, 0);
-        shit->setSize(126, 168);
+        shit->setAlign("lv_align_top_right");
+        shit->setPos(0, 0);
+        shit->setSize(128, 168);
         shit->setBorderWidth(0);
+        shit->setRadius(5);
     }
 
     {
         auto shit = new WidgetLabel(_render_canvas);
-        shit->setPos(-6, 100);
+        shit->setPos(-6, 90);
         shit->setAlign("lv_align_top_right");
         shit->setFont("RajdhaniBold48");
         shit->setTextColor("#FFFFFF");
@@ -93,16 +95,34 @@ void WatchFaceAbility::onCreate()
 
     {
         auto shit = new WidgetLabel(_render_canvas);
-        shit->setPos(-6, 142);
+        shit->setPos(-6, 135);
         shit->setAlign("lv_align_top_right");
         shit->setFont("RajdhaniBold24");
         shit->setTextColor("#FFFFFF");
         shit->setText("10.26 SAT.");
     }
 
+    {
+        auto shit = new WidgetLabel(_render_canvas);
+        shit->setPos(14, -3);
+        shit->setFont("RajdhaniBold16");
+        shit->setRotation(900);
+        shit->setTextColor("#000000");
+        shit->setText("DATE: 2024.10.26 BAT: 96%");
+    }
+
+    {
+        auto shit = new WidgetLabel(_render_canvas);
+        shit->setPos(32, -3);
+        shit->setFont("RajdhaniBold16");
+        shit->setRotation(900);
+        shit->setTextColor("#FFFFFF");
+        shit->setText("SETPS: 2333.");
+    }
+
     _clock = new WidgetClock(_render_canvas);
     _clock->centerX = 94;
-    _clock->centerY = 35;
+    _clock->centerY = 45;
     _clock->handColor = lv_color_white();
     _clock->update();
 }
