@@ -12,14 +12,17 @@
 #include "../duktape/duktape.h"
 #include "../duktape/duk_console.h"
 #include "../duktape/duk_helper.h"
+#include "../widgets/widget.h"
+#include "assets/lvgl_assets/ui.h"
 #include <mooncake_log.h>
 #include <hal/hal.h>
-#include "../widgets/widget.h"
+#include <assets/assets.h>
+#include <src/core/lv_obj_style_gen.h>
 
 using namespace mooncake;
 using namespace widget;
 
-static const char* _tag = "WF";
+static const char* _tag = "WatchFaceAbility";
 static const char* _wf_callback_on_create = "wf_on_create";
 static const char* _wf_callback_on_resume = "wf_on_resume";
 static const char* _wf_callback_on_pause = "wf_on_pause";
@@ -52,15 +55,20 @@ void WatchFaceAbility::onCreate()
     // lv_obj_create(lv_obj_t *parent)
     auto shit = new WidgetBase(_render_canvas);
     shit->setBgColor("#000000");
-    shit->setSize(60, 30);
-    shit->setPos(20, 60);
+    shit->setSize(15, 15);
+    shit->setPos(130, 0);
 
     // delete shit;
 
     auto shit2 = new WidgetLabel(_render_canvas);
-    shit2->setText("oiuhfgsiguh***(??");
-    shit2->setPos(30, 100);
+    // shit2->setText("10.21 FRI. 啊？！，。\n默抱緊你もあ\nなた的人。");
+    shit2->setText("10.21 FRI. ??@");
+    shit2->setPos(5, 5);
     shit2->setTextColor("#000000");
+
+    // lv_obj_set_style_text_font(shit2->get(), &ui_font_zpix12, LV_PART_MAIN);
+    // lv_obj_set_style_text_font(shit2->get(), &ui_font_RajdhaniBold16, LV_PART_MAIN);
+    lv_obj_set_style_text_font(shit2->get(), &ui_font_RajdhaniBold144, LV_PART_MAIN);
 }
 
 void WatchFaceAbility::onResume()

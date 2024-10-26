@@ -9,11 +9,12 @@
  *
  */
 #pragma once
+#include "lvgl_assets/ui.h"
 #include <string>
 #include <cstdint>
 
 /**
- * @brief 资产层，方便 App 的静态资源访问
+ * @brief 资产池层，用于管理字体、图片等静态资源，提供全局懒加载单例，方便 App 的静态资源访问
  *
  */
 namespace AssetPool {
@@ -51,7 +52,7 @@ void on_asset_pool_init(AssetPool_t& assetPool);
 AssetPool_t& Get();
 
 /**
- * @brief 销毁当前 HAL 实例
+ * @brief 销毁当前资产池实例
  *
  */
 void Destroy();
