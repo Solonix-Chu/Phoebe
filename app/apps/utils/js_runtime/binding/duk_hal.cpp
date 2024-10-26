@@ -8,15 +8,13 @@
  * @copyright Copyright (c) 2024
  *
  */
-#include "duk_hal.h"
-#include "apps/utils/duktape/duktape.h"
-#include "hal/components/button.h"
+#include "binding.h"
 #include <mooncake_log.h>
 #include <hal/hal.h>
 
 using namespace mooncake;
 
-static const char* _tag = "DukHal";
+static const std::string _tag = "JsBinding";
 
 /* -------------------------------------------------------------------------- */
 /*                               System control                               */
@@ -357,7 +355,6 @@ static void _duk_hal_btn_init(duk_context* ctx)
 
 void duk_hal_init(duk_context* ctx)
 {
-    mclog::tagInfo(_tag, "init");
     duk_push_object(ctx);
     _duk_hal_sysCtrl_init(ctx);
     _duk_hal_imu_init(ctx);

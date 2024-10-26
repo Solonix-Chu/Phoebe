@@ -9,24 +9,14 @@
  *
  */
 #pragma once
-#include "ability/ability.h"
-#include "../duktape/duktape.h"
+#include "../js_runtime/js_runtime.h"
+#include "../widgets/widget.h"
 #include <cstdint>
-#include <functional>
 #include <mooncake.h>
-#include <src/misc/lv_types.h>
 
 class WatchFaceAbility : public mooncake::WorkerAbility {
 public:
-    WatchFaceAbility();
-    ~WatchFaceAbility();
-
-    void pushScript(const char* scriptContent);
-
-    void setRenderCanvas(lv_obj_t* canvas)
-    {
-        _render_canvas = canvas;
-    }
+    void init(lv_obj_t* widgetParent);
 
     void onCreate() override;
     void onResume() override;
@@ -35,7 +25,6 @@ public:
     void onDestroy() override;
 
 private:
-    duk_context* _duktape_ctx = NULL;
-    lv_obj_t* _render_canvas = NULL;
+    js_runtime::JsRuntime _js_runtime;
     uint32_t _tick_time_count = 0;
 };

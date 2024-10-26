@@ -9,11 +9,10 @@
  *
  */
 #pragma once
-#include "ability/ability.h"
 #include "../../utils/smooth_lv_widgets/lv_obj.h"
 #include "../../utils/watch_face_ability/watch_face_ability.h"
-#include <memory>
 #include <mooncake.h>
+#include <memory>
 #include <vector>
 
 /**
@@ -57,7 +56,9 @@ public:
 
 private:
     std::unique_ptr<smooth_lv_widgets::LvObj> _canvas;
-    std::unique_ptr<WatchFaceAbility> _watch_face_ability;
+
+    WatchFaceAbility* _watch_face_ability_instance = nullptr;
+    int _watch_face_ability_id = -1;
 };
 
 class LauncherPageNotification : public LauncherPageBase {
