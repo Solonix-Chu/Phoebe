@@ -13,7 +13,6 @@
 #include "../duktape/duk_console.h"
 #include "../duktape/duk_helper.h"
 #include "../widgets/widget.h"
-#include "assets/lvgl_assets/ui.h"
 #include <mooncake_log.h>
 #include <hal/hal.h>
 #include <assets/assets.h>
@@ -61,14 +60,13 @@ void WatchFaceAbility::onCreate()
     // delete shit;
 
     auto shit2 = new WidgetLabel(_render_canvas);
-    // shit2->setText("10.21 FRI. 啊？！，。\n默抱緊你もあ\nなた的人。");
-    shit2->setText("10.21 FRI. ??@");
+    shit2->setText("10.21 FRI. 啊？！，。\n默抱緊你もあ\nなた的人。");
+    // shit2->setText("10.21 FRI. ??@");
     shit2->setPos(5, 5);
     shit2->setTextColor("#000000");
 
-    // lv_obj_set_style_text_font(shit2->get(), &ui_font_zpix12, LV_PART_MAIN);
-    // lv_obj_set_style_text_font(shit2->get(), &ui_font_RajdhaniBold16, LV_PART_MAIN);
-    lv_obj_set_style_text_font(shit2->get(), &ui_font_RajdhaniBold144, LV_PART_MAIN);
+    lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().zpix12, LV_PART_MAIN);
+    // lv_obj_set_style_text_font(shit2->get(), AssetPool::Font().RajdhaniBold144, LV_PART_MAIN);
 }
 
 void WatchFaceAbility::onResume()

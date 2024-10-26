@@ -36,14 +36,3 @@ void AssetPool::Destroy()
         _asset_pool = nullptr;
     }
 }
-
-void AssetPool::Inject(AssetPool_t* assetPool)
-{
-    if (assetPool) {
-        mclog::tagInfo(_tag, "inject asset pool");
-        Destroy();
-        _asset_pool = assetPool;
-    } else {
-        mclog::tagError(_tag, "inject with null");
-    }
-}
