@@ -46,7 +46,9 @@ void WatchFaceAbility::pushScript(const char* scriptContent)
     duk_eval_string(_duktape_ctx, scriptContent);
 }
 
-WidgetClock* _clock;
+// WidgetClock* _clock;
+WidgetFactory* _factory;
+int _clock_id;
 
 void WatchFaceAbility::onCreate()
 {
@@ -74,62 +76,128 @@ void WatchFaceAbility::onCreate()
 
     // shit2->setFont("RajdhaniBold48");
 
+    // {
+    //     auto shit = new WidgetBase(_render_canvas);
+    //     shit->setBgColor("#000000");
+    //     shit->setAlign("lv_align_top_right");
+    //     shit->setPos(0, 0);
+    //     shit->setSize(128, 168);
+    //     shit->setBorderWidth(0);
+    //     shit->setRadius(5);
+    // }
+
+    // {
+    //     auto shit = new WidgetLabel(_render_canvas);
+    //     shit->setPos(-6, 90);
+    //     shit->setAlign("lv_align_top_right");
+    //     shit->setFont("RajdhaniBold48");
+    //     shit->setTextColor("#FFFFFF");
+    //     shit->setText("17:37");
+    // }
+
+    // {
+    //     auto shit = new WidgetLabel(_render_canvas);
+    //     shit->setPos(-6, 135);
+    //     shit->setAlign("lv_align_top_right");
+    //     shit->setFont("RajdhaniBold24");
+    //     shit->setTextColor("#FFFFFF");
+    //     shit->setText("10.26 SAT.");
+    // }
+
+    // {
+    //     auto shit = new WidgetLabel(_render_canvas);
+    //     shit->setPos(14, -3);
+    //     shit->setFont("RajdhaniBold16");
+    //     shit->setRotation(900);
+    //     shit->setTextColor("#000000");
+    //     shit->setText("DATE: 2024.10.26 BAT: 96%");
+    // }
+
+    // {
+    //     auto shit = new WidgetLabel(_render_canvas);
+    //     shit->setPos(32, -3);
+    //     shit->setFont("RajdhaniBold16");
+    //     shit->setRotation(900);
+    //     shit->setTextColor("#FFFFFF");
+    //     shit->setText("SETPS: 2333.");
+    // }
+
+    // _clock = new WidgetClock(_render_canvas);
+    // _clock->centerX = 94;
+    // _clock->centerY = 45;
+    // _clock->handColor = lv_color_white();
+    // _clock->update();
+
+    auto factory = new WidgetFactory();
+    factory->setWidgetParent(_render_canvas);
+
     {
-        auto shit = new WidgetBase(_render_canvas);
-        shit->setBgColor("#000000");
-        shit->setAlign("lv_align_top_right");
-        shit->setPos(0, 0);
-        shit->setSize(128, 168);
-        shit->setBorderWidth(0);
-        shit->setRadius(5);
+        auto shit = factory->create("base");
+        factory->getBase(shit)->setBgColor("#000000");
+        factory->getBase(shit)->setAlign("lv_align_top_right");
+        factory->getBase(shit)->setPos(0, 0);
+        factory->getBase(shit)->setSize(128, 168);
+        factory->getBase(shit)->setBorderWidth(0);
+        factory->getBase(shit)->setRadius(5);
     }
 
     {
-        auto shit = new WidgetLabel(_render_canvas);
-        shit->setPos(-6, 90);
-        shit->setAlign("lv_align_top_right");
-        shit->setFont("RajdhaniBold48");
-        shit->setTextColor("#FFFFFF");
-        shit->setText("17:37");
+        auto shit = factory->create("label");
+        factory->getLabel(shit)->setPos(-6, 90);
+        factory->getLabel(shit)->setAlign("lv_align_top_right");
+        factory->getLabel(shit)->setFont("RajdhaniBold48");
+        factory->getLabel(shit)->setTextColor("#FFFFFF");
+        factory->getLabel(shit)->setText("17:37");
     }
 
     {
-        auto shit = new WidgetLabel(_render_canvas);
-        shit->setPos(-6, 135);
-        shit->setAlign("lv_align_top_right");
-        shit->setFont("RajdhaniBold24");
-        shit->setTextColor("#FFFFFF");
-        shit->setText("10.26 SAT.");
+        auto shit = factory->create("label");
+        factory->getLabel(shit)->setPos(-6, 135);
+        factory->getLabel(shit)->setAlign("lv_align_top_right");
+        factory->getLabel(shit)->setFont("RajdhaniBold24");
+        factory->getLabel(shit)->setTextColor("#FFFFFF");
+        factory->getLabel(shit)->setText("10.26 SAT.");
     }
 
     {
-        auto shit = new WidgetLabel(_render_canvas);
-        shit->setPos(14, -3);
-        shit->setFont("RajdhaniBold16");
-        shit->setRotation(900);
-        shit->setTextColor("#000000");
-        shit->setText("DATE: 2024.10.26 BAT: 96%");
+        auto shit = factory->create("label");
+        factory->getLabel(shit)->setPos(14, -3);
+        factory->getLabel(shit)->setFont("RajdhaniBold16");
+        factory->getLabel(shit)->setRotation(900);
+        factory->getLabel(shit)->setTextColor("#000000");
+        factory->getLabel(shit)->setText("DATE: 2024.10.26 BAT: 96%");
     }
 
     {
-        auto shit = new WidgetLabel(_render_canvas);
-        shit->setPos(32, -3);
-        shit->setFont("RajdhaniBold16");
-        shit->setRotation(900);
-        shit->setTextColor("#FFFFFF");
-        shit->setText("SETPS: 2333.");
+        auto shit = factory->create("label");
+        factory->getLabel(shit)->setPos(32, -3);
+        factory->getLabel(shit)->setFont("RajdhaniBold16");
+        factory->getLabel(shit)->setRotation(900);
+        factory->getLabel(shit)->setTextColor("#FFFFFF");
+        factory->getLabel(shit)->setText("SETPS: 2333.");
     }
 
-    _clock = new WidgetClock(_render_canvas);
-    _clock->centerX = 94;
-    _clock->centerY = 45;
-    _clock->handColor = lv_color_white();
-    _clock->update();
+    {
+        auto shit = factory->create("clock");
+        factory->getClock(shit)->centerX = 94;
+        factory->getClock(shit)->centerY = 45;
+        factory->getClock(shit)->handColor = lv_color_white();
+        factory->getClock(shit)->update();
+        _clock_id = shit;
+    }
+
+    _factory = factory;
+
+    // factory->destory(2);
+    // factory->destory(4);
+
+    // delete factory;
 }
 
 void _test_on_tick_update_shit()
 {
-    _clock->update();
+    // _clock->update();
+    _factory->getClock(_clock_id)->update();
 
     time_t now;
     struct tm* tm_info;
