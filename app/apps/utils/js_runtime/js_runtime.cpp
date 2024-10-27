@@ -84,4 +84,6 @@ void JsRuntime::loadWidgetBinding(lv_obj_t* widgetParent)
     _widget_factory.reset();
     _widget_factory = std::make_unique<WidgetFactory>();
     _widget_factory->setWidgetParent(widgetParent);
+
+    duk_widget_init(_duktape_ctx, _widget_factory.get());
 }

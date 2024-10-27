@@ -23,8 +23,30 @@ static const char* _wf_callback_on_pause = "wf_on_pause";
 static const char* _wf_callback_on_tick = "wf_on_tick";
 
 static const std::string _default_watch_face_script = R"(
+shit_id = 0
+
 function wf_on_create() {
   console.log("on create")
+  shit_id = widget.create("base")
+  widget.setAlign(shit_id, "lv_align_center")
+  // widget.setBgColor(shit_id, "#ff0000")
+  widget.setRotation(shit_id, 360)
+  try {
+    widget.setAlign(666, "lv_align_center")
+  } catch (e) {
+    console.error(e)
+  }
+  console.log(shit_id)
+
+  shit_id = widget.create("label")
+  widget.setAlign(shit_id, "lv_align_center")
+  // widget.setLabelFont(shit_id, "Zpix12")
+  widget.setLabelFont(shit_id, "RajdhaniBold64")
+  widget.setLabelText(shit_id, "#%^&!傻逼啊？，。")
+
+  shit_id = widget.create("clock")
+  widget.setClockStyle(shit_id, "{\"handColor\":\"#0000FF\"}")
+  widget.updateClock(shit_id)
 }
 
 function wf_on_resume() {
@@ -33,6 +55,8 @@ function wf_on_resume() {
 
 function wf_on_tick() {
   console.log("on tick")
+  // widget.destroy(shit_id)
+  widget.updateClock(shit_id)
 }
 
 function wf_on_pause() {

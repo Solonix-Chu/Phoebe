@@ -60,7 +60,7 @@ public:
     void setBorderColor(const char* hexColor);
     void setRotation(int32_t value);
 
-    lv_obj_t* get()
+    lv_obj_t* getLvObj()
     {
         return _lv_obj;
     }
@@ -138,6 +138,18 @@ public:
     int secHandLength = 60;
     lv_color_t handColor = lv_color_black();
 
+    // {
+    //   "centerX": 50,
+    //   "centerY": 50,
+    //   "hourHandWidth": 5,
+    //   "hourHandLength": 26,
+    //   "minHandWidth": 4,
+    //   "minHandLength": 40,
+    //   "secHandWidth": 2,
+    //   "secHandLength": 60,
+    //   "handColor": "#000000"
+    // }
+    bool setStyle(const char* styleJson);
     void update();
 
     WidgetType::Type_t type() override
@@ -198,8 +210,8 @@ private:
     };
 
     std::vector<WidgetInfo_t> _widget_list;
-    int _next_widget_id = 0;
     std::vector<int> _available_widget_id_list;
+    int _next_widget_id = 0;
     lv_obj_t* _widget_parent = NULL;
 
     int get_next_widget_id();
