@@ -9,10 +9,8 @@
  *
  */
 #pragma once
-#include <memory>
 #include <mooncake.h>
 #include <vector>
-#include "view/page.h"
 
 /**
  * @brief 启动器，包括表盘、小组件、消息、应用菜单四大页面
@@ -31,11 +29,10 @@ public:
 private:
     int _current_page_index = 1;
     int _new_page_index = 1;
-    std::vector<std::unique_ptr<LauncherPageBase>> _page_list;
+    std::vector<int> _page_list;
 
     void handle_page_change();
     void create_page_list();
-    void update_page_list();
-    void destory_page_list();
+    void destroy_page_list();
     void reset_lv_screen();
 };

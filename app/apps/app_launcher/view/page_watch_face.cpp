@@ -9,38 +9,16 @@
  *
  */
 #include "page.h"
+#include "../../utils/watch_face_ability/watch_face_ability.h"
 #include <hal/hal.h>
 #include <memory>
 #include <mooncake_log.h>
-#include <src/core/lv_obj.h>
-#include <src/core/lv_obj_scroll.h>
-#include <src/core/lv_obj_style_gen.h>
-#include <src/lv_api_map_v8.h>
-#include <src/misc/lv_color.h>
-#include <src/misc/lv_style.h>
+#include <utility>
 
 using namespace mooncake;
 using namespace SmoothUIToolKit;
 
 static const char* _tag = "PageWatchFace";
-
-static std::string _temp_wf_script = R"(
-function wf_on_create() {
-  console.log("on create")
-}
-
-function wf_on_resume() {
-  console.log("on resume")
-}
-
-function wf_on_tick() {
-  console.log("on tick")
-}
-
-function wf_on_pause() {
-  console.log("on pause")
-}
-)";
 
 static constexpr int _canvas_start_up_x = 150;
 static constexpr int _canvas_start_up_y = 32;
@@ -65,13 +43,8 @@ void LauncherPageWatchFace::onCreate()
     _canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
     _canvas->Size().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
 
-    // Create watch face ability
-    _watch_face_ability = std::make_unique<WatchFaceAbility>();
-    _watch_face_ability->setRenderCanvas(_canvas->get());
-    // Load watch face script
-    _watch_face_ability->pushScript(_temp_wf_script.c_str());
-    // Trigger ability on create
-    _watch_face_ability->baseCreate();
+    _watch_face_ability_id = GetMooncake().createExtension(std::make_unique<WatchFaceAbility>());
+    GetMooncake().getExtensionInstance<WatchFaceAbility>(_watch_face_ability_id)->init(_canvas->get());
 }
 
 void LauncherPageWatchFace::onShow()
@@ -86,7 +59,7 @@ void LauncherPageWatchFace::onShow()
     _canvas->Size().moveTo(_canvas_w, _canvas_h);
     lv_obj_move_foreground(_canvas->get());
 
-    _watch_face_ability->resume();
+    GetMooncake().extensionManager()->resumeWorkerAbility(_watch_face_ability_id);
 }
 
 void LauncherPageWatchFace::onForeground()
@@ -96,13 +69,11 @@ void LauncherPageWatchFace::onForeground()
     }
 
     _canvas->update();
-    _watch_face_ability->baseUpdate();
 }
 
 void LauncherPageWatchFace::onBackground()
 {
     _canvas->update();
-    _watch_face_ability->baseUpdate();
 }
 
 void LauncherPageWatchFace::onHide()
@@ -117,5 +88,11 @@ void LauncherPageWatchFace::onHide()
     _canvas->Size().moveTo(_canvas_start_up_w, _canvas_start_up_h);
     lv_obj_move_background(_canvas->get());
 
-    _watch_face_ability->pause();
+    GetMooncake().extensionManager()->pauseWorkerAbility(_watch_face_ability_id);
+}
+
+void LauncherPageWatchFace::onDestroy()
+{
+    mclog::tagInfo(_tag, "on destroy");
+    GetMooncake().destroyExtension(_watch_face_ability_id);
 }

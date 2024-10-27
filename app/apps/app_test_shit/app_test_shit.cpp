@@ -11,15 +11,11 @@
 #include "app_test_shit.h"
 #include <mooncake_log.h>
 #include <hal/hal.h>
-#include "../utils/duktape/duktape.h"
-#include "../utils/duktape/duk_console.h"
-#include "../utils/duktape/duk_hal.h"
+#include "../utils/js_runtime/js_runtime.h"
 
 using namespace mooncake;
 
 #define _tag (getAppInfo().name)
-
-duk_context* _duktape_ctx;
 
 std::string _script = R"(
 var app_name = "app sb";
@@ -112,29 +108,31 @@ void _log_free_heap_shit()
     current_free_heap = HAL::SysCtrl().freeHeapSize();
 }
 
+js_runtime::JsRuntime* _js_runtime;
+
 void AppTestShit::onOpen()
 {
     mclog::tagInfo(_tag, "on open");
 
     _log_free_heap_shit();
 
-    mclog::info("create duk heap..");
-    _duktape_ctx = duk_create_heap_default();
+    mclog::info("create js runtime..");
+    _js_runtime = new js_runtime::JsRuntime;
     _log_free_heap_shit();
 
     mclog::info("load console api..");
-    duk_console_init(_duktape_ctx, DUK_CONSOLE_STDOUT_ONLY);
+    _js_runtime->loadConsoleBinding();
     _log_free_heap_shit();
 
     mclog::info("load hal api..");
-    duk_hal_init(_duktape_ctx);
+    _js_runtime->loadHalBinding();
     _log_free_heap_shit();
 
     mclog::info("laod script..");
-    duk_eval_string(_duktape_ctx, _script.c_str());
+    _js_runtime->evaluate(_script);
     _log_free_heap_shit();
 
-    _call_script_api(_duktape_ctx, _script_api_on_app_open);
+    _js_runtime->callScriptFunction(_script_api_on_app_open);
 
     HAL::Display().resetScreen();
 
@@ -154,7 +152,7 @@ void AppTestShit::onOpen()
 
 void AppTestShit::onRunning()
 {
-    _call_script_api(_duktape_ctx, _script_api_on_app_update);
+    _js_runtime->callScriptFunction(_script_api_on_app_update);
 
     // HAL::Display().fillScreen(TFT_BLACK);
     // // HAL::Display().fillSmoothRoundRect(50, 70, 25, 88, 12, TFT_RED);
@@ -168,5 +166,5 @@ void AppTestShit::onRunning()
 void AppTestShit::onClose()
 {
     mclog::tagInfo(_tag, "on close");
-    duk_destroy_heap(_duktape_ctx);
+    delete _js_runtime;
 }
