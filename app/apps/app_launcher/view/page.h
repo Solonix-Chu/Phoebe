@@ -10,7 +10,7 @@
  */
 #pragma once
 #include "../../utils/smooth_lv_widgets/lv_obj.h"
-#include "../../utils/watch_face_ability/watch_face_ability.h"
+#include "../../utils/smooth_widget/smooth_widget.h"
 #include <mooncake.h>
 #include <memory>
 #include <vector>
@@ -55,7 +55,7 @@ public:
     void onDestroy() override;
 
 private:
-    std::unique_ptr<smooth_lv_widgets::LvObj> _canvas;
+    std::unique_ptr<smooth_widget::SmoothWidgetBase> _canvas;
     int _watch_face_ability_id = -1;
 };
 

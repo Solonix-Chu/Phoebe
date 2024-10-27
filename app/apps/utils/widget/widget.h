@@ -60,7 +60,7 @@ public:
     void setBorderColor(const char* hexColor);
     void setRotation(int32_t value);
 
-    lv_obj_t* getLvObj()
+    lv_obj_t* get()
     {
         return _lv_obj;
     }

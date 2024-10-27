@@ -25,6 +25,12 @@ WidgetBase::WidgetBase(lv_obj_t* parent)
     setBorderWidth(2);
     setBorderColor("#000000");
     setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
+
+    // Remove padding
+    lv_obj_set_style_pad_top(_lv_obj, 0, 0);
+    lv_obj_set_style_pad_bottom(_lv_obj, 0, 0);
+    lv_obj_set_style_pad_left(_lv_obj, 0, 0);
+    lv_obj_set_style_pad_right(_lv_obj, 0, 0);
 }
 
 WidgetBase::~WidgetBase()
