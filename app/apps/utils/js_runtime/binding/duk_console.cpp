@@ -76,6 +76,10 @@ static duk_ret_t duk__console_log_helper(duk_context* ctx,
             mclog::tagError(_tag, "{}", duk_to_string(ctx, -1));
             break;
         }
+        case mclog::level_debug: {
+            mclog::tagDebug(_tag, "{}", duk_to_string(ctx, -1));
+            break;
+        }
     }
 
     return 0;

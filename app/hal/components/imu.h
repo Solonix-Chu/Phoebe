@@ -29,6 +29,7 @@ public:
         float gyroX = 0.0;
         float gyroY = 0.0;
         float gyroZ = 0.0;
+        int steps = 0;
     };
 
     ~ImuBase() = default;
@@ -50,6 +51,8 @@ public:
     {
         return _imu_data;
     }
+
+    virtual void resetSteps() {}
 
 protected:
     ImuData_t _imu_data;

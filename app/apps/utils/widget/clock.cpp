@@ -9,11 +9,8 @@
  *
  */
 #include "widget.h"
-#include <cstdint>
-#include <memory>
 #include <cmath>
-#include <src/core/lv_obj.h>
-#include <src/core/lv_obj_style_gen.h>
+#include <ArduinoJson.h>
 
 using namespace widget;
 using namespace widget_helper;
@@ -88,4 +85,44 @@ void WidgetClock::update()
     lv_line_set_points(_second_hand, _second_points, 2);
     lv_obj_set_style_line_width(_second_hand, secHandWidth, LV_PART_MAIN);
     lv_obj_set_style_line_color(_second_hand, handColor, LV_PART_MAIN);
+}
+
+bool WidgetClock::setStyle(const char* styleJson)
+{
+    JsonDocument doc;
+
+    DeserializationError error = deserializeJson(doc, styleJson);
+    if (error) {
+        return false;
+    }
+
+    if (!doc["centerX"].isNull()) {
+        centerX = doc["centerX"];
+    }
+    if (!doc["centerY"].isNull()) {
+        centerY = doc["centerY"];
+    }
+    if (!doc["hourHandWidth"].isNull()) {
+        hourHandWidth = doc["hourHandWidth"];
+    }
+    if (!doc["hourHandLength"].isNull()) {
+        hourHandLength = doc["hourHandLength"];
+    }
+    if (!doc["minHandWidth"].isNull()) {
+        minHandWidth = doc["minHandWidth"];
+    }
+    if (!doc["minHandLength"].isNull()) {
+        minHandLength = doc["minHandLength"];
+    }
+    if (!doc["secHandWidth"].isNull()) {
+        secHandWidth = doc["secHandWidth"];
+    }
+    if (!doc["secHandLength"].isNull()) {
+        secHandLength = doc["secHandLength"];
+    }
+    if (!doc["handColor"].isNull()) {
+        handColor = get_lv_color_by_string(doc["handColor"].as<std::string>().c_str());
+    }
+
+    return true;
 }

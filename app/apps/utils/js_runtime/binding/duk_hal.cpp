@@ -100,6 +100,8 @@ static duk_ret_t _hal_imu_getData(duk_context* ctx)
     duk_put_prop_string(ctx, -2, "gyroY");
     duk_push_number(ctx, HAL::Imu().getData().gyroZ);
     duk_put_prop_string(ctx, -2, "gyroZ");
+    duk_push_int(ctx, HAL::Imu().getData().steps);
+    duk_put_prop_string(ctx, -2, "steps");
 
     return 1;
 }
@@ -225,6 +227,38 @@ static duk_ret_t _hal_battery_percent(duk_context* ctx)
     return 1;
 }
 
+static duk_ret_t _hal_battery_state(duk_context* ctx)
+{
+    auto bat_state = HAL::BatteryMonitor().state();
+    switch (bat_state) {
+        case BatteryState::NotConnected: {
+            duk_push_string(ctx, "NC");
+            break;
+        }
+        case BatteryState::Charging: {
+            duk_push_string(ctx, "CHARGING");
+            break;
+        }
+        case BatteryState::Normal: {
+            duk_push_string(ctx, "NORMAL");
+            break;
+        }
+        case BatteryState::Low: {
+            duk_push_string(ctx, "LOW");
+            break;
+        }
+        case BatteryState::Dead: {
+            duk_push_string(ctx, "DEAD");
+            break;
+        }
+        default: {
+            duk_push_string(ctx, "?");
+            break;
+        }
+    }
+    return 1;
+}
+
 static void _duk_hal_battery_init(duk_context* ctx)
 {
     duk_push_object(ctx);
@@ -232,7 +266,9 @@ static void _duk_hal_battery_init(duk_context* ctx)
     duk_put_prop_string(ctx, -2, "voltage");
     duk_push_c_function(ctx, _hal_battery_percent, 0);
     duk_put_prop_string(ctx, -2, "percent");
-    duk_put_prop_string(ctx, -2, "batteryMonitor");
+    duk_push_c_function(ctx, _hal_battery_state, 0);
+    duk_put_prop_string(ctx, -2, "state");
+    duk_put_prop_string(ctx, -2, "battery");
 }
 
 /* -------------------------------------------------------------------------- */
