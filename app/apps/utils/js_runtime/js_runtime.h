@@ -10,7 +10,7 @@
  */
 #pragma once
 #include "engine/duktape.h"
-#include "../widgets/widget.h"
+#include "../widget/widget.h"
 #include <memory>
 #include <string>
 

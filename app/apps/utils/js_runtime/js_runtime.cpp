@@ -9,13 +9,14 @@
  *
  */
 #include "js_runtime.h"
-#include "apps/utils/widgets/widget.h"
+#include "apps/utils/widget/widget.h"
 #include "binding/binding.h"
 #include <cstddef>
 #include <memory>
 #include <mooncake_log.h>
 
 using namespace js_runtime;
+using namespace js_binding;
 using namespace mooncake;
 using namespace widget;
 

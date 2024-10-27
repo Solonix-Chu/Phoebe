@@ -29,7 +29,7 @@ public:
 private:
     int _current_page_index = 1;
     int _new_page_index = 1;
-    std::vector<int> _page_list;
+    std::vector<int> _page_ability_id_list;
 
     void handle_page_change();
     void create_page_list();

@@ -132,7 +132,7 @@ static void duk__console_reg_vararg_func(duk_context* ctx, duk_c_function func, 
     duk_put_prop_string(ctx, -2, name);
 }
 
-void duk_console_init(duk_context* ctx)
+void js_binding::duk_console_init(duk_context* ctx)
 {
     duk_push_object(ctx);
 

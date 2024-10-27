@@ -10,7 +10,7 @@
  */
 #pragma once
 #include "../js_runtime/js_runtime.h"
-#include "../widgets/widget.h"
+#include "../widget/widget.h"
 #include <cstdint>
 #include <mooncake.h>
 

@@ -14,7 +14,7 @@
 
 using namespace mooncake;
 
-static const std::string _tag = "JsBinding";
+static const std::string _tag = "JS";
 
 /* -------------------------------------------------------------------------- */
 /*                               System control                               */
@@ -353,7 +353,7 @@ static void _duk_hal_btn_init(duk_context* ctx)
     _duk_add_hal_btn(ctx, _BTN_ID_DOWN, "btnDown");
 }
 
-void duk_hal_init(duk_context* ctx)
+void js_binding::duk_hal_init(duk_context* ctx)
 {
     duk_push_object(ctx);
     _duk_hal_sysCtrl_init(ctx);
