@@ -35,7 +35,7 @@ JsRuntime::~JsRuntime()
     }
 }
 
-void JsRuntime::evaluation(const std::string& script)
+void JsRuntime::evaluate(const std::string& script)
 {
     duk_eval_string(_duktape_ctx, script.c_str());
 }
@@ -61,6 +61,7 @@ void JsRuntime::reset()
         duk_destroy_heap(_duktape_ctx);
     }
     _duktape_ctx = duk_create_heap_default();
+    _widget_factory.reset();
 }
 
 void JsRuntime::loadConsoleBinding()
@@ -82,6 +83,4 @@ void JsRuntime::loadWidgetBinding(lv_obj_t* widgetParent)
     _widget_factory.reset();
     _widget_factory = std::make_unique<WidgetFactory>();
     _widget_factory->setWidgetParent(widgetParent);
-
-    
 }

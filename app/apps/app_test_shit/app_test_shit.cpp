@@ -129,7 +129,7 @@ void AppTestShit::onOpen()
     _log_free_heap_shit();
 
     mclog::info("laod script..");
-    _js_runtime->evaluation(_script);
+    _js_runtime->evaluate(_script);
     _log_free_heap_shit();
 
     _js_runtime->callScriptFunction(_script_api_on_app_open);

@@ -52,12 +52,10 @@ public:
     void onForeground() override;
     void onBackground() override;
     void onHide() override;
-    // void onDestroy() override {}
+    void onDestroy() override;
 
 private:
     std::unique_ptr<smooth_lv_widgets::LvObj> _canvas;
-
-    WatchFaceAbility* _watch_face_ability_instance = nullptr;
     int _watch_face_ability_id = -1;
 };
 

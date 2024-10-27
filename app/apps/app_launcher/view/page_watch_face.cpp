@@ -43,12 +43,8 @@ void LauncherPageWatchFace::onCreate()
     _canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
     _canvas->Size().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
 
-    // TODO
-    //  给 mooncake 加模板 helper
-    _watch_face_ability_id = GetMooncake().ExtensionManager()->createAbility(std::make_unique<WatchFaceAbility>());
-    _watch_face_ability_instance =
-        (WatchFaceAbility*)GetMooncake().ExtensionManager()->getAbilityInstance(_watch_face_ability_id);
-    _watch_face_ability_instance->init(_canvas->get());
+    _watch_face_ability_id = GetMooncake().createExtension(std::make_unique<WatchFaceAbility>());
+    GetMooncake().getExtensionInstance<WatchFaceAbility>(_watch_face_ability_id)->init(_canvas->get());
 }
 
 void LauncherPageWatchFace::onShow()
@@ -63,7 +59,7 @@ void LauncherPageWatchFace::onShow()
     _canvas->Size().moveTo(_canvas_w, _canvas_h);
     lv_obj_move_foreground(_canvas->get());
 
-    _watch_face_ability_instance->resume();
+    GetMooncake().extensionManager()->resumeWorkerAbility(_watch_face_ability_id);
 }
 
 void LauncherPageWatchFace::onForeground()
@@ -92,5 +88,11 @@ void LauncherPageWatchFace::onHide()
     _canvas->Size().moveTo(_canvas_start_up_w, _canvas_start_up_h);
     lv_obj_move_background(_canvas->get());
 
-    _watch_face_ability_instance->pause();
+    GetMooncake().extensionManager()->pauseWorkerAbility(_watch_face_ability_id);
+}
+
+void LauncherPageWatchFace::onDestroy()
+{
+    mclog::tagInfo(_tag, "on destroy");
+    GetMooncake().destroyExtension(_watch_face_ability_id);
 }

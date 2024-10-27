@@ -25,7 +25,7 @@ public:
     void loadHalBinding();
     void loadWidgetBinding(lv_obj_t* widgetParent);
 
-    void evaluation(const std::string& script);
+    void evaluate(const std::string& script);
     bool callScriptFunction(const char* functionName, bool logErrorOnFailed = true);
     void reset();
 

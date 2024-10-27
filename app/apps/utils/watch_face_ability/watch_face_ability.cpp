@@ -48,7 +48,7 @@ void WatchFaceAbility::init(lv_obj_t* widgetParent)
 
     // TODO
     // Load script from fs
-    _js_runtime.evaluation(_default_watch_face_script);
+    _js_runtime.evaluate(_default_watch_face_script);
 }
 
 void WatchFaceAbility::onCreate()
