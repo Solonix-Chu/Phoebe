@@ -80,8 +80,19 @@ public:
         return WidgetType::Base;
     }
 
+    bool isSelectable()
+    {
+        return _selectable;
+    }
+
+    void setSelectable(bool selectable)
+    {
+        _selectable = selectable;
+    }
+
 protected:
     lv_obj_t* _lv_obj = NULL;
+    bool _selectable = false;
 };
 
 /**
@@ -169,6 +180,14 @@ private:
     lv_point_precise_t _hour_points[2];
     lv_point_precise_t _minute_points[2];
     lv_point_precise_t _second_points[2];
+};
+
+class WidgetSelector : public WidgetBase {
+public:
+    WidgetSelector() = default;
+    WidgetSelector(lv_obj_t* parent) : WidgetBase(parent) {}
+
+private:
 };
 
 /**
