@@ -39,7 +39,7 @@ void LauncherPageWatchFace::onCreate()
     _canvas->setRadius(5);
     _canvas->setOutlineWidth(2);
     _canvas->setOutlineColor("#000000");
-    _canvas->smoothPosition().setTransitionPath(EasingPath::easeOutBack);
+    _canvas->smoothPosition().setTransitionPath(EasingPath::easeOutQuad);
     _canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
     _canvas->smoothSize().setTransitionPath(EasingPath::easeOutBack);
     _canvas->smoothSize().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
@@ -55,10 +55,10 @@ void LauncherPageWatchFace::onShow()
 
     // Setup watch face canvas pop out anim
     _canvas->smoothPosition().setDelay(0);
-    _canvas->smoothPosition().setDuration(800);
+    _canvas->smoothPosition().setDuration(300);
     _canvas->smoothPosition().moveTo(_canvas_x, _canvas_y);
-    _canvas->smoothSize().setDuration(800);
     _canvas->smoothSize().setDelay(100);
+    _canvas->smoothSize().setDuration(800);
     _canvas->smoothSize().moveTo(_canvas_w, _canvas_h);
     lv_obj_move_foreground(_canvas->get());
 
@@ -86,10 +86,10 @@ void LauncherPageWatchFace::onHide()
 
     // Setup watch face canvas hide anim
     _canvas->smoothPosition().setDelay(100);
-    _canvas->smoothPosition().setDuration(800);
+    _canvas->smoothPosition().setDuration(300);
     _canvas->smoothPosition().moveTo(_canvas_start_up_x, _canvas_start_up_y);
-    _canvas->smoothSize().setDuration(800);
     _canvas->smoothSize().setDelay(0);
+    _canvas->smoothSize().setDuration(800);
     _canvas->smoothSize().moveTo(_canvas_start_up_w, _canvas_start_up_h);
     lv_obj_move_background(_canvas->get());
 

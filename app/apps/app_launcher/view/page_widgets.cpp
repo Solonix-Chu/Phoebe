@@ -18,7 +18,7 @@ using namespace SmoothUIToolKit;
 static const char* _tag = "PageWidgets";
 
 static constexpr int _canvas_start_up_x = 150;
-static constexpr int _canvas_start_up_y = 64;
+static constexpr int _canvas_start_up_y = 100;
 static constexpr int _canvas_start_up_w = 20;
 static constexpr int _canvas_start_up_h = 40;
 static constexpr int _canvas_x = 10;
@@ -40,17 +40,17 @@ void LauncherPageWidgets::onShow()
         if (!canvas) {
             canvas = std::make_unique<smooth_widget::SmoothWidgetBase>(lv_screen_active());
             canvas->setRadius(16);
-            canvas->smoothPosition().setTransitionPath(EasingPath::easeOutBack);
-            canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y + i * 52);
+            canvas->smoothPosition().setTransitionPath(EasingPath::easeOutQuad);
+            canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
             canvas->smoothSize().setTransitionPath(EasingPath::easeOutBack);
             canvas->smoothSize().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
         }
 
         canvas->smoothPosition().setDelay(i * 100);
-        canvas->smoothPosition().setDuration(600);
+        canvas->smoothPosition().setDuration(300);
         canvas->smoothPosition().moveTo(_canvas_x, _canvas_y + i * 80);
-        canvas->smoothSize().setDelay(i * 100);
-        canvas->smoothSize().setDuration(1000);
+        canvas->smoothSize().setDelay(i * 100 + 100);
+        canvas->smoothSize().setDuration(800);
         canvas->smoothSize().moveTo(_canvas_w, _canvas_h);
 
         i++;
@@ -89,13 +89,13 @@ void LauncherPageWidgets::onHide()
 
     int i = 0;
     for (auto& canvas : _canvas_list) {
-        canvas->smoothPosition().setDelay((_canvas_list.size() - 1 - i) * 50);
-        canvas->smoothPosition().setDuration(600);
-        canvas->smoothPosition().moveTo(_canvas_start_up_x, _canvas_start_up_y + i * 52);
-        canvas->smoothSize().setDelay((_canvas_list.size() - 1 - i) * 50);
-        canvas->smoothSize().setDuration(400);
+        canvas->smoothPosition().setDelay((_canvas_list.size() - 1 - i) * 50 + 100);
+        canvas->smoothPosition().setDuration(300);
+        canvas->smoothPosition().moveTo(_canvas_start_up_x, _canvas_start_up_y);
+        canvas->smoothSize().setDelay((_canvas_list.size() - 1 - i) * 100);
+        canvas->smoothSize().setDuration(800);
         canvas->smoothSize().moveTo(_canvas_start_up_w, _canvas_start_up_h);
-        
+
         i++;
     }
 }
