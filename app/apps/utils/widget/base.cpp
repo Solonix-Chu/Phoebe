@@ -12,6 +12,7 @@
 #include <lvgl.h>
 #include <src/core/lv_obj_pos.h>
 #include <src/core/lv_obj_style_gen.h>
+#include <src/lv_api_map_v8.h>
 
 using namespace widget;
 using namespace widget_helper;
@@ -25,6 +26,7 @@ WidgetBase::WidgetBase(lv_obj_t* parent)
     setBorderWidth(2);
     setBorderColor("#000000");
     setScrollbarMode(LV_SCROLLBAR_MODE_OFF);
+    setPadding(0, 0, 0, 0);
 }
 
 WidgetBase::~WidgetBase()
@@ -77,4 +79,32 @@ void WidgetBase::setBorderColor(const char* hexColor)
 void WidgetBase::setRotation(int32_t value)
 {
     lv_obj_set_style_transform_rotation(_lv_obj, value, LV_PART_MAIN);
+}
+
+void WidgetBase::setPadding(int32_t top, int32_t bottom, int32_t left, int32_t right)
+{
+    lv_obj_set_style_pad_top(_lv_obj, top, LV_PART_MAIN);
+    lv_obj_set_style_pad_bottom(_lv_obj, bottom, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(_lv_obj, left, LV_PART_MAIN);
+    lv_obj_set_style_pad_right(_lv_obj, right, LV_PART_MAIN);
+}
+
+void WidgetBase::setOutlineWidth(int32_t value)
+{
+    lv_obj_set_style_outline_width(_lv_obj, value, LV_PART_MAIN);
+}
+
+void WidgetBase::setOutlineColor(const char* hexColor)
+{
+    lv_obj_set_style_outline_color(_lv_obj, get_lv_color_by_string(hexColor), LV_PART_MAIN);
+}
+
+void WidgetBase::moveBackground()
+{
+    lv_obj_move_background(_lv_obj);
+}
+
+void WidgetBase::moveForeground()
+{
+    lv_obj_move_foreground(_lv_obj);
 }
