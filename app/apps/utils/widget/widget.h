@@ -59,6 +59,9 @@ public:
     void setBorderWidth(int32_t value);
     void setBorderColor(const char* hexColor);
     void setRotation(int32_t value);
+    void setPadding(int32_t top, int32_t bottom, int32_t left, int32_t right);
+    void setOutlineWidth(int32_t value);
+    void setOutlineColor(const char* hexColor);
 
     lv_obj_t* get()
     {

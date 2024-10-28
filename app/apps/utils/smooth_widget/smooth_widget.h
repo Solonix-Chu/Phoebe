@@ -43,4 +43,22 @@ public:
     }
 };
 
+class SmoothWidgetLabel : public widget::WidgetLabel, public SmoothBinder {
+public:
+    SmoothWidgetLabel() = default;
+    SmoothWidgetLabel(lv_obj_t* parent) : WidgetLabel(parent)
+    {
+        bindSmoothTarget(_lv_obj);
+    }
+};
+
+class SmoothWidgetImg : public widget::WidgetImg, public SmoothBinder {
+public:
+    SmoothWidgetImg() = default;
+    SmoothWidgetImg(lv_obj_t* parent) : WidgetImg(parent)
+    {
+        bindSmoothTarget(_lv_obj);
+    }
+};
+
 } // namespace smooth_widget

@@ -37,8 +37,8 @@ void LauncherPageWatchFace::onCreate()
     _canvas = std::make_unique<SmoothWidgetBase>(lv_screen_active());
     _canvas->setBorderWidth(0);
     _canvas->setRadius(5);
-    lv_obj_set_style_outline_width(_canvas->get(), 2, LV_PART_MAIN);
-    lv_obj_set_style_outline_color(_canvas->get(), lv_color_black(), LV_PART_MAIN);
+    _canvas->setOutlineWidth(2);
+    _canvas->setOutlineColor("#000000");
     _canvas->smoothPosition().setTransitionPath(EasingPath::easeOutBack);
     _canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
     _canvas->smoothSize().setTransitionPath(EasingPath::easeOutBack);
