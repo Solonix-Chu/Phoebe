@@ -41,6 +41,21 @@ void SmoothBinder::freeSmoothBinding()
     _transitions.size->reset();
 }
 
+bool SmoothBinder::isAllSmoothingFinish()
+{
+    if (_transitions.position) {
+        if (!_transitions.position->isFinish()) {
+            return false;
+        }
+    }
+    if (_transitions.size) {
+        if (!_transitions.size->isFinish()) {
+            return false;
+        }
+    }
+    return true;
+}
+
 Transition2D& SmoothBinder::smoothPosition()
 {
     if (!_transitions.position) {

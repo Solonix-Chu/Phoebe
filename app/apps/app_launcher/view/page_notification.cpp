@@ -11,8 +11,6 @@
 #include "page.h"
 #include <hal/hal.h>
 #include <mooncake_log.h>
-#include <src/lv_api_map_v8.h>
-#include <src/misc/lv_area.h>
 
 using namespace mooncake;
 using namespace SmoothUIToolKit;
@@ -40,22 +38,22 @@ void LauncherPageNotification::onShow()
     int i = 0;
     for (auto& canvas : _canvas_list) {
         if (!canvas) {
-            canvas = std::make_unique<smooth_lv_widgets::LvObj>(lv_obj_create(lv_screen_active()));
-            canvas->setAlign(LV_ALIGN_TOP_MID);
-            canvas->Position().setTransitionPath(EasingPath::easeOutBack);
-            canvas->Size().setTransitionPath(EasingPath::easeOutBack);
+            canvas = std::make_unique<smooth_widget::SmoothWidgetBase>(lv_screen_active());
+            canvas->setAlign("lv_align_top_mid");
             canvas->setRadius(16);
-            canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
-            canvas->Size().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
-            lv_obj_move_background(canvas->get());
+            canvas->smoothPosition().setTransitionPath(EasingPath::easeOutBack);
+            canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
+            canvas->smoothSize().setTransitionPath(EasingPath::easeOutBack);
+            canvas->smoothSize().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
+            canvas->moveBackground();
         }
 
-        canvas->Position().setDelay(i * 30);
-        canvas->Size().setDelay((_canvas_list.size() - i - 1) * 30);
-        canvas->Position().setDuration(600);
-        canvas->Size().setDuration(1000);
-        canvas->Position().moveTo(_canvas_x, _canvas_y + i * 47);
-        canvas->Size().moveTo(_canvas_w, _canvas_h);
+        canvas->smoothPosition().setDelay(i * 30);
+        canvas->smoothPosition().setDuration(600);
+        canvas->smoothPosition().moveTo(_canvas_x, _canvas_y + i * 47);
+        canvas->smoothSize().setDelay((_canvas_list.size() - i - 1) * 30);
+        canvas->smoothSize().setDuration(1000);
+        canvas->smoothSize().moveTo(_canvas_w, _canvas_h);
 
         i++;
     }
@@ -69,7 +67,7 @@ void LauncherPageNotification::onForeground()
 
     for (auto& canvas : _canvas_list) {
         if (canvas) {
-            canvas->update();
+            canvas->updateSmoothing();
         }
     }
 }
@@ -78,7 +76,11 @@ void LauncherPageNotification::onBackground()
 {
     for (auto& canvas : _canvas_list) {
         if (canvas) {
-            canvas->update();
+            canvas->updateSmoothing();
+            if (canvas->isAllSmoothingFinish()) {
+                canvas.reset();
+                // mclog::tagInfo(_tag, "free shit");
+            }
         }
     }
 }
@@ -89,12 +91,12 @@ void LauncherPageNotification::onHide()
 
     int i = 0;
     for (auto& canvas : _canvas_list) {
-        canvas->Position().setDelay(i * 20);
-        canvas->Size().setDelay(i * 20);
-        canvas->Position().setDuration(600);
-        canvas->Size().setDuration(400);
-        canvas->Position().moveTo(_canvas_start_up_x, _canvas_start_up_y);
-        canvas->Size().moveTo(_canvas_start_up_w, _canvas_start_up_h);
+        canvas->smoothPosition().setDelay(i * 20);
+        canvas->smoothPosition().setDuration(600);
+        canvas->smoothPosition().moveTo(_canvas_start_up_x, _canvas_start_up_y);
+        canvas->smoothSize().setDelay(i * 20);
+        canvas->smoothSize().setDuration(400);
+        canvas->smoothSize().moveTo(_canvas_start_up_w, _canvas_start_up_h);
 
         i++;
     }

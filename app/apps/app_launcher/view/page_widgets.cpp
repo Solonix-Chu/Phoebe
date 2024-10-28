@@ -8,7 +8,6 @@
  * @copyright Copyright (c) 2024
  *
  */
-#include "core/easing_path/easing_path.h"
 #include "page.h"
 #include <hal/hal.h>
 #include <mooncake_log.h>
@@ -39,20 +38,20 @@ void LauncherPageWidgets::onShow()
     int i = 0;
     for (auto& canvas : _canvas_list) {
         if (!canvas) {
-            canvas = std::make_unique<smooth_lv_widgets::LvObj>(lv_obj_create(lv_screen_active()));
-            canvas->Position().setTransitionPath(EasingPath::easeOutBack);
-            canvas->Size().setTransitionPath(EasingPath::easeOutBack);
+            canvas = std::make_unique<smooth_widget::SmoothWidgetBase>(lv_screen_active());
             canvas->setRadius(16);
-            canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y + i * 52);
-            canvas->Size().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
+            canvas->smoothPosition().setTransitionPath(EasingPath::easeOutBack);
+            canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y + i * 52);
+            canvas->smoothSize().setTransitionPath(EasingPath::easeOutBack);
+            canvas->smoothSize().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
         }
 
-        canvas->Position().setDelay(i * 100);
-        canvas->Size().setDelay(i * 100);
-        canvas->Position().setDuration(600);
-        canvas->Size().setDuration(1000);
-        canvas->Position().moveTo(_canvas_x, _canvas_y + i * 80);
-        canvas->Size().moveTo(_canvas_w, _canvas_h);
+        canvas->smoothPosition().setDelay(i * 100);
+        canvas->smoothPosition().setDuration(600);
+        canvas->smoothPosition().moveTo(_canvas_x, _canvas_y + i * 80);
+        canvas->smoothSize().setDelay(i * 100);
+        canvas->smoothSize().setDuration(1000);
+        canvas->smoothSize().moveTo(_canvas_w, _canvas_h);
 
         i++;
     }
@@ -66,7 +65,7 @@ void LauncherPageWidgets::onForeground()
 
     for (auto& canvas : _canvas_list) {
         if (canvas) {
-            canvas->update();
+            canvas->updateSmoothing();
         }
     }
 }
@@ -75,7 +74,11 @@ void LauncherPageWidgets::onBackground()
 {
     for (auto& canvas : _canvas_list) {
         if (canvas) {
-            canvas->update();
+            canvas->updateSmoothing();
+            if (canvas->isAllSmoothingFinish()) {
+                canvas.reset();
+                // mclog::tagInfo(_tag, "free shit");
+            }
         }
     }
 }
@@ -86,13 +89,13 @@ void LauncherPageWidgets::onHide()
 
     int i = 0;
     for (auto& canvas : _canvas_list) {
-        canvas->Position().setDelay((_canvas_list.size() - 1 - i) * 50);
-        canvas->Size().setDelay((_canvas_list.size() - 1 - i) * 50);
-        canvas->Position().setDuration(600);
-        canvas->Size().setDuration(400);
-        canvas->Position().moveTo(_canvas_start_up_x, _canvas_start_up_y + i * 52);
-        canvas->Size().moveTo(_canvas_start_up_w, _canvas_start_up_h);
-
+        canvas->smoothPosition().setDelay((_canvas_list.size() - 1 - i) * 50);
+        canvas->smoothPosition().setDuration(600);
+        canvas->smoothPosition().moveTo(_canvas_start_up_x, _canvas_start_up_y + i * 52);
+        canvas->smoothSize().setDelay((_canvas_list.size() - 1 - i) * 50);
+        canvas->smoothSize().setDuration(400);
+        canvas->smoothSize().moveTo(_canvas_start_up_w, _canvas_start_up_h);
+        
         i++;
     }
 }

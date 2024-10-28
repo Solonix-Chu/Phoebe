@@ -12,6 +12,7 @@
 #include <lvgl.h>
 #include <src/core/lv_obj_pos.h>
 #include <src/core/lv_obj_style_gen.h>
+#include <src/lv_api_map_v8.h>
 
 using namespace widget;
 using namespace widget_helper;
@@ -96,4 +97,14 @@ void WidgetBase::setOutlineWidth(int32_t value)
 void WidgetBase::setOutlineColor(const char* hexColor)
 {
     lv_obj_set_style_outline_color(_lv_obj, get_lv_color_by_string(hexColor), LV_PART_MAIN);
+}
+
+void WidgetBase::moveBackground()
+{
+    lv_obj_move_background(_lv_obj);
+}
+
+void WidgetBase::moveForeground()
+{
+    lv_obj_move_foreground(_lv_obj);
 }

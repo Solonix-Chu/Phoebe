@@ -20,6 +20,7 @@ public:
     void bindSmoothTarget(lv_obj_t* target);
     void updateSmoothing();
     void freeSmoothBinding();
+    bool isAllSmoothingFinish();
 
     SmoothUIToolKit::Transition2D& smoothPosition();
     SmoothUIToolKit::Transition2D& smoothSize();

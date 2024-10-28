@@ -11,7 +11,6 @@
 #include "page.h"
 #include <hal/hal.h>
 #include <mooncake_log.h>
-#include <src/misc/lv_area.h>
 
 using namespace mooncake;
 using namespace SmoothUIToolKit;
@@ -30,16 +29,16 @@ void LauncherPageAppList::onShow()
     mclog::tagInfo(_tag, "on show");
 
     if (!_canvas) {
-        _canvas = std::make_unique<smooth_lv_widgets::LvObj>(lv_obj_create(lv_screen_active()));
+        _canvas = std::make_unique<smooth_widget::SmoothWidgetBase>(lv_screen_active());
         _canvas->setSize(_canvas_w, _canvas_h);
         _canvas->setRadius(42);
-        _canvas->setAlign(LV_ALIGN_CENTER);
-        _canvas->Position().setTransitionPath(EasingPath::easeOutBack);
-        _canvas->Position().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
+        _canvas->setAlign("lv_align_center");
+        _canvas->smoothPosition().setTransitionPath(EasingPath::easeOutBack);
+        _canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
     }
 
-    _canvas->Position().setDuration(700);
-    _canvas->Position().moveTo(_canvas_x, _canvas_y);
+    _canvas->smoothPosition().setDuration(700);
+    _canvas->smoothPosition().moveTo(_canvas_x, _canvas_y);
 }
 
 void LauncherPageAppList::onForeground()
@@ -49,14 +48,18 @@ void LauncherPageAppList::onForeground()
     }
 
     if (_canvas) {
-        _canvas->update();
+        _canvas->updateSmoothing();
     }
 }
 
 void LauncherPageAppList::onBackground()
 {
     if (_canvas) {
-        _canvas->update();
+        _canvas->updateSmoothing();
+        if (_canvas->isAllSmoothingFinish()) {
+            _canvas.reset();
+            // mclog::tagInfo(_tag, "free shit");
+        }
     }
 }
 
@@ -64,6 +67,6 @@ void LauncherPageAppList::onHide()
 {
     mclog::tagInfo(_tag, "on hide");
 
-    _canvas->Position().setDuration(600);
-    _canvas->Position().moveTo(_canvas_start_up_x, _canvas_start_up_y);
+    _canvas->smoothPosition().setDuration(600);
+    _canvas->smoothPosition().moveTo(_canvas_start_up_x, _canvas_start_up_y);
 }

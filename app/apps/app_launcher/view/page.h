@@ -9,7 +9,6 @@
  *
  */
 #pragma once
-#include "../../utils/smooth_lv_widgets/lv_obj.h"
 #include "../../utils/smooth_widget/smooth_widget.h"
 #include <mooncake.h>
 #include <memory>
@@ -69,7 +68,7 @@ public:
     // void onDestroy() override {}
 
 private:
-    std::vector<std::unique_ptr<smooth_lv_widgets::LvObj>> _canvas_list;
+    std::vector<std::unique_ptr<smooth_widget::SmoothWidgetBase>> _canvas_list;
 };
 
 class LauncherPageWidgets : public LauncherPageBase {
@@ -82,7 +81,7 @@ public:
     // void onDestroy() override {}
 
 private:
-    std::vector<std::unique_ptr<smooth_lv_widgets::LvObj>> _canvas_list;
+    std::vector<std::unique_ptr<smooth_widget::SmoothWidgetBase>> _canvas_list;
 };
 
 class LauncherPageAppList : public LauncherPageBase {
@@ -95,5 +94,5 @@ public:
     // void onDestroy() override {}
 
 private:
-    std::unique_ptr<smooth_lv_widgets::LvObj> _canvas;
+    std::unique_ptr<smooth_widget::SmoothWidgetBase> _canvas;
 };
