@@ -38,6 +38,22 @@ enum Type_t {
 };
 }
 
+namespace InputEventType {
+enum Type_t {
+    None = 0,
+    Hover,
+    MouseLeave,
+    Click,
+};
+}
+
+class WidgetBase;
+
+struct InputEvent_t {
+    InputEventType::Type_t type = InputEventType::None;
+    WidgetBase* target = nullptr;
+};
+
 /**
  * @brief 基础组件
  *
@@ -65,6 +81,13 @@ public:
     void setOutlineColor(const char* hexColor);
     void moveBackground();
     void moveForeground();
+    void setHidden(bool hidden);
+    int32_t getX();
+    int32_t getX2();
+    int32_t getY();
+    int32_t getY2();
+    int32_t getWidth();
+    int32_t getHeight();
 
     lv_obj_t* get()
     {
@@ -81,30 +104,11 @@ public:
         return WidgetType::Base;
     }
 
-    std::function<void(void)> onHover;
-    std::function<void(void)> onSelectorLeave;
-    std::function<void(void)> onClick;
+    std::function<void(InputEvent_t)> onHover;
+    std::function<void(InputEvent_t)> onMouseLeave;
+    std::function<void(InputEvent_t)> onClick;
 
-    void hoverWidget()
-    {
-        if (onHover) {
-            onHover();
-        }
-    }
-
-    void leaveWidget()
-    {
-        if (onSelectorLeave) {
-            onSelectorLeave();
-        }
-    }
-
-    void clickWidget()
-    {
-        if (onClick) {
-            onClick();
-        }
-    }
+    void triggerInputEvent(InputEventType::Type_t type);
 
 protected:
     lv_obj_t* _lv_obj = NULL;
@@ -197,17 +201,22 @@ private:
     lv_point_precise_t _second_points[2];
 };
 
-class WidgetSelector : public WidgetBase {
+class WidgetMouse : public WidgetBase {
 public:
-    WidgetSelector() = default;
-    WidgetSelector(lv_obj_t* parent) : WidgetBase(parent) {}
+    WidgetMouse() = default;
+    WidgetMouse(lv_obj_t* parent);
 
-    void addOption(WidgetBase* optionWidget);
+    void addTargetWidget(WidgetBase* targetWidget);
+    void clearAllTargets();
     void show();
     void hide();
     void goNext();
     void goLast();
     void goTo(WidgetBase* optionWidget);
+    void click();
+
+    int getCurrentTargetIndex();
+    WidgetBase* getCurrentTargetWidget();
 
     virtual void onShow();
     virtual void onHide();
@@ -216,8 +225,8 @@ public:
     bool goInLoop = true;
 
 protected:
-    int _current_option_index = 0;
-    std::vector<WidgetBase*> _option_widget_list;
+    int _current_target_index = -1;
+    std::vector<WidgetBase*> _target_widget_list;
 };
 
 /**
