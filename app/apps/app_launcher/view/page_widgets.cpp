@@ -27,12 +27,12 @@ static constexpr int _canvas_y = 10;
 static constexpr int _canvas_w = 124;
 static constexpr int _canvas_h = 68;
 
-static widget::WidgetMouse* _mouse;
+static smooth_widget::SmoothWidgetMouse* _mouse;
 
 void LauncherPageWidgets::onCreate()
 {
     _canvas_list.resize(2);
-    _mouse = new widget::WidgetMouse(lv_screen_active());
+    _mouse = new smooth_widget::SmoothWidgetMouse(lv_screen_active());
 }
 
 void LauncherPageWidgets::onShow()
@@ -70,8 +70,19 @@ void LauncherPageWidgets::onShow()
 
 void LauncherPageWidgets::onForeground()
 {
-    if (isOnSubPage() && HAL::BtnPower().wasClicked()) {
-        quitSubPage();
+    if (isOnSubPage()) {
+
+        if (HAL::BtnUp().wasClicked()) {
+            _mouse->goLast();
+        }
+
+        if (HAL::BtnDown().wasClicked()) {
+            _mouse->goNext();
+        }
+
+        if (HAL::BtnPower().wasClicked()) {
+            quitSubPage();
+        }
     }
 
     for (auto& canvas : _canvas_list) {
@@ -79,6 +90,8 @@ void LauncherPageWidgets::onForeground()
             canvas->updateSmoothing();
         }
     }
+
+    _mouse->updateSmoothing();
 }
 
 void LauncherPageWidgets::onBackground()
@@ -92,6 +105,8 @@ void LauncherPageWidgets::onBackground()
             }
         }
     }
+
+    _mouse->updateSmoothing();
 }
 
 void LauncherPageWidgets::onHide()

@@ -69,4 +69,14 @@ public:
     }
 };
 
+class SmoothWidgetMouse : public widget::WidgetMouse, public SmoothBinder {
+public:
+    SmoothWidgetMouse() = default;
+    SmoothWidgetMouse(lv_obj_t* parent);
+
+    void onShow() override;
+    void onHide() override;
+    void onGoTo(WidgetBase* optionWidget) override;
+};
+
 } // namespace smooth_widget
