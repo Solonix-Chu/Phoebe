@@ -11,6 +11,7 @@
 #include "page.h"
 #include <hal/hal.h>
 #include <mooncake_log.h>
+#include <src/display/lv_display.h>
 
 using namespace mooncake;
 using namespace SmoothUIToolKit;
@@ -26,9 +27,12 @@ static constexpr int _canvas_y = 10;
 static constexpr int _canvas_w = 124;
 static constexpr int _canvas_h = 68;
 
+static widget::WidgetMouse* _mouse;
+
 void LauncherPageWidgets::onCreate()
 {
     _canvas_list.resize(2);
+    _mouse = new widget::WidgetMouse(lv_screen_active());
 }
 
 void LauncherPageWidgets::onShow()
@@ -55,6 +59,13 @@ void LauncherPageWidgets::onShow()
 
         i++;
     }
+
+    _mouse->clearAllTargets();
+    _mouse->addTarget(_canvas_list[0].get());
+    _mouse->addTarget(_canvas_list[1].get());
+    mclog::info("shit {} {}", _canvas_list[0]->getX2(), _canvas_list[0]->getY2());
+    _mouse->goTo(_canvas_list[0].get());
+    mclog::info("??????");
 }
 
 void LauncherPageWidgets::onForeground()

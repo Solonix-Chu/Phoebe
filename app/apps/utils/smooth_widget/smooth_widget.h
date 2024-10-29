@@ -25,7 +25,7 @@ public:
     SmoothUIToolKit::Transition2D& smoothPosition();
     SmoothUIToolKit::Transition2D& smoothSize();
 
-private:
+protected:
     struct Transitions_t {
         std::unique_ptr<SmoothUIToolKit::Transition2D> position;
         std::unique_ptr<SmoothUIToolKit::Transition2D> size;
@@ -42,6 +42,13 @@ public:
     {
         bindSmoothTarget(_lv_obj);
     }
+
+    int32_t getX() override;
+    int32_t getX2() override;
+    int32_t getY() override;
+    int32_t getY2() override;
+    int32_t getWidth() override;
+    int32_t getHeight() override;
 };
 
 class SmoothWidgetLabel : public widget::WidgetLabel, public SmoothBinder {

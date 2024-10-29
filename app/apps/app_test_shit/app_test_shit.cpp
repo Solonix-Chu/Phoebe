@@ -71,9 +71,9 @@ void AppTestShit::onCreate()
     _shit3->onMouseLeave = handle_input_event_333;
 
     _selector = new WidgetMouse(lv_screen_active());
-    _selector->addTargetWidget(_shit1);
-    _selector->addTargetWidget(_shit2);
-    _selector->addTargetWidget(_shit3);
+    _selector->addTarget(_shit1);
+    _selector->addTarget(_shit2);
+    _selector->addTarget(_shit3);
     // _selector->goInLoop = false;
     mclog::info("shit1 {} {}", _shit1->getX(), _shit1->getY());
     _selector->goTo(_shit1);

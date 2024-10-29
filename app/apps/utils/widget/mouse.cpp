@@ -26,7 +26,7 @@ void WidgetMouse::clearAllTargets()
     _current_target_index = -1;
 }
 
-void WidgetMouse::addTargetWidget(WidgetBase* targetWidget)
+void WidgetMouse::addTarget(WidgetBase* targetWidget)
 {
     _target_widget_list.push_back(targetWidget);
 }

@@ -82,12 +82,12 @@ public:
     void moveBackground();
     void moveForeground();
     void setHidden(bool hidden);
-    int32_t getX();
-    int32_t getX2();
-    int32_t getY();
-    int32_t getY2();
-    int32_t getWidth();
-    int32_t getHeight();
+    virtual int32_t getX();
+    virtual int32_t getX2();
+    virtual int32_t getY();
+    virtual int32_t getY2();
+    virtual int32_t getWidth();
+    virtual int32_t getHeight();
 
     lv_obj_t* get()
     {
@@ -206,7 +206,7 @@ public:
     WidgetMouse() = default;
     WidgetMouse(lv_obj_t* parent);
 
-    void addTargetWidget(WidgetBase* targetWidget);
+    void addTarget(WidgetBase* targetWidget);
     void clearAllTargets();
     void show();
     void hide();
