@@ -13,6 +13,7 @@
 #include <lvgl.h>
 #include <memory>
 #include <vector>
+#include <functional>
 
 namespace widget_helper {
 
@@ -80,19 +81,33 @@ public:
         return WidgetType::Base;
     }
 
-    bool isSelectable()
+    std::function<void(void)> onHover;
+    std::function<void(void)> onSelectorLeave;
+    std::function<void(void)> onClick;
+
+    void hoverWidget()
     {
-        return _selectable;
+        if (onHover) {
+            onHover();
+        }
     }
 
-    void setSelectable(bool selectable)
+    void leaveWidget()
     {
-        _selectable = selectable;
+        if (onSelectorLeave) {
+            onSelectorLeave();
+        }
+    }
+
+    void clickWidget()
+    {
+        if (onClick) {
+            onClick();
+        }
     }
 
 protected:
     lv_obj_t* _lv_obj = NULL;
-    bool _selectable = false;
 };
 
 /**
@@ -187,7 +202,22 @@ public:
     WidgetSelector() = default;
     WidgetSelector(lv_obj_t* parent) : WidgetBase(parent) {}
 
-private:
+    void addOption(WidgetBase* optionWidget);
+    void show();
+    void hide();
+    void goNext();
+    void goLast();
+    void goTo(WidgetBase* optionWidget);
+
+    virtual void onShow();
+    virtual void onHide();
+    virtual void onGoTo(WidgetBase* optionWidget);
+
+    bool goInLoop = true;
+
+protected:
+    int _current_option_index = 0;
+    std::vector<WidgetBase*> _option_widget_list;
 };
 
 /**
