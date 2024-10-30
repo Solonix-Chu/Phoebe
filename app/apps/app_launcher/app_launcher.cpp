@@ -18,6 +18,11 @@
 
 using namespace mooncake;
 
+#define PAGE_INDEX_NOTIFICATION 0
+#define PAGE_INDEX_WATCH_FACE   1
+#define PAGE_INDEX_WIDGETS      2
+#define PAGE_INDEX_APP_LIST     3
+
 #define _tag (getAppInfo().name)
 
 AppLauncher::AppLauncher()
@@ -51,15 +56,10 @@ void AppLauncher::onClose()
     destroy_page_list();
 }
 
-// page_list 实例顺序：
-// 0：消息
-// 1：表盘
-// 2：小组件
-// 3：应用列表
 void AppLauncher::handle_page_change()
 {
     auto current_page_ability =
-        GetMooncake().getExtensionInstance<LauncherPageBase>(_page_ability_id_list[_current_page_index]);
+        GetMooncake().getExtensionInstance<LauncherPageBase>(_page_id_list[_current_page_index]);
 
     if (current_page_ability->isOnSubPage()) {
         return;
@@ -79,10 +79,15 @@ void AppLauncher::handle_page_change()
     // Go down
     else if (HAL::BtnDown().wasClicked()) {
         _new_page_index++;
-        if (_new_page_index >= _page_ability_id_list.size()) {
-            _new_page_index = _page_ability_id_list.size() - 1;
+        if (_new_page_index >= _page_id_list.size()) {
+            _new_page_index = _page_id_list.size() - 1;
             // TODO feedback
         }
+    }
+
+    // Go home (watch face)
+    if (HAL::BtnPower().wasClicked()) {
+        _new_page_index = PAGE_INDEX_WATCH_FACE;
     }
 
     // Go sub page
@@ -95,9 +100,9 @@ void AppLauncher::handle_page_change()
         // mclog::info("{}", _new_page_index);
 
         // Hide current
-        GetMooncake().extensionManager()->hideUIAbility(_page_ability_id_list[_current_page_index]);
+        GetMooncake().extensionManager()->hideUIAbility(_page_id_list[_current_page_index]);
         // Show new
-        GetMooncake().extensionManager()->showUIAbility(_page_ability_id_list[_new_page_index]);
+        GetMooncake().extensionManager()->showUIAbility(_page_id_list[_new_page_index]);
         // Update index
         _current_page_index = _new_page_index;
     }
@@ -109,26 +114,27 @@ void AppLauncher::handle_page_change()
 
 void AppLauncher::create_page_list()
 {
-    if (!_page_ability_id_list.empty()) {
+    if (!_page_id_list.empty()) {
         destroy_page_list();
     }
 
     // Create page instances
-    _page_ability_id_list.resize(4);
-    _page_ability_id_list[0] = GetMooncake().createExtension(std::make_unique<LauncherPageNotification>());
-    _page_ability_id_list[1] = GetMooncake().createExtension(std::make_unique<LauncherPageWatchFace>());
-    _page_ability_id_list[2] = GetMooncake().createExtension(std::make_unique<LauncherPageWidgets>());
-    _page_ability_id_list[3] = GetMooncake().createExtension(std::make_unique<LauncherPageAppList>());
+    _page_id_list.resize(4);
+    _page_id_list[PAGE_INDEX_NOTIFICATION] =
+        GetMooncake().createExtension(std::make_unique<LauncherPageNotification>());
+    _page_id_list[PAGE_INDEX_WATCH_FACE] = GetMooncake().createExtension(std::make_unique<LauncherPageWatchFace>());
+    _page_id_list[PAGE_INDEX_WIDGETS] = GetMooncake().createExtension(std::make_unique<LauncherPageWidgets>());
+    _page_id_list[PAGE_INDEX_APP_LIST] = GetMooncake().createExtension(std::make_unique<LauncherPageAppList>());
 
-    GetMooncake().extensionManager()->showUIAbility(_page_ability_id_list[1]);
+    GetMooncake().extensionManager()->showUIAbility(_page_id_list[1]);
 }
 
 void AppLauncher::destroy_page_list()
 {
-    for (auto& page_ability_id : _page_ability_id_list) {
+    for (auto& page_ability_id : _page_id_list) {
         GetMooncake().destroyExtension(page_ability_id);
     }
-    _page_ability_id_list.clear();
+    _page_id_list.clear();
 }
 
 void AppLauncher::reset_lv_screen()

@@ -19,11 +19,11 @@ bool ButtonSDL::getButton(ButtonId::ButtonId_t id)
     const Uint8* current_key_states = SDL_GetKeyboardState(NULL);
     switch (id) {
         case ButtonId::Power:
-            return current_key_states[SDL_SCANCODE_Q] != 0;
+            return current_key_states[SDL_SCANCODE_A] != 0;
         case ButtonId::Up:
             return current_key_states[SDL_SCANCODE_W] != 0;
         case ButtonId::Ok:
-            return current_key_states[SDL_SCANCODE_E] != 0;
+            return current_key_states[SDL_SCANCODE_D] != 0;
         case ButtonId::Down:
             return current_key_states[SDL_SCANCODE_S] != 0;
         default:

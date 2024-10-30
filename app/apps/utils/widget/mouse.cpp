@@ -29,6 +29,10 @@ void WidgetMouse::clearAllTargets()
 void WidgetMouse::addTarget(WidgetBase* targetWidget)
 {
     _target_widget_list.push_back(targetWidget);
+    // If add target from none, set default to 0
+    if (_current_target_index < 0) {
+        _current_target_index = 0;
+    }
 }
 
 void WidgetMouse::show()
