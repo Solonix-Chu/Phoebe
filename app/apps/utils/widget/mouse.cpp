@@ -14,8 +14,8 @@ using namespace widget;
 
 WidgetMouse::WidgetMouse(lv_obj_t* parent) : WidgetBase(parent)
 {
-    setSize(16, 16);
-    setRadius(8);
+    setSize(18, 18);
+    setRadius(18);
     setBorderWidth(0);
     setBgColor("#000000");
 }
@@ -85,7 +85,7 @@ void WidgetMouse::goLast()
     goTo(_target_widget_list[new_target_index]);
 }
 
-void WidgetMouse::goTo(WidgetBase* optionWidget)
+void WidgetMouse::goTo(WidgetBase* targetWidget)
 {
     if (_target_widget_list.empty()) {
         return;
@@ -98,10 +98,10 @@ void WidgetMouse::goTo(WidgetBase* optionWidget)
 
     // Find new widget
     for (int i = 0; i < _target_widget_list.size(); i++) {
-        if (_target_widget_list[i] == optionWidget) {
+        if (_target_widget_list[i] == targetWidget) {
             // Trigger option on hover and selector on go to
-            optionWidget->triggerInputEvent(InputEventType::Hover);
-            onGoTo(optionWidget);
+            targetWidget->triggerInputEvent(InputEventType::Hover);
+            onGoTo(targetWidget);
             // Update current and go
             _current_target_index = i;
             break;
@@ -141,7 +141,7 @@ void WidgetMouse::onHide()
     setHidden(true);
 }
 
-void WidgetMouse::onGoTo(WidgetBase* optionWidget)
+void WidgetMouse::onGoTo(WidgetBase* targetWidget)
 {
-    setPos(optionWidget->getX2() - 12, optionWidget->getY2() - 12);
+    setPos(targetWidget->getX2() - 13, targetWidget->getY2() - 13);
 }

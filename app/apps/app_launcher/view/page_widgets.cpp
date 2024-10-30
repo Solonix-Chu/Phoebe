@@ -72,6 +72,14 @@ void LauncherPageWidgets::onForeground()
             _mouse->goNext();
         }
 
+        if (HAL::BtnOk().wasPressed()) {
+            _mouse->press();
+        }
+
+        if (HAL::BtnOk().wasReleased()) {
+            _mouse->release();
+        }
+
         if (HAL::BtnPower().wasClicked()) {
             quitSubPage();
         }

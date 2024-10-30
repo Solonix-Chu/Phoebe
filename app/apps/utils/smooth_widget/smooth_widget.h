@@ -76,7 +76,10 @@ public:
 
     void onShow() override;
     void onHide() override;
-    void onGoTo(WidgetBase* optionWidget) override;
+    void onGoTo(WidgetBase* targetWidget) override;
+
+    void press();
+    void release();
 };
 
 } // namespace smooth_widget

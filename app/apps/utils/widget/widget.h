@@ -212,7 +212,7 @@ public:
     void hide();
     void goNext();
     void goLast();
-    void goTo(WidgetBase* optionWidget);
+    void goTo(WidgetBase* targetWidget);
     void click();
 
     int getCurrentTargetIndex();
@@ -220,7 +220,7 @@ public:
 
     virtual void onShow();
     virtual void onHide();
-    virtual void onGoTo(WidgetBase* optionWidget);
+    virtual void onGoTo(WidgetBase* targetWidget);
 
     bool goInLoop = true;
 
