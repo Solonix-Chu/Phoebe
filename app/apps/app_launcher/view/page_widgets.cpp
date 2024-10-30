@@ -12,7 +12,6 @@
 #include <hal/hal.h>
 #include <memory>
 #include <mooncake_log.h>
-#include <src/display/lv_display.h>
 
 using namespace mooncake;
 using namespace SmoothUIToolKit;

@@ -85,6 +85,8 @@ public:
 private:
     std::vector<std::unique_ptr<smooth_widget::SmoothWidgetBase>> _canvas_list;
     std::unique_ptr<smooth_widget::SmoothWidgetMouse> _mouse;
+    int _widget_a_ability_id = -1;
+    int _widget_b_ability_id = -1;
 };
 
 class LauncherPageAppList : public LauncherPageBase {
