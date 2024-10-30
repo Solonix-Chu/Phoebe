@@ -53,6 +53,7 @@ void SmoothWidgetMouse::onGoTo(WidgetBase* targetWidget)
     smoothPosition().moveTo(targetWidget->getX2() - 13, targetWidget->getY2() - 13);
     smoothSize().moveTo(_mouse_w, _mouse_h);
     smoothPosition().setDuration(300);
+    smoothPosition().getXTransition().setDelay(100);
 }
 
 void SmoothWidgetMouse::press()
@@ -70,6 +71,7 @@ void SmoothWidgetMouse::press()
     smoothPosition().moveTo(squeeze_shape.x, squeeze_shape.y);
     smoothSize().moveTo(squeeze_shape.w, squeeze_shape.h);
 
+    smoothPosition().getXTransition().setDelay(0);
     smoothPosition().setDuration(400);
     smoothSize().setDuration(400);
 }
@@ -89,6 +91,7 @@ void SmoothWidgetMouse::release()
     smoothPosition().moveTo(release_shape.x, release_shape.y);
     smoothSize().moveTo(release_shape.w, release_shape.h);
 
+    smoothPosition().getXTransition().setDelay(0);
     smoothPosition().setDuration(300);
     smoothSize().setDuration(600);
 }
