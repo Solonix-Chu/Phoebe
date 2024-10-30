@@ -79,9 +79,12 @@ public:
     void onBackground() override;
     void onHide() override;
     // void onDestroy() override {}
+    void onEnterSubPage() override;
+    void onQuitSubPage() override;
 
 private:
     std::vector<std::unique_ptr<smooth_widget::SmoothWidgetBase>> _canvas_list;
+    std::unique_ptr<smooth_widget::SmoothWidgetMouse> _mouse;
 };
 
 class LauncherPageAppList : public LauncherPageBase {

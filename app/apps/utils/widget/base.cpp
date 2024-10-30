@@ -108,3 +108,78 @@ void WidgetBase::moveForeground()
 {
     lv_obj_move_foreground(_lv_obj);
 }
+
+void WidgetBase::setHidden(bool hidden)
+{
+    if (hidden) {
+        lv_obj_add_flag(_lv_obj, LV_OBJ_FLAG_HIDDEN);
+    } else {
+        lv_obj_remove_flag(_lv_obj, LV_OBJ_FLAG_HIDDEN);
+    }
+}
+
+int32_t WidgetBase::getX()
+{
+    lv_obj_update_layout(_lv_obj);
+    return lv_obj_get_x(_lv_obj);
+}
+
+int32_t WidgetBase::getX2()
+{
+    lv_obj_update_layout(_lv_obj);
+    return lv_obj_get_x2(_lv_obj);
+}
+
+int32_t WidgetBase::getY()
+{
+    lv_obj_update_layout(_lv_obj);
+    return lv_obj_get_y(_lv_obj);
+}
+
+int32_t WidgetBase::getY2()
+{
+    lv_obj_update_layout(_lv_obj);
+    return lv_obj_get_y2(_lv_obj);
+}
+
+int32_t WidgetBase::getWidth()
+{
+    lv_obj_update_layout(_lv_obj);
+    return lv_obj_get_width(_lv_obj);
+}
+
+int32_t WidgetBase::getHeight()
+{
+    lv_obj_update_layout(_lv_obj);
+    return lv_obj_get_height(_lv_obj);
+}
+
+void WidgetBase::triggerInputEvent(InputEventType::Type_t type)
+{
+    InputEvent_t event;
+    event.type = type;
+    event.target = this;
+
+    switch (type) {
+        case InputEventType::None:
+            break;
+        case InputEventType::Hover: {
+            if (onHover) {
+                onHover(event);
+            }
+            break;
+        }
+        case InputEventType::MouseLeave: {
+            if (onMouseLeave) {
+                onMouseLeave(event);
+            }
+            break;
+        }
+        case InputEventType::Click: {
+            if (onClick) {
+                onClick(event);
+            }
+            break;
+        }
+    }
+}

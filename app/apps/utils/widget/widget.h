@@ -13,6 +13,7 @@
 #include <lvgl.h>
 #include <memory>
 #include <vector>
+#include <functional>
 
 namespace widget_helper {
 
@@ -36,6 +37,22 @@ enum Type_t {
     Clock,
 };
 }
+
+namespace InputEventType {
+enum Type_t {
+    None = 0,
+    Hover,
+    MouseLeave,
+    Click,
+};
+}
+
+class WidgetBase;
+
+struct InputEvent_t {
+    InputEventType::Type_t type = InputEventType::None;
+    WidgetBase* target = nullptr;
+};
 
 /**
  * @brief 基础组件
@@ -64,6 +81,13 @@ public:
     void setOutlineColor(const char* hexColor);
     void moveBackground();
     void moveForeground();
+    void setHidden(bool hidden);
+    virtual int32_t getX();
+    virtual int32_t getX2();
+    virtual int32_t getY();
+    virtual int32_t getY2();
+    virtual int32_t getWidth();
+    virtual int32_t getHeight();
 
     lv_obj_t* get()
     {
@@ -79,6 +103,12 @@ public:
     {
         return WidgetType::Base;
     }
+
+    std::function<void(InputEvent_t)> onHover;
+    std::function<void(InputEvent_t)> onMouseLeave;
+    std::function<void(InputEvent_t)> onClick;
+
+    void triggerInputEvent(InputEventType::Type_t type);
 
 protected:
     lv_obj_t* _lv_obj = NULL;
@@ -169,6 +199,34 @@ private:
     lv_point_precise_t _hour_points[2];
     lv_point_precise_t _minute_points[2];
     lv_point_precise_t _second_points[2];
+};
+
+class WidgetMouse : public WidgetBase {
+public:
+    WidgetMouse() = default;
+    WidgetMouse(lv_obj_t* parent);
+
+    void addTarget(WidgetBase* targetWidget);
+    void clearAllTargets();
+    void show();
+    void hide();
+    void goNext();
+    void goLast();
+    void goTo(WidgetBase* targetWidget);
+    void click();
+
+    int getCurrentTargetIndex();
+    WidgetBase* getCurrentTargetWidget();
+
+    virtual void onShow();
+    virtual void onHide();
+    virtual void onGoTo(WidgetBase* targetWidget);
+
+    bool goInLoop = true;
+
+protected:
+    int _current_target_index = -1;
+    std::vector<WidgetBase*> _target_widget_list;
 };
 
 /**

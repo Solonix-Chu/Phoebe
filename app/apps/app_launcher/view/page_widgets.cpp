@@ -10,10 +10,13 @@
  */
 #include "page.h"
 #include <hal/hal.h>
+#include <memory>
 #include <mooncake_log.h>
+#include <src/display/lv_display.h>
 
 using namespace mooncake;
 using namespace SmoothUIToolKit;
+using namespace smooth_widget;
 
 static const char* _tag = "PageWidgets";
 
@@ -38,7 +41,7 @@ void LauncherPageWidgets::onShow()
     int i = 0;
     for (auto& canvas : _canvas_list) {
         if (!canvas) {
-            canvas = std::make_unique<smooth_widget::SmoothWidgetBase>(lv_screen_active());
+            canvas = std::make_unique<SmoothWidgetBase>(lv_screen_active());
             canvas->setRadius(16);
             canvas->smoothPosition().setTransitionPath(EasingPath::easeOutQuad);
             canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
@@ -59,14 +62,37 @@ void LauncherPageWidgets::onShow()
 
 void LauncherPageWidgets::onForeground()
 {
-    if (isOnSubPage() && HAL::BtnPower().wasClicked()) {
-        quitSubPage();
+    if (isOnSubPage()) {
+
+        if (HAL::BtnUp().wasClicked()) {
+            _mouse->goLast();
+        }
+
+        if (HAL::BtnDown().wasClicked()) {
+            _mouse->goNext();
+        }
+
+        if (HAL::BtnOk().wasPressed()) {
+            _mouse->press();
+        }
+
+        if (HAL::BtnOk().wasReleased()) {
+            _mouse->release();
+        }
+
+        if (HAL::BtnPower().wasClicked()) {
+            quitSubPage();
+        }
     }
 
     for (auto& canvas : _canvas_list) {
         if (canvas) {
             canvas->updateSmoothing();
         }
+    }
+
+    if (_mouse) {
+        _mouse->updateSmoothing();
     }
 }
 
@@ -80,6 +106,10 @@ void LauncherPageWidgets::onBackground()
                 // mclog::tagInfo(_tag, "free shit");
             }
         }
+    }
+
+    if (_mouse) {
+        _mouse->updateSmoothing();
     }
 }
 
@@ -98,4 +128,21 @@ void LauncherPageWidgets::onHide()
 
         i++;
     }
+}
+
+void LauncherPageWidgets::onEnterSubPage()
+{
+    if (!_mouse) {
+        _mouse = std::make_unique<SmoothWidgetMouse>(lv_screen_active());
+    }
+
+    _mouse->clearAllTargets();
+    _mouse->addTarget(_canvas_list[0].get());
+    _mouse->addTarget(_canvas_list[1].get());
+    _mouse->show();
+}
+
+void LauncherPageWidgets::onQuitSubPage()
+{
+    _mouse->hide();
 }
