@@ -83,6 +83,13 @@ void LauncherPageWidgets::onForeground()
         if (HAL::BtnPower().wasClicked()) {
             quitSubPage();
         }
+    } else {
+        if (_mouse) {
+            if (_mouse->isAllSmoothingFinish()) {
+                _mouse.reset();
+                mclog::tagInfo(_tag, "free shit");
+            }
+        }
     }
 
     for (auto& canvas : _canvas_list) {
@@ -110,6 +117,10 @@ void LauncherPageWidgets::onBackground()
 
     if (_mouse) {
         _mouse->updateSmoothing();
+        if (_mouse->isAllSmoothingFinish()) {
+            _mouse.reset();
+            // mclog::tagInfo(_tag, "free shit");
+        }
     }
 }
 
