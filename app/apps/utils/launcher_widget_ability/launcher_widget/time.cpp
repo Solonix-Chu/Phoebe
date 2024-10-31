@@ -9,18 +9,50 @@
  *
  */
 #include "../launcher_widget_ability.h"
+#include "../../widget/widget.h"
 #include <hal/hal.h>
+#include <memory>
 #include <mooncake_log.h>
 
 using namespace mooncake;
 using namespace widget;
 
-void LauncherWidgetTime::onCreate() {}
+void LauncherWidgetTime::onCreate()
+{
+    _clock = std::make_unique<WidgetClock>(_canvas->get());
+    _clock->centerX = 30;
+    _clock->centerY = 30;
+    _clock->hourHandLength = 13;
+    _clock->minHandLength = 20;
+    _clock->secHandLength = 30;
+
+    _time_title = std::make_unique<WidgetLabel>(_canvas->get());
+    _time_title->setText("TIME");
+    _time_title->setAlign("lv_align_top_right");
+    _time_title->setFont("RajdhaniBold16");
+    _time_title->setPos(-8, 14);
+
+    _time = std::make_unique<WidgetLabel>(_canvas->get());
+    _time->setText("22:33");
+    _time->setAlign("lv_align_top_right");
+    _time->setFont("RajdhaniBold24");
+    _time->setPos(-8, 34);
+
+    _clock->update();
+}
 
 void LauncherWidgetTime::onRunning()
 {
     if (HAL::SysCtrl().millis() - _time_count > 1000) {
-        mclog::info("6");
+        _clock->update();
+
+        time_t now;
+        struct tm* tm_info;
+        time(&now);
+        tm_info = localtime(&now);
+        _string_buffer = fmt::format("{:02d}:{:02d}", tm_info->tm_hour, tm_info->tm_min);
+        _time->setText(_string_buffer.c_str());
+
         _time_count = HAL::SysCtrl().millis();
     }
 }

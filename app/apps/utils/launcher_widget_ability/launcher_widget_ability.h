@@ -11,23 +11,28 @@
 #pragma once
 #include "../widget/widget.h"
 #include <cstdint>
+#include <memory>
 #include <mooncake.h>
 
 class LauncherWidgetAbilityBase : public mooncake::WorkerAbility {
 public:
-    LauncherWidgetAbilityBase(lv_obj_t* widgetParent) : _widget_parent(widgetParent) {}
+    LauncherWidgetAbilityBase(widget::WidgetBase* canvas) : _canvas(canvas) {}
 
-private:
-    lv_obj_t* _widget_parent = NULL;
+protected:
+    widget::WidgetBase* _canvas = NULL;
 };
 
 class LauncherWidgetTime : public LauncherWidgetAbilityBase {
 public:
-    LauncherWidgetTime(lv_obj_t* widgetParent) : LauncherWidgetAbilityBase(widgetParent) {}
+    LauncherWidgetTime(widget::WidgetBase* canvas) : LauncherWidgetAbilityBase(canvas) {}
 
     void onCreate() override;
     void onRunning() override;
 
 private:
     uint32_t _time_count = 0;
+    std::unique_ptr<widget::WidgetClock> _clock;
+    std::unique_ptr<widget::WidgetLabel> _time_title;
+    std::unique_ptr<widget::WidgetLabel> _time;
+    std::string _string_buffer;
 };

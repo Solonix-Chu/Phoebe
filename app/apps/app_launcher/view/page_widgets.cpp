@@ -179,10 +179,10 @@ void LauncherPageWidgets::handle_create_launcher_widget_ability(int canvasIndex)
 {
     if (canvasIndex == 0) {
         _widget_a_ability_id =
-            GetMooncake().createExtension(std::make_unique<LauncherWidgetTime>(_canvas_list[canvasIndex]->get()));
+            GetMooncake().createExtension(std::make_unique<LauncherWidgetTime>(_canvas_list[canvasIndex].get()));
     } else if (canvasIndex == 1) {
         _widget_b_ability_id =
-            GetMooncake().createExtension(std::make_unique<LauncherWidgetTime>(_canvas_list[canvasIndex]->get()));
+            GetMooncake().createExtension(std::make_unique<LauncherWidgetTime>(_canvas_list[canvasIndex].get()));
     }
 }
 
