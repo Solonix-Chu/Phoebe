@@ -91,8 +91,8 @@ private:
     void handle_show_widget_canvas();
     void handle_hide_widget_canvas();
     void handle_sub_page_input();
-    void handle_create_launcher_widget_ability(int canvasIndex);
-    void handle_destroy_launcher_widget_ability(int canvasIndex);
+    void handle_create_launcher_widget(int canvasIndex);
+    void handle_destroy_launcher_widget(int canvasIndex);
 };
 
 class LauncherPageAppList : public LauncherPageBase {

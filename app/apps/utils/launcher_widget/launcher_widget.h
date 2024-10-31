@@ -1,9 +1,9 @@
 /**
- * @file launcher_widget_ability.h
+ * @file launcher_widget.h
  * @author Forairaaaaa
  * @brief
  * @version 0.1
- * @date 2024-10-30
+ * @date 2024-10-31
  *
  * @copyright Copyright (c) 2024
  *
@@ -13,18 +13,19 @@
 #include <cstdint>
 #include <memory>
 #include <mooncake.h>
+#include <vector>
 
-class LauncherWidgetAbilityBase : public mooncake::WorkerAbility {
+class LauncherWidgetBase : public mooncake::WorkerAbility {
 public:
-    LauncherWidgetAbilityBase(widget::WidgetBase* canvas) : _canvas(canvas) {}
+    LauncherWidgetBase(widget::WidgetBase* canvas) : _canvas(canvas) {}
 
 protected:
     widget::WidgetBase* _canvas = NULL;
 };
 
-class LauncherWidgetTime : public LauncherWidgetAbilityBase {
+class LauncherWidgetTime : public LauncherWidgetBase {
 public:
-    LauncherWidgetTime(widget::WidgetBase* canvas) : LauncherWidgetAbilityBase(canvas) {}
+    LauncherWidgetTime(widget::WidgetBase* canvas) : LauncherWidgetBase(canvas) {}
 
     void onCreate() override;
     void onRunning() override;
@@ -37,9 +38,9 @@ private:
     std::string _string_buffer;
 };
 
-class LauncherWidgetDate : public LauncherWidgetAbilityBase {
+class LauncherWidgetDate : public LauncherWidgetBase {
 public:
-    LauncherWidgetDate(widget::WidgetBase* canvas) : LauncherWidgetAbilityBase(canvas) {}
+    LauncherWidgetDate(widget::WidgetBase* canvas) : LauncherWidgetBase(canvas) {}
 
     void onCreate() override;
     void onRunning() override;
@@ -51,9 +52,9 @@ private:
     std::string _string_buffer;
 };
 
-class LauncherWidgetBattery : public LauncherWidgetAbilityBase {
+class LauncherWidgetBattery : public LauncherWidgetBase {
 public:
-    LauncherWidgetBattery(widget::WidgetBase* canvas) : LauncherWidgetAbilityBase(canvas) {}
+    LauncherWidgetBattery(widget::WidgetBase* canvas) : LauncherWidgetBase(canvas) {}
 
     void onCreate() override;
     void onRunning() override;
@@ -69,3 +70,20 @@ private:
 
     void set_battery_icon_level(float batteryLevel);
 };
+
+class LauncherWidgetFactory {
+public:
+    ~LauncherWidgetFactory();
+
+    // "time" | "date" | "battery" | "weather"
+    void createLauncherWidget(widget::WidgetBase* canvas, const std::string& widgetType);
+    void clear();
+
+private:
+    std::vector<int> _launcher_widget_ability_id_list;
+};
+
+namespace launcher_widget_factory {
+// "time" | "date" | "battery" | "weather"
+int create(widget::WidgetBase* canvas, const std::string& widgetType);
+} // namespace launcher_widget_factory

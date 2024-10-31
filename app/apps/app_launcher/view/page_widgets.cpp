@@ -9,7 +9,7 @@
  *
  */
 #include "page.h"
-#include "../../utils//launcher_widget_ability/launcher_widget_ability.h"
+#include "../../utils/launcher_widget/launcher_widget.h"
 #include <hal/hal.h>
 #include <memory>
 #include <mooncake.h>
@@ -73,7 +73,7 @@ void LauncherPageWidgets::onBackground()
             if (canvas->isAllSmoothingFinish()) {
                 canvas.reset();
                 // mclog::tagInfo(_tag, "free shit");
-                handle_destroy_launcher_widget_ability(i);
+                handle_destroy_launcher_widget(i);
             }
         }
         i++;
@@ -123,7 +123,7 @@ void LauncherPageWidgets::handle_show_widget_canvas()
             canvas->smoothSize().setTransitionPath(EasingPath::easeOutBack);
             canvas->smoothSize().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
 
-            handle_create_launcher_widget_ability(i);
+            handle_create_launcher_widget(i);
         }
 
         canvas->smoothPosition().setDelay(i * 100);
@@ -175,20 +175,18 @@ void LauncherPageWidgets::handle_sub_page_input()
     }
 }
 
-void LauncherPageWidgets::handle_create_launcher_widget_ability(int canvasIndex)
+void LauncherPageWidgets::handle_create_launcher_widget(int canvasIndex)
 {
     // TODO
     // get type by config
     if (canvasIndex == 0) {
-        _widget_a_ability_id =
-            GetMooncake().createExtension(std::make_unique<LauncherWidgetTime>(_canvas_list[canvasIndex].get()));
+        _widget_a_ability_id = launcher_widget_factory::create(_canvas_list[canvasIndex].get(), "time");
     } else if (canvasIndex == 1) {
-        _widget_b_ability_id =
-            GetMooncake().createExtension(std::make_unique<LauncherWidgetBattery>(_canvas_list[canvasIndex].get()));
+        _widget_b_ability_id = launcher_widget_factory::create(_canvas_list[canvasIndex].get(), "date");
     }
 }
 
-void LauncherPageWidgets::handle_destroy_launcher_widget_ability(int canvasIndex)
+void LauncherPageWidgets::handle_destroy_launcher_widget(int canvasIndex)
 {
     if (canvasIndex == 0) {
         GetMooncake().destroyExtension(_widget_a_ability_id);
