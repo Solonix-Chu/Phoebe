@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2024
  *
  */
-#include "../launcher_widget_ability.h"
+#include "../launcher_widget.h"
 #include "../../widget/widget.h"
 #include <hal/hal.h>
 #include <memory>
