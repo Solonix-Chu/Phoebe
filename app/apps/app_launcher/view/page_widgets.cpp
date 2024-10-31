@@ -9,8 +9,10 @@
  *
  */
 #include "page.h"
+#include "../../utils//launcher_widget_ability/launcher_widget_ability.h"
 #include <hal/hal.h>
 #include <memory>
+#include <mooncake.h>
 #include <mooncake_log.h>
 
 using namespace mooncake;
@@ -36,59 +38,13 @@ void LauncherPageWidgets::onCreate()
 void LauncherPageWidgets::onShow()
 {
     mclog::tagInfo(_tag, "on show");
-
-    int i = 0;
-    for (auto& canvas : _canvas_list) {
-        if (!canvas) {
-            canvas = std::make_unique<SmoothWidgetBase>(lv_screen_active());
-            canvas->setRadius(16);
-            canvas->smoothPosition().setTransitionPath(EasingPath::easeOutQuad);
-            canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
-            canvas->smoothSize().setTransitionPath(EasingPath::easeOutBack);
-            canvas->smoothSize().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
-        }
-
-        canvas->smoothPosition().setDelay(i * 100);
-        canvas->smoothPosition().setDuration(300);
-        canvas->smoothPosition().moveTo(_canvas_x, _canvas_y + i * 80);
-        canvas->smoothSize().setDelay(i * 100 + 100);
-        canvas->smoothSize().setDuration(800);
-        canvas->smoothSize().moveTo(_canvas_w, _canvas_h);
-
-        i++;
-    }
+    handle_show_widget_canvas();
 }
 
 void LauncherPageWidgets::onForeground()
 {
     if (isOnSubPage()) {
-
-        if (HAL::BtnUp().wasClicked()) {
-            _mouse->goLast();
-        }
-
-        if (HAL::BtnDown().wasClicked()) {
-            _mouse->goNext();
-        }
-
-        if (HAL::BtnOk().wasPressed()) {
-            _mouse->press();
-        }
-
-        if (HAL::BtnOk().wasReleased()) {
-            _mouse->release();
-        }
-
-        if (HAL::BtnPower().wasClicked()) {
-            quitSubPage();
-        }
-    } else {
-        if (_mouse) {
-            if (_mouse->isAllSmoothingFinish()) {
-                _mouse.reset();
-                mclog::tagInfo(_tag, "free shit");
-            }
-        }
+        handle_sub_page_input();
     }
 
     for (auto& canvas : _canvas_list) {
@@ -99,19 +55,28 @@ void LauncherPageWidgets::onForeground()
 
     if (_mouse) {
         _mouse->updateSmoothing();
+        if (!isOnSubPage()) {
+            if (_mouse->isAllSmoothingFinish()) {
+                _mouse.reset();
+                // mclog::tagInfo(_tag, "free shit");
+            }
+        }
     }
 }
 
 void LauncherPageWidgets::onBackground()
 {
+    int i = 0;
     for (auto& canvas : _canvas_list) {
         if (canvas) {
             canvas->updateSmoothing();
             if (canvas->isAllSmoothingFinish()) {
                 canvas.reset();
                 // mclog::tagInfo(_tag, "free shit");
+                handle_destroy_launcher_widget_ability(i);
             }
         }
+        i++;
     }
 
     if (_mouse) {
@@ -126,18 +91,7 @@ void LauncherPageWidgets::onBackground()
 void LauncherPageWidgets::onHide()
 {
     mclog::tagInfo(_tag, "on hide");
-
-    int i = 0;
-    for (auto& canvas : _canvas_list) {
-        canvas->smoothPosition().setDelay((_canvas_list.size() - 1 - i) * 50 + 100);
-        canvas->smoothPosition().setDuration(300);
-        canvas->smoothPosition().moveTo(_canvas_start_up_x, _canvas_start_up_y);
-        canvas->smoothSize().setDelay((_canvas_list.size() - 1 - i) * 100);
-        canvas->smoothSize().setDuration(800);
-        canvas->smoothSize().moveTo(_canvas_start_up_w, _canvas_start_up_h);
-
-        i++;
-    }
+    handle_hide_widget_canvas();
 }
 
 void LauncherPageWidgets::onEnterSubPage()
@@ -155,4 +109,88 @@ void LauncherPageWidgets::onEnterSubPage()
 void LauncherPageWidgets::onQuitSubPage()
 {
     _mouse->hide();
+}
+
+void LauncherPageWidgets::handle_show_widget_canvas()
+{
+    int i = 0;
+    for (auto& canvas : _canvas_list) {
+        if (!canvas) {
+            canvas = std::make_unique<SmoothWidgetBase>(lv_screen_active());
+            canvas->setRadius(16);
+            canvas->smoothPosition().setTransitionPath(EasingPath::easeOutQuad);
+            canvas->smoothPosition().jumpTo(_canvas_start_up_x, _canvas_start_up_y);
+            canvas->smoothSize().setTransitionPath(EasingPath::easeOutBack);
+            canvas->smoothSize().jumpTo(_canvas_start_up_w, _canvas_start_up_h);
+
+            handle_create_launcher_widget_ability(i);
+        }
+
+        canvas->smoothPosition().setDelay(i * 100);
+        canvas->smoothPosition().setDuration(300);
+        canvas->smoothPosition().moveTo(_canvas_x, _canvas_y + i * 80);
+        canvas->smoothSize().setDelay(i * 100 + 100);
+        canvas->smoothSize().setDuration(800);
+        canvas->smoothSize().moveTo(_canvas_w, _canvas_h);
+
+        i++;
+    }
+}
+
+void LauncherPageWidgets::handle_hide_widget_canvas()
+{
+    int i = 0;
+    for (auto& canvas : _canvas_list) {
+        canvas->smoothPosition().setDelay((_canvas_list.size() - 1 - i) * 50 + 100);
+        canvas->smoothPosition().setDuration(200);
+        canvas->smoothPosition().moveTo(_canvas_start_up_x, _canvas_start_up_y);
+        canvas->smoothSize().setDelay((_canvas_list.size() - 1 - i) * 100);
+        canvas->smoothSize().setDuration(600);
+        canvas->smoothSize().moveTo(_canvas_start_up_w, _canvas_start_up_h);
+
+        i++;
+    }
+}
+
+void LauncherPageWidgets::handle_sub_page_input()
+{
+    if (HAL::BtnUp().wasClicked()) {
+        _mouse->goLast();
+    }
+
+    if (HAL::BtnDown().wasClicked()) {
+        _mouse->goNext();
+    }
+
+    if (HAL::BtnOk().wasPressed()) {
+        _mouse->press();
+    }
+
+    if (HAL::BtnOk().wasReleased()) {
+        _mouse->release();
+    }
+
+    if (HAL::BtnPower().wasClicked()) {
+        quitSubPage();
+    }
+}
+
+void LauncherPageWidgets::handle_create_launcher_widget_ability(int canvasIndex)
+{
+    if (canvasIndex == 0) {
+        _widget_a_ability_id =
+            GetMooncake().createExtension(std::make_unique<LauncherWidgetTime>(_canvas_list[canvasIndex]->get()));
+    } else if (canvasIndex == 1) {
+        _widget_b_ability_id =
+            GetMooncake().createExtension(std::make_unique<LauncherWidgetTime>(_canvas_list[canvasIndex]->get()));
+    }
+}
+
+void LauncherPageWidgets::handle_destroy_launcher_widget_ability(int canvasIndex)
+{
+    if (canvasIndex == 0) {
+        GetMooncake().destroyExtension(_widget_a_ability_id);
+    } else if (canvasIndex == 1) {
+        GetMooncake().destroyExtension(_widget_b_ability_id);
+    }
 }
