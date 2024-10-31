@@ -36,3 +36,17 @@ private:
     std::unique_ptr<widget::WidgetLabel> _time;
     std::string _string_buffer;
 };
+
+class LauncherWidgetDate : public LauncherWidgetAbilityBase {
+public:
+    LauncherWidgetDate(widget::WidgetBase* canvas) : LauncherWidgetAbilityBase(canvas) {}
+
+    void onCreate() override;
+    void onRunning() override;
+
+private:
+    uint32_t _time_count = 0;
+    std::unique_ptr<widget::WidgetLabel> _date_title;
+    std::unique_ptr<widget::WidgetLabel> _date;
+    std::string _string_buffer;
+};

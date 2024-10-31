@@ -30,13 +30,13 @@ void LauncherWidgetTime::onCreate()
     _time_title->setText("TIME");
     _time_title->setAlign("lv_align_top_right");
     _time_title->setFont("RajdhaniBold16");
-    _time_title->setPos(-8, 14);
+    _time_title->setPos(-8, 12);
 
     _time = std::make_unique<WidgetLabel>(_canvas->get());
     _time->setText("22:33");
     _time->setAlign("lv_align_top_right");
     _time->setFont("RajdhaniBold24");
-    _time->setPos(-8, 34);
+    _time->setPos(-8, 32);
 
     _clock->update();
 }
