@@ -32,7 +32,7 @@ WidgetBase::WidgetBase(lv_obj_t* parent)
 WidgetBase::~WidgetBase()
 {
     if (_lv_obj != NULL) {
-        lv_obj_delete_async(_lv_obj);
+        lv_obj_delete(_lv_obj);
     }
 }
 

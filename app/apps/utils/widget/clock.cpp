@@ -35,13 +35,13 @@ WidgetClock::WidgetClock(lv_obj_t* parent)
 WidgetClock::~WidgetClock()
 {
     if (_hour_hand != NULL) {
-        lv_obj_delete_async(_hour_hand);
+        lv_obj_delete(_hour_hand);
     }
     if (_minute_hand != NULL) {
-        lv_obj_delete_async(_hour_hand);
+        lv_obj_delete(_hour_hand);
     }
     if (_second_hand != NULL) {
-        lv_obj_delete_async(_hour_hand);
+        lv_obj_delete(_hour_hand);
     }
 }
 
