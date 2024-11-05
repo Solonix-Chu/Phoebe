@@ -1,0 +1,76 @@
+/**
+ * @file page_select_menu.cpp
+ * @author Forairaaaaa
+ * @brief
+ * @version 0.1
+ * @date 2024-11-05
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+#include "page.h"
+#include <lvgl.h>
+#include <hal/hal.h>
+#include <mooncake_log.h>
+
+using namespace page;
+using namespace widget;
+using namespace smooth_widget;
+using namespace mooncake;
+using namespace SmoothUIToolKit;
+
+void PageSelectMenu::create()
+{
+    _menu_base = std::make_unique<SmoothWidgetBase>(lv_screen_active());
+    _mouse = std::make_unique<SmoothWidgetMouse>(_menu_base->get());
+
+    _menu_base->setSize(HAL::Display().width(), HAL::Display().height());
+    _menu_base->smoothPosition().jumpTo(0, HAL::Display().height());
+
+    for (int i = 0; i < optionList.size(); i++) {
+        _option_widget_list.push_back(std::make_unique<WidgetLabel>(_menu_base->get()));
+        _option_widget_list[i]->setFont("RajdhaniBold24");
+        _option_widget_list[i]->setText(optionList[i].c_str());
+        _option_widget_list[i]->setPos(10, (24 + 10) * i + 10);
+        _option_widget_list[i]->setSize(_option_widget_list[i]->getWidth() + 20, _option_widget_list[i]->getHeight());
+
+        mclog::info("{}", _option_widget_list[i]->getWidth());
+
+        _mouse->addTarget(_option_widget_list[i].get());
+    }
+
+    _mouse->show();
+}
+
+void PageSelectMenu::show()
+{
+    _menu_base->smoothPosition().setTransitionPath(EasingPath::easeOutBack);
+    _menu_base->smoothPosition().setDuration(800);
+    _menu_base->smoothPosition().moveTo(0, 0);
+}
+
+void PageSelectMenu::hide() {}
+
+void PageSelectMenu::update()
+{
+    HAL::BtnUpdate();
+
+    if (HAL::BtnUp().wasClicked()) {
+        _mouse->goLast();
+    }
+
+    if (HAL::BtnDown().wasClicked()) {
+        _mouse->goNext();
+    }
+
+    if (HAL::BtnOk().wasPressed()) {
+        _mouse->press();
+    }
+
+    if (HAL::BtnOk().wasReleased()) {
+        _mouse->release();
+    }
+
+    _menu_base->updateSmoothing();
+    _mouse->updateSmoothing();
+}
