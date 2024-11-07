@@ -32,6 +32,8 @@ SmoothWidgetMouse::SmoothWidgetMouse(lv_obj_t* parent) : WidgetMouse(parent)
 
 void SmoothWidgetMouse::onShow()
 {
+    smoothPosition().getXTransition().setDelay(0);
+
     auto current_target = getCurrentTargetWidget();
     if (current_target) {
         goTo(current_target);
@@ -49,11 +51,19 @@ void SmoothWidgetMouse::onHide()
 
 void SmoothWidgetMouse::onGoTo(WidgetBase* targetWidget)
 {
-    moveForeground();
-    smoothPosition().moveTo(targetWidget->getX2() - 13, targetWidget->getY2() - 13);
-    smoothSize().moveTo(_mouse_w, _mouse_h);
-    smoothPosition().setDuration(300);
-    smoothPosition().getXTransition().setDelay(100);
+    if (mouseType == CornerBall) {
+        setRadius(18);
+        moveForeground();
+        smoothPosition().moveTo(targetWidget->getX2() - 13, targetWidget->getY2() - 13);
+        smoothSize().moveTo(_mouse_w, _mouse_h);
+        smoothPosition().setDuration(300);
+    } else if (mouseType == BackgroundBrick) {
+        setRadius(5);
+        moveBackground();
+        smoothPosition().moveTo(targetWidget->getX() - 2, targetWidget->getY() - 2);
+        smoothSize().moveTo(targetWidget->getWidth() + 4, targetWidget->getHeight() + 4);
+        smoothPosition().setDuration(300);
+    }
 }
 
 void SmoothWidgetMouse::press()

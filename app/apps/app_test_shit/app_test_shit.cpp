@@ -47,7 +47,7 @@ void AppTestShit::onOpen()
     _menu->optionList.push_back("1111");
     _menu->optionList.push_back("23525");
     _menu->optionList.push_back("asf af dd");
-    _menu->optionList.push_back("??? &(**&)");
+    _menu->optionList.push_back("??? &(**&)vdssdvsdvdvdsv");
     _menu->optionList.push_back("6666..");
 
     _menu->create();

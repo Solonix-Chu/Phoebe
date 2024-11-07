@@ -74,6 +74,12 @@ public:
     SmoothWidgetMouse() = default;
     SmoothWidgetMouse(lv_obj_t* parent);
 
+    enum MouseType_t {
+        CornerBall = 0,
+        BackgroundBrick,
+    };
+    MouseType_t mouseType = CornerBall;
+
     void onShow() override;
     void onHide() override;
     void onGoTo(WidgetBase* targetWidget) override;
