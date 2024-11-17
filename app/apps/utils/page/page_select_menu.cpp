@@ -10,13 +10,10 @@
  */
 #include "apps/utils/widget/widget.h"
 #include "page.h"
+#include <cstddef>
 #include <lvgl.h>
 #include <hal/hal.h>
 #include <mooncake_log.h>
-#include <src/core/lv_obj.h>
-#include <src/display/lv_display.h>
-#include <src/misc/lv_style.h>
-#include <src/widgets/label/lv_label.h>
 
 using namespace page;
 using namespace widget;
@@ -24,7 +21,7 @@ using namespace smooth_widget;
 using namespace mooncake;
 using namespace SmoothUIToolKit;
 
-void PageSelectMenu::create()
+void PageSelectMenu::create(size_t startUpIndex)
 {
     _menu_base = std::make_unique<SmoothWidgetBase>(lv_screen_active());
     _mouse = std::make_unique<SmoothWidgetMouse>(_menu_base->get());
@@ -37,6 +34,12 @@ void PageSelectMenu::create()
         _option_widget_list[i]->setFont("RajdhaniBold16");
         _option_widget_list[i]->setText(optionList[i].c_str());
         _option_widget_list[i]->setPos(10, (16 + 10) * i + 10);
+
+        // Longer the height if too many options
+        // mclog::info("{}", _option_widget_list[i]->getY2());
+        if (_option_widget_list[i]->getY2() > _menu_base->getHeight()) {
+            _menu_base->setSize(HAL::Display().width(), _menu_base->getHeight() + (16 + 10));
+        }
 
         // Limit long text width and enable scrolling
         if (_option_widget_list[i]->getWidth() > HAL::Display().width() - 22) {
@@ -57,17 +60,26 @@ void PageSelectMenu::create()
     }
 
     _mouse->mouseType = SmoothWidgetMouse::BackgroundBrick;
-    _mouse->show();
+    if (startUpIndex < optionList.size()) {
+        _mouse->goTo(_option_widget_list[startUpIndex].get());
+    }
 }
 
 void PageSelectMenu::show()
 {
-    _menu_base->smoothPosition().setTransitionPath(EasingPath::easeOutBack);
-    _menu_base->smoothPosition().setDuration(800);
-    _menu_base->smoothPosition().moveTo(0, 0);
+    _menu_base->smoothPosition().setTransitionPath(EasingPath::easeOutBackHalf);
+    _menu_base->smoothPosition().setDuration(600);
+    _menu_base->smoothPosition().moveTo(0, 10);
+
+    _mouse->show();
+    _is_hiding = false;
 }
 
-void PageSelectMenu::hide() {}
+void PageSelectMenu::hide()
+{
+    _menu_base->smoothPosition().moveTo(0, HAL::Display().height());
+    _is_hiding = true;
+}
 
 void PageSelectMenu::update()
 {
@@ -87,6 +99,23 @@ void PageSelectMenu::update()
 
     if (HAL::BtnOk().wasReleased()) {
         _mouse->release();
+    }
+
+    // Make sure mouse in the view
+    if (!_is_hiding) {
+        auto current_target = _mouse->getCurrentTargetWidget();
+        if (current_target) {
+            auto offset =
+                _menu_base->smoothPosition().getTargetPoint().y - HAL::Display().height() + current_target->getY2();
+            // mclog::info("{} {} {} {} {}", current_target->getY2(), _menu_base->smoothPosition().getTargetPoint().y,
+            // offset,
+            //             offset - 10, offset + HAL::Display().height());
+            if (offset > 0) {
+                _menu_base->smoothPosition().moveTo(0, _menu_base->smoothPosition().getTargetPoint().y - (offset + 10));
+            } else if (-offset + 10 > HAL::Display().height()) {
+                _menu_base->smoothPosition().moveTo(0, offset + HAL::Display().height() + 10);
+            }
+        }
     }
 
     _menu_base->updateSmoothing();

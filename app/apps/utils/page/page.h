@@ -20,7 +20,7 @@ namespace page {
 
 class PageSelectMenu {
 public:
-    void create();
+    void create(size_t startUpIndex = 0);
     void show();
     void hide();
     void update();
@@ -31,6 +31,7 @@ private:
     std::unique_ptr<smooth_widget::SmoothWidgetBase> _menu_base;
     std::unique_ptr<smooth_widget::SmoothWidgetMouse> _mouse;
     std::vector<std::unique_ptr<widget::WidgetLabel>> _option_widget_list;
+    bool _is_hiding = true;
 };
 
 } // namespace page

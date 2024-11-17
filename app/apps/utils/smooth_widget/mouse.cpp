@@ -9,6 +9,7 @@
  *
  */
 #include "core/easing_path/easing_path.h"
+#include "core/types/types.h"
 #include "smooth_widget.h"
 
 using namespace smooth_widget;
@@ -54,16 +55,14 @@ void SmoothWidgetMouse::onGoTo(WidgetBase* targetWidget)
     if (mouseType == CornerBall) {
         setRadius(18);
         moveForeground();
-        smoothPosition().moveTo(targetWidget->getX2() - 13, targetWidget->getY2() - 13);
-        smoothSize().moveTo(_mouse_w, _mouse_h);
         smoothPosition().setDuration(300);
     } else if (mouseType == BackgroundBrick) {
         setRadius(5);
         moveBackground();
-        smoothPosition().moveTo(targetWidget->getX() - 2, targetWidget->getY() - 2);
-        smoothSize().moveTo(targetWidget->getWidth() + 4, targetWidget->getHeight() + 4);
         smoothPosition().setDuration(300);
     }
+    smoothPosition().moveTo(getMousePosition(targetWidget));
+    smoothSize().moveTo(getMouseSize(targetWidget));
 }
 
 void SmoothWidgetMouse::press()
@@ -73,11 +72,22 @@ void SmoothWidgetMouse::press()
         return;
     }
 
+    Vector2D_t mouse_target_size = getMouseSize(target_widget);
+    Vector2D_t mouse_target_position = getMousePosition(target_widget);
     Vector4D_t squeeze_shape;
-    squeeze_shape.w = _mouse_w * 2 / 3;
-    squeeze_shape.h = _mouse_h * 2 / 3;
-    squeeze_shape.x = target_widget->getX2() - 13 + _mouse_w / 6;
-    squeeze_shape.y = target_widget->getY2() - 13 + _mouse_h / 6;
+
+    if (mouseType == CornerBall) {
+        squeeze_shape.w = mouse_target_size.width * 2 / 3;
+        squeeze_shape.h = mouse_target_size.height * 2 / 3;
+        squeeze_shape.x = mouse_target_position.x + mouse_target_size.width / 6;
+        squeeze_shape.y = mouse_target_position.y + mouse_target_size.height / 6;
+    } else {
+        squeeze_shape.w = mouse_target_size.width * 7 / 8;
+        squeeze_shape.h = mouse_target_size.height * 2 / 3;
+        squeeze_shape.x = mouse_target_position.x + mouse_target_size.width / 16;
+        squeeze_shape.y = mouse_target_position.y + mouse_target_size.height / 6;
+    }
+
     smoothPosition().moveTo(squeeze_shape.x, squeeze_shape.y);
     smoothSize().moveTo(squeeze_shape.w, squeeze_shape.h);
 
@@ -93,15 +103,78 @@ void SmoothWidgetMouse::release()
         return;
     }
 
-    Vector4D_t release_shape;
-    release_shape.w = _mouse_w;
-    release_shape.h = _mouse_h;
-    release_shape.x = target_widget->getX2() - 13;
-    release_shape.y = target_widget->getY2() - 13;
-    smoothPosition().moveTo(release_shape.x, release_shape.y);
-    smoothSize().moveTo(release_shape.w, release_shape.h);
+    smoothPosition().moveTo(getMousePosition(target_widget));
+    smoothSize().moveTo(getMouseSize(target_widget));
 
     smoothPosition().getXTransition().setDelay(0);
     smoothPosition().setDuration(300);
     smoothSize().setDuration(600);
+}
+
+Vector2D_t SmoothWidgetMouse::getMouseSize(WidgetBase* targetWidget)
+{
+    Vector2D_t ret;
+    if (mouseType == CornerBall) {
+        ret.width = _mouse_w;
+        ret.height = _mouse_h;
+    } else {
+        ret.width = targetWidget->getWidth() + 4;
+        ret.height = targetWidget->getHeight() + 4;
+    }
+    return ret;
+}
+
+Vector2D_t SmoothWidgetMouse::getMousePosition(WidgetBase* targetWidget)
+{
+    Vector2D_t ret;
+    if (mouseType == CornerBall) {
+        ret.x = targetWidget->getX2() - 13;
+        ret.y = targetWidget->getY2() - 13;
+    } else {
+        ret.x = targetWidget->getX() - 2;
+        ret.y = targetWidget->getY() - 2;
+    }
+    return ret;
+}
+
+int32_t SmoothWidgetMouse::getX()
+{
+    if (_transitions.position) {
+        return _transitions.position->getTargetPoint().x;
+    }
+    return WidgetBase::getX();
+}
+
+int32_t SmoothWidgetMouse::getX2()
+{
+    return getX() + getWidth();
+}
+
+int32_t SmoothWidgetMouse::getY()
+{
+    if (_transitions.position) {
+        return _transitions.position->getTargetPoint().y;
+    }
+    return WidgetBase::getY();
+}
+
+int32_t SmoothWidgetMouse::getY2()
+{
+    return getY() + getHeight();
+}
+
+int32_t SmoothWidgetMouse::getWidth()
+{
+    if (_transitions.size) {
+        return _transitions.size->getTargetPoint().width;
+    }
+    return WidgetBase::getWidth();
+}
+
+int32_t SmoothWidgetMouse::getHeight()
+{
+    if (_transitions.size) {
+        return _transitions.size->getTargetPoint().height;
+    }
+    return WidgetBase::getHeight();
 }

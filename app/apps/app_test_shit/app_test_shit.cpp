@@ -49,14 +49,34 @@ void AppTestShit::onOpen()
     _menu->optionList.push_back("asf af dd");
     _menu->optionList.push_back("??? &(**&)vdssdvsdvdvdsv");
     _menu->optionList.push_back("6666..");
+    _menu->optionList.push_back("*** fasf??? dsd");
+    _menu->optionList.push_back("*** fasf??? dsd");
+    _menu->optionList.push_back("1111");
+    _menu->optionList.push_back("23525");
+    _menu->optionList.push_back("asf af dd");
+    _menu->optionList.push_back("??? &(**&)vdssdvsdvdvdsv");
+    _menu->optionList.push_back("6666..");
+    _menu->optionList.push_back("*** fasf??? dsd");
+    _menu->optionList.push_back("*** fasf??? dsd");
 
-    _menu->create();
+    // _menu->create();
+    _menu->create(2);
     _menu->show();
 }
 
 void AppTestShit::onRunning()
 {
     _menu->update();
+
+    if (HAL::BtnPower().wasClicked()) {
+        static bool toggle_shit = false;
+        toggle_shit = !toggle_shit;
+        if (toggle_shit) {
+            _menu->hide();
+        } else {
+            _menu->show();
+        }
+    }
 }
 
 void AppTestShit::onClose()
