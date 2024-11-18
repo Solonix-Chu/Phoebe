@@ -10,6 +10,7 @@
  */
 #pragma once
 #include "../widget/widget.h"
+#include "core/types/types.h"
 #include <smooth_ui_toolkit.h>
 #include <lvgl.h>
 
@@ -74,12 +75,28 @@ public:
     SmoothWidgetMouse() = default;
     SmoothWidgetMouse(lv_obj_t* parent);
 
+    enum MouseType_t {
+        CornerBall = 0,
+        BackgroundBrick,
+    };
+    MouseType_t mouseType = CornerBall;
+
     void onShow() override;
     void onHide() override;
     void onGoTo(WidgetBase* targetWidget) override;
 
     void press();
     void release();
+
+    SmoothUIToolKit::Vector2D_t getMouseSize(WidgetBase* targetWidget);
+    SmoothUIToolKit::Vector2D_t getMousePosition(WidgetBase* targetWidget);
+
+    int32_t getX() override;
+    int32_t getX2() override;
+    int32_t getY() override;
+    int32_t getY2() override;
+    int32_t getWidth() override;
+    int32_t getHeight() override;
 };
 
 } // namespace smooth_widget
