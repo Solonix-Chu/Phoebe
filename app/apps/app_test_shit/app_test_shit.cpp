@@ -21,8 +21,6 @@ using namespace widget;
 using namespace smooth_widget;
 using namespace page;
 
-static PageSelectMenu* _menu;
-
 #define _tag (getAppInfo().name)
 
 AppTestShit::AppTestShit()
@@ -36,47 +34,36 @@ void AppTestShit::onCreate()
     open();
 
     lv_obj_set_scrollbar_mode(lv_screen_active(), LV_SCROLLBAR_MODE_OFF);
-
-    _menu = new PageSelectMenu;
 }
 
 void AppTestShit::onOpen()
 {
     mclog::tagInfo(_tag, "on open");
-
-    _menu->optionList.push_back("1111");
-    _menu->optionList.push_back("23525");
-    _menu->optionList.push_back("asf af dd");
-    _menu->optionList.push_back("??? &(**&)vdssdvsdvdvdsv");
-    _menu->optionList.push_back("6666..");
-    _menu->optionList.push_back("*** fasf??? dsd");
-    _menu->optionList.push_back("*** fasf??? dsd");
-    _menu->optionList.push_back("1111");
-    _menu->optionList.push_back("23525");
-    _menu->optionList.push_back("asf af dd");
-    _menu->optionList.push_back("??? &(**&)vdssdvsdvdvdsv");
-    _menu->optionList.push_back("6666..");
-    _menu->optionList.push_back("*** fasf??? dsd");
-    _menu->optionList.push_back("*** fasf??? dsd");
-
-    // _menu->create();
-    _menu->create(2);
-    _menu->show();
 }
 
 void AppTestShit::onRunning()
 {
-    _menu->update();
+    auto ret = CreateSelecMenuPageAndWaitResult(
+        [](std::vector<std::string>& optionList, size_t& startupIndex) {
+            optionList.push_back("1111");
+            optionList.push_back("23525");
+            optionList.push_back("asf af dd");
+            optionList.push_back("??? &(**&)vdssdvsdvdvdsv");
+            optionList.push_back("6666..");
+            optionList.push_back("*** fasf??? dsd");
+            optionList.push_back("*** fasf??? dsd");
+            optionList.push_back("1111");
+            optionList.push_back("23525");
+            optionList.push_back("asf af dd");
+            optionList.push_back("??? &(**&)vdssdvsdvdvdsv");
+            optionList.push_back("6666..");
+            optionList.push_back("*** fasf??? dsd");
+            optionList.push_back("*** fasf??? dsd");
 
-    if (HAL::BtnPower().wasClicked()) {
-        static bool toggle_shit = false;
-        toggle_shit = !toggle_shit;
-        if (toggle_shit) {
-            _menu->hide();
-        } else {
-            _menu->show();
-        }
-    }
+            // startupIndex = 2;
+        },
+        [](int selectIndex, std::string& option) { mclog::info("on select {} {}", selectIndex, option); });
+    mclog::info("ret: {}", ret);
 }
 
 void AppTestShit::onClose()

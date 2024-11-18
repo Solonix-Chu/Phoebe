@@ -13,6 +13,7 @@
 #include <cstddef>
 #include <lvgl.h>
 #include <hal/hal.h>
+#include <mooncake.h>
 #include <mooncake_log.h>
 
 using namespace page;
@@ -21,7 +22,7 @@ using namespace smooth_widget;
 using namespace mooncake;
 using namespace SmoothUIToolKit;
 
-void PageSelectMenu::create(size_t startUpIndex)
+void PageSelectMenu::create(size_t startupIndex)
 {
     _menu_base = std::make_unique<SmoothWidgetBase>(lv_screen_active());
     _mouse = std::make_unique<SmoothWidgetMouse>(_menu_base->get());
@@ -60,8 +61,8 @@ void PageSelectMenu::create(size_t startUpIndex)
     }
 
     _mouse->mouseType = SmoothWidgetMouse::BackgroundBrick;
-    if (startUpIndex < optionList.size()) {
-        _mouse->goTo(_option_widget_list[startUpIndex].get());
+    if (startupIndex < optionList.size()) {
+        _mouse->goTo(_option_widget_list[startupIndex].get());
     }
 }
 
@@ -77,6 +78,8 @@ void PageSelectMenu::show()
 
 void PageSelectMenu::hide()
 {
+    _menu_base->smoothPosition().setDelay(300);
+    _menu_base->smoothPosition().setDuration(400);
     _menu_base->smoothPosition().moveTo(0, HAL::Display().height());
     _is_hiding = true;
 }
@@ -85,24 +88,25 @@ void PageSelectMenu::update()
 {
     HAL::BtnUpdate();
 
-    if (HAL::BtnUp().wasClicked()) {
-        _mouse->goLast();
-    }
-
-    if (HAL::BtnDown().wasClicked()) {
-        _mouse->goNext();
-    }
-
-    if (HAL::BtnOk().wasPressed()) {
-        _mouse->press();
-    }
-
-    if (HAL::BtnOk().wasReleased()) {
-        _mouse->release();
-    }
-
-    // Make sure mouse in the view
     if (!_is_hiding) {
+        if (HAL::BtnUp().wasClicked()) {
+            _mouse->goLast();
+        }
+
+        if (HAL::BtnDown().wasClicked()) {
+            _mouse->goNext();
+        }
+
+        if (HAL::BtnOk().wasPressed()) {
+            _mouse->press();
+        }
+
+        if (HAL::BtnOk().wasReleased()) {
+            _mouse->release();
+            wasSelected = true;
+        }
+
+        // Make sure mouse in the view
         auto current_target = _mouse->getCurrentTargetWidget();
         if (current_target) {
             auto offset =
@@ -120,4 +124,78 @@ void PageSelectMenu::update()
 
     _menu_base->updateSmoothing();
     _mouse->updateSmoothing();
+}
+
+int PageSelectMenu::getCurrentTargetIndex()
+{
+    if (_mouse) {
+        return _mouse->getCurrentTargetIndex();
+    }
+    return -1;
+}
+
+std::string PageSelectMenu::getCurrntTargetOption()
+{
+    if (_mouse) {
+        return optionList[_mouse->getCurrentTargetIndex()];
+    }
+    return "";
+}
+
+bool PageSelectMenu::isAllSmoothingFinish()
+{
+    return _mouse->isAllSmoothingFinish() && _menu_base->isAllSmoothingFinish();
+}
+
+int page::CreateSelecMenuPageAndWaitResult(OnSelectMenuSetupCallback_t onSetup, OnSelectMenuSelectCallback_t onSelect)
+{
+    if (!onSetup) {
+        mclog::tagError("SelectMenuPage", "null setup callback");
+        return -1;
+    }
+
+    int selected_index = -1;
+    auto menu = new PageSelectMenu;
+
+    size_t startup_index = 0;
+    onSetup(menu->optionList, startup_index);
+
+    menu->create(startup_index);
+    menu->show();
+
+    bool is_quiting = false;
+    while (1) {
+        menu->update();
+
+        if (is_quiting) {
+            if (menu->isAllSmoothingFinish()) {
+                break;
+            }
+        } else {
+            if (menu->wasSelected) {
+                // mclog::tagInfo("SelectMenuPage", "selected {}", menu->getCurrntTargetOption());
+                selected_index = menu->getCurrentTargetIndex();
+
+                if (onSelect) {
+                    onSelect(selected_index, menu->optionList[selected_index]);
+                }
+
+                is_quiting = true;
+                menu->hide();
+            }
+
+            if (HAL::BtnPower().wasClicked()) {
+                selected_index = -1;
+                is_quiting = true;
+                menu->hide();
+            }
+        }
+
+        GetMooncake().extensionManager()->updateAbilities();
+        lv_timer_handler();
+        HAL::SysCtrl().feedTheDog();
+    }
+
+    delete menu;
+    return selected_index;
 }
