@@ -10,6 +10,7 @@
  */
 #include "page.h"
 #include "../../utils/launcher_widget/launcher_widget.h"
+#include "../../utils/page/page.h"
 #include <hal/hal.h>
 #include <memory>
 #include <mooncake.h>
@@ -18,6 +19,7 @@
 using namespace mooncake;
 using namespace SmoothUIToolKit;
 using namespace smooth_widget;
+using namespace page;
 
 static const char* _tag = "PageWidgets";
 
@@ -104,6 +106,8 @@ void LauncherPageWidgets::onEnterSubPage()
     _mouse->addTarget(_canvas_list[0].get());
     _mouse->addTarget(_canvas_list[1].get());
     _mouse->show();
+
+    HAL::BtnUpdate();
 }
 
 void LauncherPageWidgets::onQuitSubPage()
@@ -154,6 +158,10 @@ void LauncherPageWidgets::handle_hide_widget_canvas()
 
 void LauncherPageWidgets::handle_sub_page_input()
 {
+    if (_handing_config_widget_type) {
+        return;
+    }
+
     if (HAL::BtnUp().wasClicked()) {
         _mouse->goLast();
     }
@@ -168,6 +176,7 @@ void LauncherPageWidgets::handle_sub_page_input()
 
     if (HAL::BtnOk().wasReleased()) {
         _mouse->release();
+        handle_config_widget_type();
     }
 
     if (HAL::BtnPower().wasClicked()) {
@@ -177,12 +186,12 @@ void LauncherPageWidgets::handle_sub_page_input()
 
 void LauncherPageWidgets::handle_create_launcher_widget(int canvasIndex)
 {
-    // TODO
-    // get type by config
     if (canvasIndex == 0) {
-        _widget_a_ability_id = launcher_widget_factory::create(_canvas_list[canvasIndex].get(), "time");
+        _widget_a_ability_id =
+            launcher_widget_factory::create(_canvas_list[canvasIndex].get(), HAL::SysCfg().getConfig().widgetA);
     } else if (canvasIndex == 1) {
-        _widget_b_ability_id = launcher_widget_factory::create(_canvas_list[canvasIndex].get(), "date");
+        _widget_b_ability_id =
+            launcher_widget_factory::create(_canvas_list[canvasIndex].get(), HAL::SysCfg().getConfig().widgetB);
     }
 }
 
@@ -193,4 +202,57 @@ void LauncherPageWidgets::handle_destroy_launcher_widget(int canvasIndex)
     } else if (canvasIndex == 1) {
         GetMooncake().destroyExtension(_widget_b_ability_id);
     }
+}
+
+void LauncherPageWidgets::handle_config_widget_type()
+{
+    _handing_config_widget_type = true;
+
+    auto config_widget_index = _mouse->getCurrentTargetIndex();
+    std::string current_widget_type;
+    if (config_widget_index == 0) {
+        current_widget_type = HAL::SysCfg().getConfig().widgetA;
+    } else {
+        current_widget_type = HAL::SysCfg().getConfig().widgetB;
+    }
+    // mclog::info("{} {}", config_widget_index, current_widget_type);
+
+    auto ret = CreateSelecMenuPageAndWaitResult(
+        [&current_widget_type](std::vector<std::string>& optionList, size_t& startupIndex) {
+            optionList.push_back("time");
+            optionList.push_back("date");
+            optionList.push_back("battery");
+            optionList.push_back("weather");
+
+            for (int i = 0; i < optionList.size(); i++) {
+                if (current_widget_type == optionList[i]) {
+                    startupIndex = i;
+                }
+            }
+        },
+        [&](int selectIndex, std::string& option) {
+            // mclog::info("on select {} {}", selectIndex, option);
+
+            if (option != current_widget_type) {
+                if (config_widget_index == 0) {
+                    mclog::tagInfo(_tag, "set WidgetA to {}", option);
+                    HAL::SysCfg().setConfig().widgetA = option;
+                } else {
+                    mclog::tagInfo(_tag, "set WidgetB to {}", option);
+                    HAL::SysCfg().setConfig().widgetB = option;
+                }
+                HAL::SysCfg().saveConfig();
+
+                mclog::info("{} {}", _widget_a_ability_id, _widget_b_ability_id);
+
+                handle_destroy_launcher_widget(0);
+                handle_destroy_launcher_widget(1);
+                handle_create_launcher_widget(0);
+                handle_create_launcher_widget(1);
+                mclog::info("{} {}", _widget_a_ability_id, _widget_b_ability_id);
+            }
+        });
+    // mclog::info("ret: {}", ret);
+
+    _handing_config_widget_type = false;
 }

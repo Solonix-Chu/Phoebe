@@ -114,6 +114,8 @@ std::string SystemConfigStd::create_config_json()
     doc["mute"] = _config.mute;
     doc["hapticFeedback"] = _config.hapticFeedback;
     doc["watchFace"] = _config.watchFace;
+    doc["widgetA"] = _config.widgetA;
+    doc["widgetB"] = _config.widgetB;
 
     // 序列化 json
     std::string json_content;
@@ -138,6 +140,8 @@ bool SystemConfigStd::parse_json_and_copy_config(char* jsonContent)
     _config.mute = doc["mute"];
     _config.hapticFeedback = doc["hapticFeedback"];
     _config.watchFace = doc["watchFace"].as<std::string>();
+    _config.widgetA = doc["widgetA"].as<std::string>();
+    _config.widgetB = doc["widgetB"].as<std::string>();
 
     return true;
 }
@@ -181,4 +185,6 @@ void SystemConfigStd::logConfig()
     fmt::println("mute: {}", _config.mute);
     fmt::println("hapticFeedback: {}", _config.hapticFeedback);
     fmt::println("watchFace: {}", _config.watchFace);
+    fmt::println("widgetA: {}", _config.widgetA);
+    fmt::println("widgetB: {}", _config.widgetB);
 }

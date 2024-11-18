@@ -69,8 +69,15 @@ void PageSelectMenu::create(size_t startupIndex)
 void PageSelectMenu::show()
 {
     _menu_base->smoothPosition().setTransitionPath(EasingPath::easeOutBackHalf);
+    _menu_base->smoothPosition().setDelay(0);
     _menu_base->smoothPosition().setDuration(600);
-    _menu_base->smoothPosition().moveTo(0, 10);
+
+    // If just few options, lower the pannel
+    if (optionList.size() < 5) {
+        _menu_base->smoothPosition().moveTo(0, 24 + (16 + 10) * (5 - optionList.size()));
+    } else {
+        _menu_base->smoothPosition().moveTo(0, 10);
+    }
 
     _mouse->show();
     _is_hiding = false;
@@ -78,7 +85,7 @@ void PageSelectMenu::show()
 
 void PageSelectMenu::hide()
 {
-    _menu_base->smoothPosition().setDelay(300);
+    _menu_base->smoothPosition().setDelay(hideDelay);
     _menu_base->smoothPosition().setDuration(400);
     _menu_base->smoothPosition().moveTo(0, HAL::Display().height());
     _is_hiding = true;
@@ -181,12 +188,14 @@ int page::CreateSelecMenuPageAndWaitResult(OnSelectMenuSetupCallback_t onSetup, 
                 }
 
                 is_quiting = true;
+                menu->hideDelay = 300;
                 menu->hide();
             }
 
             if (HAL::BtnPower().wasClicked()) {
                 selected_index = -1;
                 is_quiting = true;
+                menu->hideDelay = 0;
                 menu->hide();
             }
         }

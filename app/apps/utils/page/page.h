@@ -30,6 +30,7 @@ public:
 
     std::vector<std::string> optionList;
     bool wasSelected = false;
+    int hideDelay = 0;
 
 private:
     std::unique_ptr<smooth_widget::SmoothWidgetBase> _menu_base;

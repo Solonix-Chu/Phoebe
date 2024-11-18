@@ -24,6 +24,8 @@ public:
         bool mute = false;
         bool hapticFeedback = true;
         std::string watchFace;
+        std::string widgetA = "time";
+        std::string widgetB = "date";
     };
 
     ~SystemConfigBase() = default;
