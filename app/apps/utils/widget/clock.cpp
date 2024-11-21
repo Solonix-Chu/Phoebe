@@ -38,10 +38,10 @@ WidgetClock::~WidgetClock()
         lv_obj_delete(_hour_hand);
     }
     if (_minute_hand != NULL) {
-        lv_obj_delete(_hour_hand);
+        lv_obj_delete(_minute_hand);
     }
     if (_second_hand != NULL) {
-        lv_obj_delete(_hour_hand);
+        lv_obj_delete(_second_hand);
     }
 }
 

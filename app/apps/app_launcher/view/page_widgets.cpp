@@ -218,6 +218,7 @@ void LauncherPageWidgets::handle_config_widget_type()
     // mclog::info("{} {}", config_widget_index, current_widget_type);
 
     auto ret = CreateSelecMenuPageAndWaitResult(
+        // OnSetup
         [&current_widget_type](std::vector<std::string>& optionList, size_t& startupIndex) {
             optionList.push_back("time");
             optionList.push_back("date");
@@ -230,6 +231,7 @@ void LauncherPageWidgets::handle_config_widget_type()
                 }
             }
         },
+        // OnSelect
         [&](int selectIndex, std::string& option) {
             // mclog::info("on select {} {}", selectIndex, option);
 
@@ -243,14 +245,13 @@ void LauncherPageWidgets::handle_config_widget_type()
                 }
                 HAL::SysCfg().saveConfig();
 
-                mclog::info("{} {}", _widget_a_ability_id, _widget_b_ability_id);
-
-                handle_destroy_launcher_widget(0);
-                handle_destroy_launcher_widget(1);
-                handle_create_launcher_widget(0);
-                handle_create_launcher_widget(1);
-                mclog::info("{} {}", _widget_a_ability_id, _widget_b_ability_id);
+                handle_destroy_launcher_widget(config_widget_index);
+                handle_create_launcher_widget(config_widget_index);
             }
+        },
+        // OnWaitingLoop
+        [&]() {
+
         });
     // mclog::info("ret: {}", ret);
 

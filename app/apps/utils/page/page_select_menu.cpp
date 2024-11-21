@@ -154,7 +154,9 @@ bool PageSelectMenu::isAllSmoothingFinish()
     return _mouse->isAllSmoothingFinish() && _menu_base->isAllSmoothingFinish();
 }
 
-int page::CreateSelecMenuPageAndWaitResult(OnSelectMenuSetupCallback_t onSetup, OnSelectMenuSelectCallback_t onSelect)
+int page::CreateSelecMenuPageAndWaitResult(OnSetupCallback_t onSetup,
+                                           OnSelectCallback_t onSelect,
+                                           OnWaitingLoopCallback_t onWaitingLoop)
 {
     if (!onSetup) {
         mclog::tagError("SelectMenuPage", "null setup callback");
@@ -200,7 +202,10 @@ int page::CreateSelecMenuPageAndWaitResult(OnSelectMenuSetupCallback_t onSetup, 
             }
         }
 
-        GetMooncake().extensionManager()->updateAbilities();
+        if (onWaitingLoop) {
+            onWaitingLoop();
+        }
+
         lv_timer_handler();
         HAL::SysCtrl().feedTheDog();
     }
