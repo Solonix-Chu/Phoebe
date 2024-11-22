@@ -30,6 +30,7 @@ public:
 
     std::vector<std::string> optionList;
     bool wasSelected = false;
+    int hideDelay = 0;
 
 private:
     std::unique_ptr<smooth_widget::SmoothWidgetBase> _menu_base;
@@ -38,10 +39,13 @@ private:
     bool _is_hiding = true;
 };
 
-typedef std::function<void(std::vector<std::string>& optionList, size_t& startupIndex)> OnSelectMenuSetupCallback_t;
-typedef std::function<void(int selectIndex, std::string& option)> OnSelectMenuSelectCallback_t;
+// Helper wrap
+typedef std::function<void(std::vector<std::string>& optionList, size_t& startupIndex)> OnSetupCallback_t;
+typedef std::function<void(int selectIndex, std::string& option)> OnSelectCallback_t;
+typedef std::function<void(void)> OnWaitingLoopCallback_t;
 
-int CreateSelecMenuPageAndWaitResult(OnSelectMenuSetupCallback_t onSetup,
-                                     OnSelectMenuSelectCallback_t onSelect = nullptr);
+int CreateSelecMenuPageAndWaitResult(OnSetupCallback_t onSetup,
+                                     OnSelectCallback_t onSelect = nullptr,
+                                     OnWaitingLoopCallback_t onWaitingLoop = nullptr);
 
 } // namespace page
