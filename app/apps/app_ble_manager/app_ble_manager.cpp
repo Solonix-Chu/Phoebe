@@ -56,6 +56,7 @@ void AppBleManager::handle_ble_message()
         for (const auto& message : SharedData::Ble().messageList) {
         }
 
+        SharedData::Ble().messageList.clear();
         SharedData::Return();
         _time_count = HAL::SysCtrl().millis();
     }

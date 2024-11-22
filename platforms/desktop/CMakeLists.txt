@@ -67,6 +67,7 @@ target_link_libraries(app_desktop_build PUBLIC
     ArduinoJson
     smooth_ui_toolkit
     lgfx_slim
+    pthread
 )
 
 # 设置构建路径
