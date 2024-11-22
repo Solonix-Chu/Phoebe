@@ -36,7 +36,7 @@ function wf_on_create() {
     myWidgets.bigDate = tempId;
 
     tempId = widget.create("label");
-    widget.setPos(tempId, 14, -3);
+    widget.setPos(tempId, 14, 3);
     widget.setRotation(tempId, 900);
     widget.setLabelFont(tempId, "RajdhaniBold16");
     widget.setLabelTextColor(tempId, "#000000");
@@ -44,7 +44,7 @@ function wf_on_create() {
     myWidgets.sideStatus = tempId;
 
     tempId = widget.create("label");
-    widget.setPos(tempId, 32, -3);
+    widget.setPos(tempId, 32, 3);
     widget.setRotation(tempId, 900);
     widget.setLabelFont(tempId, "RajdhaniBold16");
     widget.setLabelTextColor(tempId, "#FFFFFF");
