@@ -10,9 +10,13 @@
  */
 #pragma once
 #include <string>
+#include <thread>
+#include <mutex>
+#include <string>
+#include <vector>
 
 /**
- * @brief 共享数据层，提供一个 App 间共享的数据单例
+ * @brief 共享数据层，提供一个 App 间、App层与底层 daemon 间带互斥锁的共享数据单例
  *
  */
 namespace SharedData {
@@ -22,6 +26,8 @@ namespace SharedData {
  *
  */
 struct SharedData_t {
+    std::mutex mutex;
+
     struct Notification_t {
     };
     Notification_t Notification;
@@ -31,20 +37,43 @@ struct SharedData_t {
         int temperature = 26;
     };
     Weather_t Weather;
+
+    struct BleMessage_t {
+        std::vector<std::string> messageList;
+    };
+    BleMessage_t BleMessage;
 };
 
 /**
- * @brief 获取共享数据单例
+ * @brief 获取共享数据实例
  *
  * @return SharedData_t&
  */
 SharedData_t& Get();
 
 /**
- * @brief 销毁共享数据单例
+ * @brief 销毁共享数据实例
  *
  */
 void Destroy();
+
+/**
+ * @brief 借用共享数据（互斥上锁）
+ *
+ */
+inline void Borrow()
+{
+    Get().mutex.lock();
+}
+
+/**
+ * @brief 归还共享数据（互斥解锁）
+ *
+ */
+inline void Return()
+{
+    Get().mutex.unlock();
+}
 
 // 封装一下不然长的一
 inline SharedData_t::Notification_t& Notification()
@@ -54,6 +83,10 @@ inline SharedData_t::Notification_t& Notification()
 inline SharedData_t::Weather_t& Weather()
 {
     return Get().Weather;
+}
+inline SharedData_t::BleMessage_t& BleMessage()
+{
+    return Get().BleMessage;
 }
 
 } // namespace SharedData
