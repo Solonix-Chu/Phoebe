@@ -158,10 +158,6 @@ void LauncherPageWidgets::handle_hide_widget_canvas()
 
 void LauncherPageWidgets::handle_sub_page_input()
 {
-    if (_handing_config_widget_type) {
-        return;
-    }
-
     if (HAL::BtnUp().wasClicked()) {
         _mouse->goLast();
     }
@@ -206,27 +202,29 @@ void LauncherPageWidgets::handle_destroy_launcher_widget(int canvasIndex)
 
 void LauncherPageWidgets::handle_config_widget_type()
 {
-    _handing_config_widget_type = true;
-
-    auto config_widget_index = _mouse->getCurrentTargetIndex();
-    std::string current_widget_type;
-    if (config_widget_index == 0) {
-        current_widget_type = HAL::SysCfg().getConfig().widgetA;
+    // Get target widget index and type
+    auto target_widget_index = _mouse->getCurrentTargetIndex();
+    std::string target_widget_current_type;
+    if (target_widget_index == 0) {
+        target_widget_current_type = HAL::SysCfg().getConfig().widgetA;
     } else {
-        current_widget_type = HAL::SysCfg().getConfig().widgetB;
+        target_widget_current_type = HAL::SysCfg().getConfig().widgetB;
     }
-    // mclog::info("{} {}", config_widget_index, current_widget_type);
+
+    // Store oringin launcher widget ability id
+    auto original_widget_a_ability_id = _widget_a_ability_id;
+    auto original_widget_b_ability_id = _widget_b_ability_id;
 
     auto ret = CreateSelecMenuPageAndWaitResult(
         // OnSetup
-        [&current_widget_type](std::vector<std::string>& optionList, size_t& startupIndex) {
+        [&target_widget_current_type](std::vector<std::string>& optionList, size_t& startupIndex) {
             optionList.push_back("time");
             optionList.push_back("date");
             optionList.push_back("battery");
             optionList.push_back("weather");
 
             for (int i = 0; i < optionList.size(); i++) {
-                if (current_widget_type == optionList[i]) {
+                if (target_widget_current_type == optionList[i]) {
                     startupIndex = i;
                 }
             }
@@ -235,8 +233,8 @@ void LauncherPageWidgets::handle_config_widget_type()
         [&](int selectIndex, std::string& option) {
             // mclog::info("on select {} {}", selectIndex, option);
 
-            if (option != current_widget_type) {
-                if (config_widget_index == 0) {
+            if (option != target_widget_current_type) {
+                if (target_widget_index == 0) {
                     mclog::tagInfo(_tag, "set WidgetA to {}", option);
                     HAL::SysCfg().setConfig().widgetA = option;
                 } else {
@@ -245,15 +243,23 @@ void LauncherPageWidgets::handle_config_widget_type()
                 }
                 HAL::SysCfg().saveConfig();
 
-                handle_destroy_launcher_widget(config_widget_index);
-                handle_create_launcher_widget(config_widget_index);
+                handle_destroy_launcher_widget(target_widget_index);
+                handle_create_launcher_widget(target_widget_index);
             }
         },
         // OnWaitingLoop
         [&]() {
+            // Keep launcher widget updating
+            GetMooncake().extensionManager()->updateAbility(_widget_a_ability_id);
+            GetMooncake().extensionManager()->updateAbility(_widget_b_ability_id);
 
+            // If ability changed, update the original one too
+            if (original_widget_a_ability_id != _widget_a_ability_id) {
+                GetMooncake().extensionManager()->updateAbility(original_widget_a_ability_id);
+            }
+            if (original_widget_b_ability_id != _widget_b_ability_id) {
+                GetMooncake().extensionManager()->updateAbility(original_widget_b_ability_id);
+            }
         });
     // mclog::info("ret: {}", ret);
-
-    _handing_config_widget_type = false;
 }

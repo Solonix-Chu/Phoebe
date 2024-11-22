@@ -87,7 +87,6 @@ private:
     std::unique_ptr<smooth_widget::SmoothWidgetMouse> _mouse;
     int _widget_a_ability_id = -1;
     int _widget_b_ability_id = -1;
-    bool _handing_config_widget_type = false;
     bool _need_reload = false;
 
     void handle_show_widget_canvas();
