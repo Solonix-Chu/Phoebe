@@ -12,12 +12,12 @@
 #include <SDL2/SDL.h>
 #include <SDL_timer.h>
 
-std::uint32_t SystemControlSDL::millis()
+std::uint32_t SystemControlSdl::millis()
 {
     return SDL_GetTicks();
 }
 
-void SystemControlSDL::delay(std::uint32_t ms)
+void SystemControlSdl::delay(std::uint32_t ms)
 {
     SDL_Delay(ms);
 }

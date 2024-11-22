@@ -20,7 +20,6 @@ namespace APP {
 
 // 依赖注入回调
 struct InitCallback_t {
-    std::function<void()> onAssetPoolInjection = nullptr;
     std::function<void()> onHalInjection = nullptr;
 };
 

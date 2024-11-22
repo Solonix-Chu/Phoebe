@@ -53,6 +53,9 @@ void AppBleManager::handle_ble_message()
     if (HAL::SysCtrl().millis() - _time_count > 100) {
         SharedData::Borrow();
 
+        for (const auto& message : SharedData::Ble().messageList) {
+        }
+
         SharedData::Return();
         _time_count = HAL::SysCtrl().millis();
     }

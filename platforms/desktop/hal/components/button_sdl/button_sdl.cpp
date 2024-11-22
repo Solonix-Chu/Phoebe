@@ -14,7 +14,7 @@
 #include <SDL_scancode.h>
 #include <SDL_timer.h>
 
-bool ButtonSDL::getButton(ButtonId::ButtonId_t id)
+bool ButtonSdl::getButton(ButtonId::ButtonId_t id)
 {
     const Uint8* current_key_states = SDL_GetKeyboardState(NULL);
     switch (id) {
@@ -32,7 +32,7 @@ bool ButtonSDL::getButton(ButtonId::ButtonId_t id)
     return false;
 }
 
-std::uint32_t ButtonSDL::millis()
+std::uint32_t ButtonSdl::millis()
 {
     return SDL_GetTicks();
 }

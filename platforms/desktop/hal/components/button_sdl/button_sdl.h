@@ -12,7 +12,7 @@
 #include <hal/hal.h>
 
 // SDL 实现
-class ButtonSDL : public hal_components::ButtonBase {
+class ButtonSdl : public hal_components::ButtonBase {
 public:
     bool getButton(ButtonId::ButtonId_t id) override;
     std::uint32_t millis() override;

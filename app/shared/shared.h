@@ -16,7 +16,7 @@
 #include <vector>
 
 /**
- * @brief 共享数据层，提供一个 App 间、App层与底层 daemon 间带互斥锁的共享数据单例
+ * @brief 共享数据层，提供一个带互斥锁的全局共享数据单例
  *
  */
 namespace SharedData {
@@ -38,10 +38,10 @@ struct SharedData_t {
     };
     Weather_t Weather;
 
-    struct BleMessage_t {
+    struct Ble_t {
         std::vector<std::string> messageList;
     };
-    BleMessage_t BleMessage;
+    Ble_t Ble;
 };
 
 /**
@@ -84,9 +84,9 @@ inline SharedData_t::Weather_t& Weather()
 {
     return Get().Weather;
 }
-inline SharedData_t::BleMessage_t& BleMessage()
+inline SharedData_t::Ble_t& Ble()
 {
-    return Get().BleMessage;
+    return Get().Ble;
 }
 
 } // namespace SharedData

@@ -24,13 +24,6 @@ void APP::Init(InitCallback_t callback)
 {
     mclog::tagInfo(_tag, "init");
 
-    /* -------------------------- Asset Pool Injection -------------------------- */
-    // 资产池注入
-    mclog::tagInfo(_tag, "asset pool injection");
-    if (callback.onAssetPoolInjection) {
-        callback.onAssetPoolInjection();
-    }
-
     /* ------------------------------ HAL Injection ----------------------------- */
     // 硬件抽象层注入
     mclog::tagInfo(_tag, "hal injection");
