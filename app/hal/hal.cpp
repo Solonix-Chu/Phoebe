@@ -135,3 +135,12 @@ hal_components::ButtonBase& HAL::HalBase::Button()
     }
     return *_components.button.get();
 }
+
+hal_components::BleBase& HAL::HalBase::Ble()
+{
+    if (!_components.ble) {
+        mclog::tagWarn(_tag, "getting null ble component");
+        _components.ble = std::make_unique<hal_components::BleBase>();
+    }
+    return *_components.ble.get();
+}

@@ -14,6 +14,7 @@
 #include "components/system_config_std/system_config_std.h"
 #include "components/button_sdl/button_sdl.h"
 #include "components/display/display.h"
+#include "components/ble/ble.h"
 #include <memory>
 #include <mooncake_log.h>
 #include <lvgl.h>
@@ -25,11 +26,13 @@ void HalDesktop::init()
     lvgl_init();
 
     // 创建组件实例
-    _components.system_control = std::make_unique<SystemControlSDL>();
+    _components.system_control = std::make_unique<SystemControlSdl>();
     _components.system_config = std::make_unique<SystemConfigStd>();
-    _components.button = std::make_unique<ButtonSDL>();
-    _components.display = std::make_unique<DisplaySDL>();
+    _components.button = std::make_unique<ButtonSdl>();
+    _components.display = std::make_unique<DisplaySdl>();
     _components.display->init();
+    _components.ble = std::make_unique<BlePython>();
+    _components.ble->init();
 
     // 拉取一下保存的配置
     HAL::SysCfg().loadConfig();

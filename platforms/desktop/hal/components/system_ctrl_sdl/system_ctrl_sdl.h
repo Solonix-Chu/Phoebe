@@ -12,7 +12,7 @@
 #include <hal/hal.h>
 
 // SDL 实现
-class SystemControlSDL : public hal_components::SystemControlBase {
+class SystemControlSdl : public hal_components::SystemControlBase {
 public:
     std::uint32_t millis() override;
     void delay(std::uint32_t ms) override;

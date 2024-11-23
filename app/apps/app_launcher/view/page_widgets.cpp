@@ -260,6 +260,8 @@ void LauncherPageWidgets::handle_config_widget_type()
             if (original_widget_b_ability_id != _widget_b_ability_id) {
                 GetMooncake().extensionManager()->updateAbility(original_widget_b_ability_id);
             }
+
+            _mouse->updateSmoothing();
         });
     // mclog::info("ret: {}", ret);
 }

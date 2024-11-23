@@ -1,9 +1,9 @@
 /**
- * @file display.h
+ * @file ble.h
  * @author Forairaaaaa
  * @brief
  * @version 0.1
- * @date 2024-10-24
+ * @date 2024-11-22
  *
  * @copyright Copyright (c) 2024
  *
@@ -11,8 +11,7 @@
 #pragma once
 #include <hal/hal.h>
 
-class DisplaySdl : public hal_components::DisplayBase {
+class BlePython : public hal_components::BleBase {
 public:
     void init() override;
-    void push_buffer_to_display(void* buffer) override;
 };

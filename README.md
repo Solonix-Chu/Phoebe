@@ -1,9 +1,37 @@
-# Mooncake app boilerplate
+直接开放吧，有兴趣的话可以编译玩玩
 
-Mooncake 框架工程模板，以桌面端 Cmake 工程为主导，编写应用层逻辑
+- 新的 Mooncake 项目框架
+- 带 UI、HAL API 绑定的 JS runtime，可用于表盘、或者 app
+- 更好用的 Lvgl cpp 绑定，以及过渡动画支持
 
-使用硬件抽象层（HAL）抽象不同平台的硬件行为，应用层无需关心其具体实现
+https://www.bilibili.com/video/BV1qCBBYkEXS
 
-要适配某个平台时，只需要派生一个自己的 HAL 类，对接行为方法即可
+# 桌面端编译
 
-重构中
+拉取依赖：
+
+```bash
+python fetch_repos.py
+```
+
+编译：
+
+```bash
+mkdir build && cd build
+```
+
+```
+cmake .. && make
+```
+
+运行：
+
+```bash
+cd desktop
+```
+
+```
+./app_desktop_build
+```
+
+WASD 键导航

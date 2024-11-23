@@ -19,7 +19,7 @@
 #include "components/haptic_engine.h"
 #include "components/battery_monitor.h"
 #include "components/button.h"
-#include "hal/components/utils/Button_Class/Button_Class.hpp"
+#include "components/ble.h"
 
 /**
  * @brief 硬件抽象层，提供统一的硬件、平台相关行为接口
@@ -72,6 +72,7 @@ public:
     hal_components::HapticEngineBase& HapticEngine();
     hal_components::BatteryMonitorBase& BatteryMonitor();
     hal_components::ButtonBase& Button();
+    hal_components::BleBase& Ble();
 
 protected:
     // 组件实例管理
@@ -84,6 +85,7 @@ protected:
         std::unique_ptr<hal_components::HapticEngineBase> haptic_engine;
         std::unique_ptr<hal_components::BatteryMonitorBase> battery_monitor;
         std::unique_ptr<hal_components::ButtonBase> button;
+        std::unique_ptr<hal_components::BleBase> ble;
     };
     Components_t _components;
 };
@@ -161,6 +163,10 @@ inline hal_components::Button_Class& BtnOk()
 inline hal_components::Button_Class& BtnDown()
 {
     return Get().Button().BtnDown;
+}
+inline hal_components::BleBase& Ble()
+{
+    return Get().Ble();
 }
 
 } // namespace HAL
