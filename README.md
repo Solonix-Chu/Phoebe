@@ -2,6 +2,8 @@
 
 https://www.bilibili.com/video/BV1qCBBYkEXS
 
+硬件：https://oshwhub.com/eedadada/phoebe-4-real
+
 ---
 
 
