@@ -10,6 +10,7 @@
  */
 #include "page.h"
 #include <hal/hal.h>
+#include <mooncake.h>
 #include <mooncake_log.h>
 
 using namespace mooncake;

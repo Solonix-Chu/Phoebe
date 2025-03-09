@@ -16,6 +16,8 @@
 #define ENABLE_DEBUG_OUTPUT 1
 #endif
 
+#include <mooncake.h>
+
 using namespace mooncake;
 
 void debug::log_heap_usage()

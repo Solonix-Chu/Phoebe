@@ -12,6 +12,10 @@
 #include <memory>
 #include <mooncake.h>
 
+#include <mooncake.h>
+
+#include <mooncake.h>
+
 using namespace mooncake;
 
 int launcher_widget_factory::create(widget::WidgetBase* canvas, const std::string& widgetType)

@@ -14,6 +14,8 @@
 #include <memory>
 #include <mooncake_log.h>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 using namespace widget;
 

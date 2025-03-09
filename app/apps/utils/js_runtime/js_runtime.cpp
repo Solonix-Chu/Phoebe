@@ -17,6 +17,16 @@
 
 using namespace js_runtime;
 using namespace js_binding;
+#include <mooncake.h>
+
+#include <mooncake.h>
+
+#include <mooncake.h>
+
+#include <mooncake.h>
+
+#include <mooncake.h>
+
 using namespace mooncake;
 using namespace widget;
 

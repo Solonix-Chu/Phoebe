@@ -16,6 +16,8 @@
 #include "../utils/widget/widget.h"
 #include "../utils/page/page.h"
 
+#include <mooncake.h>
+
 using namespace mooncake;
 using namespace widget;
 using namespace smooth_widget;

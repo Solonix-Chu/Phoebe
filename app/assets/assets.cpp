@@ -12,6 +12,8 @@
 #include <mooncake_log.h>
 #include <string>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 
 static AssetPool::AssetPool_t* _asset_pool = nullptr;

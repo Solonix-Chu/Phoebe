@@ -14,6 +14,8 @@
 #include <Arduino.h>
 #include <mooncake_log.h>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 
 static const char* _tag = "haptic";

@@ -9,6 +9,7 @@
  *
  */
 #include "ble.h"
+#include <mooncake.h>
 #include <mooncake_log.h>
 #include <iostream>
 #include <thread>

@@ -13,6 +13,8 @@
 #include <hal/hal.h>
 #include <lvgl.h>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 
 #define _tag (getAppInfo().name)

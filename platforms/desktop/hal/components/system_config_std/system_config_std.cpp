@@ -15,6 +15,8 @@
 #include <ArduinoJson.h>
 #include <string>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 
 static const char* _tag = "syscfg";

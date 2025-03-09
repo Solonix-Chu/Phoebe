@@ -16,6 +16,8 @@
 #include <mooncake_log.h>
 #include <vector>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 using namespace widget;
 

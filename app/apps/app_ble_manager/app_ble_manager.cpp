@@ -9,6 +9,7 @@
  *
  */
 #include "app_ble_manager.h"
+#include <mooncake.h>
 #include <mooncake_log.h>
 #include <hal/hal.h>
 #include <shared/shared.h>

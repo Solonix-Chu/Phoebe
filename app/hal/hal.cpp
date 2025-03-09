@@ -15,6 +15,8 @@
 #include <string>
 #include <mooncake_log.h>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 
 /* -------------------------------------------------------------------------- */

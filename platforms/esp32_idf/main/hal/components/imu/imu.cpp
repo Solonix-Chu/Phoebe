@@ -17,6 +17,8 @@
 #include <driver/i2c.h>
 #include <mooncake_log.h>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 
 /*! Earth's gravity in m/s^2 */

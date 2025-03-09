@@ -11,6 +11,7 @@
 #include "button.h"
 #include "../../hal_config.h"
 #include <Arduino.h>
+#include <mooncake.h>
 #include <mooncake_log.h>
 
 using namespace mooncake;

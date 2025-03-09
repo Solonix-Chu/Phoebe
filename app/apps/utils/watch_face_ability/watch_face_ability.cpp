@@ -14,6 +14,8 @@
 #include <hal/hal.h>
 #include <assets/assets.h>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 using namespace widget;
 using namespace debug;

@@ -16,6 +16,8 @@
 #include <mooncake_log.h>
 #include <mutex>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 
 static const char* _tag = "BatMon";

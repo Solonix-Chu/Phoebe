@@ -28,6 +28,10 @@ extern "C" {
 #include <lvgl.h>
 #include <esp_timer.h>
 
+#include <mooncake.h>
+
+#include <mooncake.h>
+
 using namespace mooncake;
 
 // 组件实例创建和杂项初始化

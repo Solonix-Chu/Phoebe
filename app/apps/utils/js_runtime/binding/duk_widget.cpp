@@ -12,6 +12,8 @@
 #include <mooncake_log.h>
 #include <hal/hal.h>
 
+#include <mooncake.h>
+
 using namespace mooncake;
 using namespace widget;
 using namespace widget_helper;
