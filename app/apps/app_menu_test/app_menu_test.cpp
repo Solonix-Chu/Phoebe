@@ -76,15 +76,19 @@ void AppMenuTest::initHorizontalMenu()
     // 清理之前的菜单资源
     clearMenus();
     
-    // 创建应用图标列表
-    const int NUM_APPS = 5;
-    const char* APP_NAMES[NUM_APPS] = {"App 1", "App 2", "App 3", "App 4", "App 5"};
+    // 创建应用图标列表 - 增加图标数量
+    const int NUM_APPS = 9;
+    const char* APP_NAMES[NUM_APPS] = {"App 1", "App 2", "App 3", "App 4", "App 5", "App 6", "App 7", "App 8", "App 9"};
     lv_color_t APP_COLORS[NUM_APPS] = {
         lv_color_hex(0xFF5555), // 红色
         lv_color_hex(0x55FF55), // 绿色
         lv_color_hex(0x5555FF), // 蓝色
         lv_color_hex(0xFFFF55), // 黄色
-        lv_color_hex(0xFF55FF)  // 紫色
+        lv_color_hex(0xFF55FF), // 紫色
+        lv_color_hex(0x55FFFF), // 青色
+        lv_color_hex(0xFFAA55), // 橙色
+        lv_color_hex(0xAA55FF), // 浅紫色
+        lv_color_hex(0x55AAFF)  // 浅蓝色
     };
     
     // 获取屏幕尺寸
@@ -124,35 +128,42 @@ void AppMenuTest::initHorizontalMenu()
         // 计算循环位置，中心为选中项
         int offset = i - 2; // 以中间位置为基准
         
-        // 设置关键帧位置，所有图标在同一水平线上
+        // 设置关键帧位置，所有图标在同一水平线上，减小间距以显示更多图标
         Vector4D_t keyframe;
-        keyframe.x = screenWidth/2 + offset * 90; // 横向间隔调整为90
-        keyframe.y = screenHeight/2;               // 所有图标垂直居中在同一水平线
+        keyframe.x = screenWidth/2 + offset * 75; // 减小横向间隔为75，使更多图标可见
+        keyframe.y = screenHeight/2;              // 所有图标垂直居中在同一水平线
         
-        // 更强的尺寸对比：选中项大，非选中项更小
+        // 更平衡的尺寸对比：选中项大，非选中项小一些但仍然清晰可见
         if (offset == 0) {
-            keyframe.w = 85; // 选中项大小缩小
-            keyframe.h = 85;
+            keyframe.w = 70; // 选中项大小稍微减小
+            keyframe.h = 70;
         } else {
-            keyframe.w = 50;  // 非选中项大小大幅缩小，增强对比
-            keyframe.h = 50;
+            keyframe.w = 40;  // 非选中项大小
+            keyframe.h = 40;
         }
         
         horizontalMenu.setKeyframe(i, keyframe);
     }
     
-    // 设置动画效果，使用easeOutBack提供Q弹效果
-    horizontalMenu.setPositionDuration(400);     // 位置过渡时间
-    horizontalMenu.setShapeDuration(300);        // 形状过渡时间
-    horizontalMenu.setPositionTransitionPath(EasingPath::easeOutBack); // Q弹效果
-    horizontalMenu.setShapeTransitionPath(EasingPath::easeOutBack);
+    // 设置动画效果，强化弹性效果和过渡
+    
+    // 位置过渡
+    horizontalMenu.setPositionDuration(600);     // 增加持续时间，使动画更明显
+    horizontalMenu.setPositionTransitionPath(EasingPath::easeOutElastic); // 使用easeOutElastic获得更强的弹性效果
+    
+    // 形状过渡
+    horizontalMenu.setShapeDuration(800);        // 增加持续时间，使动画更明显
+    horizontalMenu.setShapeTransitionPath(EasingPath::easeOutBack); // 使用easeOutBack获得弹性效果
+    
+    // 确保所有选项的动画统一设置
+    horizontalMenu.setDuration(600); // 统一设置所有选项的过渡时间
     
     // 初始化动画，从中间开始
     horizontalMenu.jumpTo(2);
     
     // 初始状态
     currentState = HORIZONTAL_MENU;
-    mclog::tagInfo(_tag, "横向菜单已初始化");
+    mclog::tagInfo(_tag, "横向菜单已初始化，共%d个应用", NUM_APPS);
 }
 
 void AppMenuTest::initVerticalMenu() 
@@ -262,8 +273,8 @@ void AppMenuTest::switchToHorizontalMenu() {
 
 void AppMenuTest::onRunning()
 {
-    // 更新时间
-    currentTime += 20;
+    // 更新时间，增加增量确保动画有足够的更新帧
+    currentTime += 40; // 增加每帧的时间增量，确保动画能够更流畅地进行
     
     // 更新按钮状态
     HAL::BtnUpdate();
@@ -282,10 +293,22 @@ void AppMenuTest::onRunning()
         
         // 横向菜单的控制
         if (HAL::BtnUp().wasClicked()) {
+            mclog::info("向左移动菜单");
+            // 确保每次移动都重新设置动画参数
+            horizontalMenu.setPositionDuration(600);
+            horizontalMenu.setShapeDuration(800);
+            horizontalMenu.setPositionTransitionPath(EasingPath::easeOutElastic);
+            // 调用移动方法
             horizontalMenu.goLast();
         }
         
         if (HAL::BtnDown().wasClicked()) {
+            mclog::info("向右移动菜单");
+            // 确保每次移动都重新设置动画参数
+            horizontalMenu.setPositionDuration(600);
+            horizontalMenu.setShapeDuration(800);
+            horizontalMenu.setPositionTransitionPath(EasingPath::easeOutElastic);
+            // 调用移动方法
             horizontalMenu.goNext();
         }
         
@@ -295,8 +318,11 @@ void AppMenuTest::onRunning()
             switchToVerticalMenu();
         }
         
-        // 更新横向菜单
+        // 更新横向菜单 - 确保动画更新
         horizontalMenu.update(currentTime);
+        
+        // 强制更新LVGL UI，确保动画显示
+        lv_timer_handler();
         
         // 更新UI元素位置和大小
         for (int i = 0; i < appIcons.size() && i < horizontalMenu.getOptionList().size(); i++) {
@@ -402,6 +428,9 @@ void AppMenuTest::onRunning()
     
     // 处理LVGL任务
     lv_timer_handler();
+    
+    // 添加一个小延迟，给动画留出更多更新时间
+    HAL::SysCtrl().delay(10);
 }
 
 void AppMenuTest::onClose()
