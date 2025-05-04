@@ -21,7 +21,8 @@
  * @brief 派生 App
  *
  */
-class AppMenuTest : public mooncake::AppAbility {
+class AppMenuTest : public mooncake::AppAbility
+{
 public:
     AppMenuTest();
 
@@ -32,32 +33,74 @@ public:
     void onClose() override;
 
 private:
-    // 菜单状态
+    // 菜单选项类型
+    enum OptionType {
+        TYPE_TOGGLE,   // 开关类型
+        TYPE_VALUE,    // 数值类型
+        TYPE_ACTION    // 动作类型（如返回）
+    };
+
+    // 菜单选项数据结构
+    struct MenuOption {
+        std::string name;
+        OptionType type;
+        bool toggleState;     // 开关状态
+        int value;            // 数值
+        int minValue;         // 最小值
+        int maxValue;         // 最大值
+        int step;             // 步长
+    };
+
+    // 存储每个应用的选项配置
+    std::vector<std::vector<MenuOption>> appMenuOptions;
+    
+    // 编辑状态
+    bool isEditingValue = false;
+    uint32_t blinkTimer = 0;
+    bool blinkState = true;
+    
+    // UI变量
+    std::vector<lv_obj_t*> appIcons;     // 应用图标
+    std::vector<lv_obj_t*> menuItems;    // 菜单项
+    lv_obj_t* selector = nullptr;        // 选择器
+    std::vector<lv_obj_t*> stateLabels;  // 状态标签
+    
+    // 布局常量
+    const int MENU_ITEM_HEIGHT = 28;     // 选项高度
+    const int MENU_ITEM_SPACING = 3;     // 选项间距
+    const int MENU_START_Y = 40;         // 起始Y坐标
+    const int MENU_LEFT_MARGIN = 5;      // 左侧边距
+
+    // 菜单变量
+    SmoothUIToolKit::SelectMenu::SmoothOptions horizontalMenu;  // 横向菜单
+    SmoothUIToolKit::SelectMenu::SmoothSelector verticalMenu;   // 竖向菜单
+    
+    // 状态控制
     enum MenuState {
         HORIZONTAL_MENU,
         VERTICAL_MENU
     };
     MenuState currentState = HORIZONTAL_MENU;
+    int currentAppIndex = 0;             // 当前选中的应用索引
+    uint32_t currentTime = 0;           // 当前时间，用于动画更新
     
-    // 横向循环菜单
-    SmoothUIToolKit::SelectMenu::SmoothOptions horizontalMenu;
-    std::vector<lv_obj_t*> appIcons;
-    std::vector<lv_color_t> appColors; // 存储应用图标颜色
-    std::vector<std::string> appNames; // 存储应用名称
+    // 初始化默认选项配置
+    void initMenuOptions();
     
-    // 竖向设置菜单
-    SmoothUIToolKit::SelectMenu::SmoothSelector verticalMenu;
-    lv_obj_t* selector = nullptr;
-    std::vector<lv_obj_t*> menuItems;
+    // 切换开关状态
+    void toggleOptionState(int index);
     
-    // 时间计数
-    uint32_t currentTime = 0;
+    // 调整数值
+    void adjustValue(int index, bool increment);
     
-    // 初始化菜单
+    // 获取状态文本
+    std::string getOptionStateText(const MenuOption& option);
+    
+    // 菜单初始化
     void initHorizontalMenu();
-    void initVerticalMenu();
-    void switchToVerticalMenu();
+    void initVerticalMenu(int appIndex);
     void switchToHorizontalMenu();
+    void switchToVerticalMenu(int appIndex);
     
     // 清理资源
     void clearMenus();
