@@ -109,11 +109,30 @@ public:
     int adjustValue(int index, bool increment);
 
     /**
+     * @brief 切换数值编辑状态
+     * @param index 选项索引
+     * @return 是否进入编辑状态
+     */
+    bool toggleEditMode(int index);
+
+    /**
      * @brief 获取选项状态文本
      * @param index 选项索引
      * @return 状态文本
      */
     std::string getOptionStateText(int index) const;
+
+    /**
+     * @brief 检查是否处于编辑模式
+     * @return 是否处于编辑模式
+     */
+    bool isInEditMode() const;
+
+    /**
+     * @brief 获取当前编辑的选项索引
+     * @return 编辑索引，如果不在编辑模式则返回-1
+     */
+    int getEditingIndex() const;
 
     /**
      * @brief 设置选定选项的回调函数
@@ -155,8 +174,8 @@ private:
     int editingIndex = -1;
     
     // 布局常量
-    const int MENU_ITEM_HEIGHT = 28;     // 选项高度
-    const int MENU_ITEM_SPACING = 3;     // 选项间距
+    int MENU_ITEM_HEIGHT = 28;     // 选项高度
+    int MENU_ITEM_SPACING = 3;     // 选项间距
     
     // Logging tag
     static const char* _tag;

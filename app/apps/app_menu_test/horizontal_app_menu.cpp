@@ -4,6 +4,7 @@
  */
 #include "horizontal_app_menu.h"
 #include <hal/hal.h>
+#include <lvgl.h>
 
 namespace MenuModules {
 
@@ -13,6 +14,9 @@ void HorizontalAppMenu::init(lv_obj_t* screen) {
     
     // 保存目标屏幕
     targetScreen = screen;
+    
+    // 设置黑色背景 - OLED显示屏默认背景为黑色
+    lv_obj_set_style_bg_color(screen, lv_color_hex(0x000000), LV_PART_MAIN);
     
     // 重新初始化横向菜单对象
     horizontalMenu = SmoothUIToolKit::SelectMenu::SmoothOptions();
@@ -33,14 +37,16 @@ int HorizontalAppMenu::addApp(const char* name, lv_color_t color, bool isCircle)
     lv_obj_t* icon = lv_obj_create(targetScreen);
     lv_obj_set_style_bg_color(icon, color, 0);
     lv_obj_set_style_radius(icon, isCircle ? LV_RADIUS_CIRCLE : 0, 0);
-    lv_obj_set_style_border_width(icon, 2, 0);
+    lv_obj_set_style_border_width(icon, 1, 0);  // 减小边框厚度以适应小屏幕
     lv_obj_set_style_border_color(icon, lv_color_hex(0xFFFFFF), 0);
-    lv_obj_set_style_shadow_width(icon, 0, 0); // 移除阴影
+    lv_obj_set_style_shadow_width(icon, 0, 0);  // 移除阴影
     
-    // 添加标签
+    // 添加标签 - 使用更小的字体
     lv_obj_t* label = lv_label_create(icon);
     lv_label_set_text(label, name);
     lv_obj_set_style_text_color(label, lv_color_hex(0xFFFFFF), 0);
+    // 设置更小的字体
+    lv_obj_set_style_text_font(label, &lv_font_montserrat_10, 0);
     lv_obj_center(label);
     
     // 初始隐藏图标
@@ -52,12 +58,12 @@ int HorizontalAppMenu::addApp(const char* name, lv_color_t color, bool isCircle)
     // 设置关键帧
     updateKeyframes();
     
-    // 设置菜单动画效果
-    horizontalMenu.setPositionDuration(600);
-    horizontalMenu.setShapeDuration(800);
+    // 设置菜单动画效果 - 减少动画持续时间以适应较小的屏幕
+    horizontalMenu.setPositionDuration(400);
+    horizontalMenu.setShapeDuration(600);
     horizontalMenu.setPositionTransitionPath(SmoothUIToolKit::EasingPath::easeOutElastic);
     horizontalMenu.setShapeTransitionPath(SmoothUIToolKit::EasingPath::easeOutBack);
-    horizontalMenu.setDuration(600);
+    horizontalMenu.setDuration(400);
     
     return appIndex;
 }
@@ -67,23 +73,23 @@ void HorizontalAppMenu::updateKeyframes() {
     int screenWidth = HAL::Display().width();
     int screenHeight = HAL::Display().height();
     
-    // 设置横向循环菜单的关键帧
+    // 设置横向循环菜单的关键帧 - 为小屏幕调整大小和位置
     for (int i = 0; i < appIcons.size(); i++) {
         // 计算循环位置，中心为选中项
         int offset = i - 2; // 以中间位置为基准
         
         // 设置关键帧位置，所有图标在同一水平线上
         SmoothUIToolKit::Vector4D_t keyframe;
-        keyframe.x = screenWidth/2 + offset * 75; // 减小横向间隔为75，使更多图标可见
-        keyframe.y = screenHeight/2;              // 所有图标垂直居中在同一水平线
+        keyframe.x = screenWidth/2 + offset * 32; // 减小横向间隔为32，适应128px宽度
+        keyframe.y = screenHeight/2 - 12;         // 上移更多，为底部的应用名称留出空间
         
-        // 更平衡的尺寸对比：选中项大，非选中项小一些但仍然清晰可见
+        // 更平衡的尺寸对比：适应较小的屏幕
         if (offset == 0) {
-            keyframe.w = 70; // 选中项大小
-            keyframe.h = 70;
+            keyframe.w = 30; // 选中项大小
+            keyframe.h = 30;
         } else {
-            keyframe.w = 40; // 非选中项大小
-            keyframe.h = 40;
+            keyframe.w = 20; // 非选中项大小
+            keyframe.h = 20;
         }
         
         horizontalMenu.setKeyframe(i, keyframe);
@@ -127,8 +133,8 @@ void HorizontalAppMenu::update(uint32_t currentTime) {
 
 void HorizontalAppMenu::goNext() {
     // 确保每次移动都重新设置动画参数
-    horizontalMenu.setPositionDuration(600);
-    horizontalMenu.setShapeDuration(800);
+    horizontalMenu.setPositionDuration(400);
+    horizontalMenu.setShapeDuration(600);
     horizontalMenu.setPositionTransitionPath(SmoothUIToolKit::EasingPath::easeOutElastic);
     
     // 调用移动方法
@@ -137,8 +143,8 @@ void HorizontalAppMenu::goNext() {
 
 void HorizontalAppMenu::goLast() {
     // 确保每次移动都重新设置动画参数
-    horizontalMenu.setPositionDuration(600);
-    horizontalMenu.setShapeDuration(800);
+    horizontalMenu.setPositionDuration(400);
+    horizontalMenu.setShapeDuration(600);
     horizontalMenu.setPositionTransitionPath(SmoothUIToolKit::EasingPath::easeOutElastic);
     
     // 调用移动方法

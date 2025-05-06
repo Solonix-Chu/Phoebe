@@ -189,6 +189,43 @@ void SharpeMlcd::copyBuffer(uint16_t* colors)
     }
 }
 
+void SharpeMlcd::copyMonoBuffer(uint8_t* mono_buffer, uint16_t width, uint16_t height)
+{
+    if (!mono_buffer) {
+        return;
+    }
+    
+    // Clear buffer first
+    clearBuffer();
+    
+    // Calculate dimensions to copy (clamp to display size)
+    uint16_t copy_width = min(width, _config.screen_width);
+    uint16_t copy_height = min(height, _config.screen_height);
+    
+    // For monochrome displays, each byte contains 8 pixels (1 bit per pixel)
+    // The OLED display uses 1=white, 0=black, but our sharp display uses inverse logic
+    for (int y = 0; y < copy_height; y++) {
+        for (int x = 0; x < copy_width; x++) {
+            // Calculate source byte index and bit position
+            int source_byte_index = (y * width + x) / 8;
+            int source_bit_position = 7 - ((y * width + x) % 8); // MSB first for OLED
+            
+            // Get the pixel value (0 or 1)
+            bool pixel_value = (mono_buffer[source_byte_index] & (1 << source_bit_position)) != 0;
+            
+            // Draw the pixel - 1=white (pixel on), 0=black (pixel off)
+            // Our Sharp Memory LCD uses inverse logic compared to OLED (1=white, 0=black)
+            if (pixel_value) {
+                // White pixel (set bit)
+                _sharpmem_buffer[(y * _config.screen_width + x) / 8] |= pgm_read_byte(&set[x & 7]);
+            } else {
+                // Black pixel (clear bit)
+                _sharpmem_buffer[(y * _config.screen_width + x) / 8] &= pgm_read_byte(&clr[x & 7]);
+            }
+        }
+    }
+}
+
 void SharpeMlcd::toggle_vcom()
 {
     do {

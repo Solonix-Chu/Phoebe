@@ -4,7 +4,10 @@
  */
 #include "vertical_options_menu.h"
 #include <hal/hal.h>
+#include <lvgl.h>
 #include <mooncake_log.h>
+#include <cstdio>
+#include <sstream>
 
 namespace MenuModules {
 
@@ -22,30 +25,29 @@ void VerticalOptionsMenu::init(lv_obj_t* screen) {
         return;
     }
     
-    // 重新初始化垂直菜单对象
+    // 设置黑色背景 - OLED显示屏默认背景为黑色
+    lv_obj_set_style_bg_color(screen, lv_color_hex(0x000000), LV_PART_MAIN);
+    
+    // 创建菜单选择器 - 占据整个屏幕
+    selector = lv_obj_create(screen);
+    lv_obj_set_size(selector, HAL::Display().width(), HAL::Display().height());
+    lv_obj_set_pos(selector, 0, 0);
+    lv_obj_set_style_radius(selector, 0, 0);
+    lv_obj_set_style_border_width(selector, 0, 0);
+    lv_obj_set_style_bg_color(selector, lv_color_hex(0x000000), 0); // 黑色背景
+    lv_obj_set_style_pad_all(selector, 0, 0);
+    
+    // 重新初始化竖向菜单对象
     verticalMenu = SmoothUIToolKit::SelectMenu::SmoothSelector();
     
-    // 获取屏幕尺寸
-    int screenWidth = HAL::Display().width();
-    int screenHeight = HAL::Display().height();
-    
-    // 创建选择器UI元素
-    selector = lv_obj_create(targetScreen);
-    if (selector == nullptr) {
-        mclog::tagError(_tag, "创建选择器失败");
-        return;
-    }
-    
-    lv_obj_set_style_bg_color(selector, lv_color_hex(0x3399FF), 0);
-    lv_obj_set_style_bg_opa(selector, 80, 0);  // 降低背景透明度
-    lv_obj_set_style_border_width(selector, 2, 0);
-    lv_obj_set_style_border_color(selector, lv_color_hex(0x66AAFF), 0);
-    lv_obj_set_style_radius(selector, 6, 0);
+    // 设置菜单项高度和间距 - 减小值以适应小屏幕
+    MENU_ITEM_HEIGHT = 12; // 更小的项目高度
+    MENU_ITEM_SPACING = 1; // 最小间距
     
     // 设置菜单配置，包括摄像机设置
     verticalMenu.setConfig({
         .moveInLoop = true,      // 循环模式
-        .cameraSize = {screenWidth, screenHeight},
+        .cameraSize = {HAL::Display().width(), HAL::Display().height()},
         .readInputInterval = 20,
         .renderInterval = 15
     });
@@ -70,107 +72,57 @@ int VerticalOptionsMenu::addOption(const MenuOption& option) {
         return -1;
     }
     
-    // 获取屏幕尺寸
-    int screenWidth = HAL::Display().width();
-    
-    // 添加选项到内部列表
+    // 添加选项到数据列表
     options.push_back(option);
     int optionIndex = options.size() - 1;
     
-    // 计算项目Y坐标
-    int itemY = 0 + optionIndex * (MENU_ITEM_HEIGHT + MENU_ITEM_SPACING);
+    // 添加选项到菜单 - 每项都有自己的平移距离
+    // 创建选项属性并设置关键帧
+    SmoothUIToolKit::SelectMenu::SmoothSelector::OptionProps_t optionProps;
+    optionProps.keyframe = {
+        0, // 从左侧开始
+        optionIndex * (MENU_ITEM_HEIGHT + MENU_ITEM_SPACING),
+        HAL::Display().width(),
+        MENU_ITEM_HEIGHT
+    };
+    verticalMenu.addOption(optionProps);
     
-    try {
-        // 创建背景占位符
-        lv_obj_t* placeholder = lv_obj_create(targetScreen);
-        if (placeholder == nullptr) {
-            mclog::tagError(_tag, "创建背景失败");
-            options.pop_back(); // 回滚
-            return -1;
-        }
-        
-        lv_obj_set_size(placeholder, screenWidth, MENU_ITEM_HEIGHT);
-        lv_obj_set_style_bg_opa(placeholder, 0, 0);  // 完全透明
-        lv_obj_set_style_border_width(placeholder, 0, 0);
-        lv_obj_set_pos(placeholder, 0, itemY);
-        menuItems.push_back(placeholder);
-        
-        // 创建选项标签 - 左对齐
-        lv_obj_t* label = lv_label_create(targetScreen);
-        if (label == nullptr) {
-            mclog::tagError(_tag, "创建标签失败");
-            options.pop_back(); // 回滚
-            return -1;
-        }
-        
-        // 设置标签文本
-        lv_label_set_text(label, option.name.c_str());
-        // 设置文本颜色
-        lv_obj_set_style_text_color(label, lv_color_hex(0x000000), 0);
-        // 恢复使用原来的字体
-        lv_obj_set_style_text_font(label, &lv_font_montserrat_10, 0);
-        
-        // 设置标签位置
-        lv_obj_set_pos(label, 5, itemY + (MENU_ITEM_HEIGHT - 10) / 2 - 2);
-        menuItems.push_back(label);
-        
-        // 为非Back选项添加状态标签 (ON/OFF 或 数值)
-        if (option.type != TYPE_ACTION) {
-            lv_obj_t* stateLabel = lv_label_create(targetScreen);
-            if (stateLabel == nullptr) {
-                mclog::tagError(_tag, "创建状态标签失败");
-                options.pop_back(); // 回滚
-                return -1;
-            }
-            
-            lv_label_set_text(stateLabel, getOptionStateText(option).c_str());
-            lv_obj_set_style_text_color(stateLabel, lv_color_hex(0x000000), 0);
-            // 恢复使用原来的字体
-            lv_obj_set_style_text_font(stateLabel, &lv_font_montserrat_10, 0);
-            
-            // 设置文本右对齐
-            lv_obj_set_style_text_align(stateLabel, LV_TEXT_ALIGN_RIGHT, 0);
-            int valueWidth = 40;
-            lv_obj_set_width(stateLabel, valueWidth);
-            
-            int rightMargin = 10;
-            int xPosition = screenWidth - rightMargin - valueWidth;
-            
-            lv_obj_set_pos(stateLabel, xPosition, itemY + (MENU_ITEM_HEIGHT - 10) / 2 - 2);
-            
-            menuItems.push_back(stateLabel);
-            stateLabels.push_back(stateLabel);
-        } else {
-            // 为保持索引对应，添加一个空的占位符
-            stateLabels.push_back(nullptr);
-        }
-        
-        // 添加选项到菜单
-        SmoothUIToolKit::SelectMenu::SmoothSelector::OptionProps_t optionProps;
-        optionProps.keyframe = {
-            0, // 从左侧开始
-            itemY,
-            screenWidth,
-            MENU_ITEM_HEIGHT
-        };
-        verticalMenu.addOption(optionProps);
-        
-        return optionIndex;
-    } catch (const std::exception& e) {
-        mclog::tagError(_tag, "添加选项时异常：%s", e.what());
-        // 回滚操作
-        if (!options.empty()) {
-            options.pop_back();
-        }
-        return -1;
-    } catch (...) {
-        mclog::tagError(_tag, "添加选项时发生未知异常");
-        // 回滚操作
-        if (!options.empty()) {
-            options.pop_back();
-        }
-        return -1;
-    }
+    // 获取屏幕尺寸
+    int screenWidth = HAL::Display().width();
+    
+    // 创建选项项容器 - 占据整个宽度
+    lv_obj_t* menuItem = lv_obj_create(selector);
+    lv_obj_set_size(menuItem, screenWidth, MENU_ITEM_HEIGHT); // 完整宽度
+    lv_obj_set_pos(menuItem, 0, optionIndex * (MENU_ITEM_HEIGHT + MENU_ITEM_SPACING));
+    lv_obj_set_style_radius(menuItem, 0, 0);
+    lv_obj_set_style_border_width(menuItem, 0, 0);
+    lv_obj_set_style_bg_color(menuItem, lv_color_hex(0x000000), 0); // 黑色背景
+    lv_obj_set_style_pad_all(menuItem, 0, 0);
+    
+    // 计算选项文本和状态的布局
+    int textAreaWidth = screenWidth * 0.6; // 文本区域宽度占60%
+    
+    // 创建选项名称标签 - 使用更小的字体
+    lv_obj_t* nameLabel = lv_label_create(menuItem);
+    lv_label_set_text(nameLabel, option.name.c_str());
+    lv_obj_set_style_text_color(nameLabel, lv_color_hex(0xFFFFFF), 0); // 白色文本
+    lv_obj_set_style_text_font(nameLabel, &lv_font_montserrat_10, 0); // 较小的字体
+    lv_obj_set_pos(nameLabel, 2, 1); // 减少边距，更紧凑
+    lv_obj_set_width(nameLabel, textAreaWidth);
+    
+    // 创建状态标签 - 使用更小的字体
+    lv_obj_t* stateLabel = lv_label_create(menuItem);
+    std::string stateText = getOptionStateText(option);
+    lv_label_set_text(stateLabel, stateText.c_str());
+    lv_obj_set_style_text_color(stateLabel, lv_color_hex(0xFFFFFF), 0); // 白色文本
+    lv_obj_set_style_text_font(stateLabel, &lv_font_montserrat_10, 0); // 较小的字体
+    lv_obj_align(stateLabel, LV_ALIGN_RIGHT_MID, -4, 0); // 调整右边距
+    
+    // 保存UI元素引用
+    menuItems.push_back(menuItem);
+    stateLabels.push_back(stateLabel);
+    
+    return optionIndex;
 }
 
 void VerticalOptionsMenu::setOptions(const std::vector<MenuOption>& newOptions) {
@@ -216,22 +168,23 @@ void VerticalOptionsMenu::setOptions(const std::vector<MenuOption>& newOptions) 
     onSelectCallback = nullptr;
     
     try {
-        // 创建新的选择器
+        // 创建新的选择器 - 适合小型OLED
+        int screenWidth = HAL::Display().width();
+        int screenHeight = HAL::Display().height();
+        
         selector = lv_obj_create(targetScreen);
         if (selector == nullptr) {
             mclog::tagError(_tag, "创建选择器失败");
             return;
         }
         
-        lv_obj_set_style_bg_color(selector, lv_color_hex(0x3399FF), 0);
-        lv_obj_set_style_bg_opa(selector, 80, 0);
-        lv_obj_set_style_border_width(selector, 2, 0);
-        lv_obj_set_style_border_color(selector, lv_color_hex(0x66AAFF), 0);
-        lv_obj_set_style_radius(selector, 6, 0);
-        
-        // 获取屏幕尺寸
-        int screenWidth = HAL::Display().width();
-        int screenHeight = HAL::Display().height();
+        // 设置选择器为黑色背景
+        lv_obj_set_size(selector, screenWidth, screenHeight);
+        lv_obj_set_pos(selector, 0, 0);
+        lv_obj_set_style_radius(selector, 0, 0);
+        lv_obj_set_style_border_width(selector, 0, 0);
+        lv_obj_set_style_bg_color(selector, lv_color_hex(0x000000), 0); // 黑色背景
+        lv_obj_set_style_pad_all(selector, 0, 0);
         
         // 设置菜单配置
         verticalMenu.setConfig({
@@ -299,27 +252,14 @@ void VerticalOptionsMenu::update(uint32_t currentTime) {
             lv_coord_t x = lv_obj_get_x_aligned(menuItems[i]);
             
             // 计算原始Y坐标
-            int itemIndex = i / 3; // 计算对应的菜单项索引
-            int elementType = i % 3; // 计算元素类型 (0=背景, 1=标签, 2=状态)
-            
-            lv_coord_t baseY;
-            if (elementType == 0) {
-                // placeholder
-                baseY = 0 + itemIndex * (MENU_ITEM_HEIGHT + MENU_ITEM_SPACING);
-            } else if (elementType == 1 || elementType == 2) {
-                // label 或 stateLabel
-                baseY = 0 + itemIndex * (MENU_ITEM_HEIGHT + MENU_ITEM_SPACING) + 
-                        (MENU_ITEM_HEIGHT - 10) / 2 - 2;
-            } else {
-                // 默认情况，使用当前Y值加上摄像机偏移还原原始位置
-                baseY = lv_obj_get_y_aligned(menuItems[i]) + cameraOffset.y;
-            }
+            int itemIndex = i;  // 调整为直接使用索引，不再需要计算
+            lv_coord_t baseY = itemIndex * (MENU_ITEM_HEIGHT + MENU_ITEM_SPACING);
             
             // 应用摄像机偏移
             float newY = baseY - cameraOffset.y;
             
             // 如果项目超出顶部，则隐藏它
-            if (newY < -MENU_ITEM_HEIGHT) {
+            if (newY < -MENU_ITEM_HEIGHT || newY > HAL::Display().height()) {
                 lv_obj_set_style_opa(menuItems[i], 0, 0); // 隐藏
             } else {
                 lv_obj_set_style_opa(menuItems[i], 255, 0); // 显示
@@ -328,61 +268,60 @@ void VerticalOptionsMenu::update(uint32_t currentTime) {
         }
     }
     
-    // 更新状态标签位置和可见性
+    // 更新状态标签可见性
     for (int i = 0; i < stateLabels.size(); i++) {
         if (stateLabels[i] != nullptr) {
-            // 获取X坐标 (保持不变)
-            lv_coord_t x = lv_obj_get_x(stateLabels[i]);
-            
-            // 计算原始Y坐标
-            lv_coord_t baseY = 0 + i * (MENU_ITEM_HEIGHT + MENU_ITEM_SPACING) +
-                               (MENU_ITEM_HEIGHT - 10) / 2 - 2;
-            
-            // 应用摄像机偏移
-            float newY = baseY - cameraOffset.y;
-            
-            // 如果状态标签超出顶部，则隐藏它
-            if (newY < -MENU_ITEM_HEIGHT) {
-                lv_obj_set_style_opa(stateLabels[i], 0, 0); // 隐藏
-            } else {
+            // 获取父菜单项的可见性并应用相同设置
+            if (i < menuItems.size()) {
+                lv_opa_t parentOpa = lv_obj_get_style_opa(menuItems[i], 0);
+                
                 // 如果正在编辑此状态，根据闪烁状态决定是否显示
                 if (isEditingValue && i == editingIndex) {
-                    lv_obj_set_style_opa(stateLabels[i], blinkState ? 255 : 0, 0);
+                    lv_obj_set_style_opa(stateLabels[i], blinkState ? parentOpa : 0, 0);
                 } else {
-                    lv_obj_set_style_opa(stateLabels[i], 255, 0); // 正常显示
+                    lv_obj_set_style_opa(stateLabels[i], parentOpa, 0);
                 }
-                lv_obj_set_y(stateLabels[i], newY);
             }
         }
     }
     
-    // 更新选择器位置
-    if (selector != nullptr) {
-        auto selectorFrame = verticalMenu.getSelectorCurrentFrame();
-        // 应用摄像机偏移
-        lv_obj_set_pos(selector, selectorFrame.x, selectorFrame.y - cameraOffset.y);
-        lv_obj_set_size(selector, selectorFrame.w, selectorFrame.h);
-    }
-    
-    // 更新选中项的高亮状态
+    // 更新选中项的高亮状态 - 使用简单的反转显示效果，没有滑动指示器
     int selectedIndex = verticalMenu.getSelectedOptionIndex();
-    for (int i = 0; i < options.size(); i++) {
-        // 获取背景对象和标签对象的索引
-        int bgIndex = i * 3;      // 背景索引
-        int labelIndex = i * 3 + 1; // 标签索引
+    for (int i = 0; i < menuItems.size(); i++) {
+        lv_obj_t* menuItem = menuItems[i];
+        lv_obj_t* nameLabel = nullptr;
         
-        if (bgIndex < menuItems.size() && labelIndex < menuItems.size()) {
-            if (i == selectedIndex) {
-                // 选中项高亮 - 使用亮蓝色文本
-                lv_obj_set_style_text_color(menuItems[labelIndex], lv_color_hex(0x0066CC), 0);
-                // 为选中项添加淡蓝色背景
-                lv_obj_set_style_bg_opa(menuItems[bgIndex], 40, 0);
-                lv_obj_set_style_bg_color(menuItems[bgIndex], lv_color_hex(0x99CCFF), 0);
-                lv_obj_set_style_radius(menuItems[bgIndex], 4, 0);
-            } else {
-                // 非选中项 - 黑色文本
-                lv_obj_set_style_text_color(menuItems[labelIndex], lv_color_hex(0x000000), 0);
-                lv_obj_set_style_bg_opa(menuItems[bgIndex], 0, 0);
+        // 获取子对象（第一个子对象是名称标签）
+        if (lv_obj_get_child_cnt(menuItem) > 0) {
+            nameLabel = lv_obj_get_child(menuItem, 0);
+        }
+        
+        if (i == selectedIndex) {
+            // 选中项高亮 - 使用白色底黑字效果
+            lv_obj_set_style_bg_opa(menuItem, 255, 0);
+            lv_obj_set_style_bg_color(menuItem, lv_color_hex(0xFFFFFF), 0);
+            
+            // 设置选中项的文本为黑色
+            if (nameLabel) {
+                lv_obj_set_style_text_color(nameLabel, lv_color_hex(0x000000), 0);
+            }
+            
+            // 设置状态标签为黑色
+            if (i < stateLabels.size() && stateLabels[i] != nullptr) {
+                lv_obj_set_style_text_color(stateLabels[i], lv_color_hex(0x000000), 0);
+            }
+        } else {
+            // 非选中项 - 黑底白字
+            lv_obj_set_style_bg_opa(menuItem, 0, 0);
+            
+            // 设置非选中项的文本为白色
+            if (nameLabel) {
+                lv_obj_set_style_text_color(nameLabel, lv_color_hex(0xFFFFFF), 0);
+            }
+            
+            // 设置状态标签为白色
+            if (i < stateLabels.size() && stateLabels[i] != nullptr) {
+                lv_obj_set_style_text_color(stateLabels[i], lv_color_hex(0xFFFFFF), 0);
             }
         }
     }
@@ -539,11 +478,10 @@ int VerticalOptionsMenu::adjustValue(int index, bool increment) {
         return -1;
     }
     
-    // 设置编辑状态
-    isEditingValue = true;
-    editingIndex = index;
-    blinkTimer = HAL::SysCtrl().millis();
-    blinkState = true;
+    // 如果未处于编辑状态，仅返回当前值
+    if (!isEditingValue) {
+        return options[index].value;
+    }
     
     // 调整值
     MenuOption& option = options[index];
@@ -562,7 +500,45 @@ int VerticalOptionsMenu::adjustValue(int index, bool increment) {
     // 更新UI
     updateStateLabel(index);
     
+    // 重置闪烁计时器
+    blinkTimer = HAL::SysCtrl().millis();
+    blinkState = true;
+    
     return option.value;
+}
+
+/**
+ * @brief 切换数值编辑状态
+ * @param index 选项索引
+ * @return 是否进入编辑状态
+ */
+bool VerticalOptionsMenu::toggleEditMode(int index) {
+    if (index < 0 || index >= options.size() || options[index].type != TYPE_VALUE) {
+        return false;
+    }
+    
+    // 如果已经在编辑中但不是同一个选项
+    if (isEditingValue && editingIndex != index) {
+        // 退出之前的编辑状态
+        isEditingValue = false;
+        
+        // 恢复之前编辑项的显示
+        if (editingIndex >= 0 && editingIndex < stateLabels.size() && stateLabels[editingIndex] != nullptr) {
+            lv_obj_set_style_opa(stateLabels[editingIndex], 255, 0);
+        }
+    }
+    
+    // 切换编辑状态
+    isEditingValue = !isEditingValue;
+    
+    // 设置当前编辑索引
+    editingIndex = isEditingValue ? index : -1;
+    
+    // 重置闪烁计时器
+    blinkTimer = HAL::SysCtrl().millis();
+    blinkState = true;
+    
+    return isEditingValue;
 }
 
 void VerticalOptionsMenu::updateStateLabel(int index) {
@@ -588,6 +564,14 @@ std::string VerticalOptionsMenu::getOptionStateText(const MenuOption& option) co
         default:
             return "";
     }
+}
+
+bool VerticalOptionsMenu::isInEditMode() const {
+    return isEditingValue && editingIndex >= 0;
+}
+
+int VerticalOptionsMenu::getEditingIndex() const {
+    return isEditingValue ? editingIndex : -1;
 }
 
 void VerticalOptionsMenu::setSelectCallback(std::function<void(int, OptionType)> callback) {

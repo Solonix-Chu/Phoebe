@@ -33,8 +33,8 @@ void HalDesktop::init()
     _components.button = std::make_unique<ButtonSdl>();
     _components.display = std::make_unique<DisplaySdl>();
     _components.display->init();
-    _components.ble = std::make_unique<BlePython>();
-    _components.ble->init();
+    // _components.ble = std::make_unique<BlePython>();
+    // _components.ble->init();
 
     // 拉取一下保存的配置
     HAL::SysCfg().loadConfig();

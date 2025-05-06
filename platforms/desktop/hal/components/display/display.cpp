@@ -16,26 +16,32 @@
 #include <src/display/lv_display.h>
 #include <src/drivers/sdl/lv_sdl_window.h>
 
-void render_from_uint16(SDL_Renderer* renderer, uint16_t* pixel_data, int width, int height)
+void render_from_uint8(SDL_Renderer* renderer, uint8_t* pixel_data, int width, int height)
 {
-    // Step 1: Create an SDL_Surface using the pixel data from the uint16_t array
-    SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(pixel_data,               // Pixel data
-                                                    width,                    // Width of the image
-                                                    height,                   // Height of the image
-                                                    16,                       // Depth (16 bits per pixel)
-                                                    width * sizeof(uint16_t), // Pitch (number of bytes per row)
-                                                    0xF800,                   // Red mask (5 bits for red)
-                                                    0x07E0,                   // Green mask (6 bits for green)
-                                                    0x001F,                   // Blue mask (5 bits for blue)
-                                                    0x0000                    // Alpha mask (no alpha channel)
-    );
-
+    // Create an SDL surface for monochrome display
+    SDL_Surface* surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
     if (!surface) {
         SDL_Log("Unable to create surface: %s", SDL_GetError());
         return;
     }
 
-    // Step 2: Convert the SDL_Surface to an SDL_Texture
+    // Convert monochrome data to 32-bit RGBA
+    uint32_t* pixels = (uint32_t*)surface->pixels;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int byte_index = (y * width + x) / 8;
+            int bit_index = 7 - ((y * width + x) % 8); // MSB first
+            
+            bool pixel_is_set = (pixel_data[byte_index] & (1 << bit_index)) != 0;
+            
+            // Monochrome: White on Black (OLED style)
+            uint32_t color = pixel_is_set ? 0xFFFFFFFF : 0x000000FF; // White if set, Black if not
+            
+            pixels[y * width + x] = color;
+        }
+    }
+
+    // Convert the SDL_Surface to an SDL_Texture
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (!texture) {
         SDL_Log("Unable to create texture: %s", SDL_GetError());
@@ -43,13 +49,14 @@ void render_from_uint16(SDL_Renderer* renderer, uint16_t* pixel_data, int width,
         return;
     }
 
-    // Step 3: Clear the renderer
+    // Clear the renderer
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
     SDL_RenderClear(renderer);
 
-    // Step 4: Copy the texture to the renderer
-    SDL_RenderCopy(renderer, texture, NULL, NULL); // NULL means render the entire texture
+    // Copy the texture to the renderer
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
 
-    // Step 5: Present the updated renderer to display the image
+    // Present the updated renderer
     SDL_RenderPresent(renderer);
 
     // Cleanup
@@ -59,14 +66,17 @@ void render_from_uint16(SDL_Renderer* renderer, uint16_t* pixel_data, int width,
 
 void DisplaySdl::init()
 {
-    // 内存多，直接申请一个
-    setColorDepth(lgfx::color_depth_t::rgb565_nonswapped);
+    // Setting monochrome (1-bit) color depth
+    setColorDepth(lgfx::color_depth_t::palette_1bit);
     createSprite(HAL_SCREEN_WIDTH, HAL_SCREEN_HEIGHT);
+    
+    // Set black background color for LVGL
+    lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x000000), LV_PART_MAIN);
 }
 
 void DisplaySdl::push_buffer_to_display(void* buffer)
 {
-    // 从 lvgl 那里拿个 sdl renderer 实例来用
+    // From lvgl, get sdl renderer instance
     auto sdl_render = (SDL_Renderer*)lv_sdl_window_get_renderer(lv_display_get_default());
-    render_from_uint16(sdl_render, (uint16_t*)buffer, width(), height());
+    render_from_uint8(sdl_render, (uint8_t*)buffer, width(), height());
 }

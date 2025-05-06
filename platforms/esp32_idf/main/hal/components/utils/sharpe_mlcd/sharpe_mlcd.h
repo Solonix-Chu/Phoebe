@@ -15,8 +15,8 @@
 class SharpeMlcd {
 public:
     struct Config_t {
-        uint16_t screen_width = 144;
-        uint16_t screen_height = 168;
+        uint16_t screen_width = 128;
+        uint16_t screen_height = 64;
         int8_t pin_scs = -1;
         int8_t pin_sclk = -1;
         int8_t pin_si = -1;
@@ -42,6 +42,14 @@ public:
     void drawPixel(int16_t x, int16_t y, uint16_t color);
     void drawPixelPreclipped(uint_fast16_t x, uint_fast16_t y, uint_fast16_t color);
     void copyBuffer(uint16_t* colors);
+    
+    /**
+     * @brief Copy monochrome buffer (1-bit per pixel) to the display buffer
+     * @param mono_buffer The source monochrome buffer
+     * @param width Width of the buffer
+     * @param height Height of the buffer
+     */
+    void copyMonoBuffer(uint8_t* mono_buffer, uint16_t width, uint16_t height);
 
 private:
     Config_t _config;

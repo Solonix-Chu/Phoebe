@@ -11,8 +11,8 @@
 #pragma once
 
 // 屏幕
-#define HAL_SCREEN_WIDTH  144
-#define HAL_SCREEN_HEIGHT 168
+#define HAL_SCREEN_WIDTH  128
+#define HAL_SCREEN_HEIGHT 64
 #define HAL_PIN_MLCD_SCLK 1
 #define HAL_PIN_MLCD_SI   0
 #define HAL_PIN_MLCD_SCS  7
