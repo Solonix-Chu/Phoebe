@@ -10,5 +10,5 @@
  */
 #pragma once
 
-#define HAL_SCREEN_WIDTH  144
-#define HAL_SCREEN_HEIGHT 168
+#define HAL_SCREEN_WIDTH  128
+#define HAL_SCREEN_HEIGHT 64
